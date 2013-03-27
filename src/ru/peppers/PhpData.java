@@ -24,9 +24,9 @@ final public class PhpData {
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
+        HttpPost httppost = new HttpPost("http://10.0.2.2/api/index.php");
         //http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
-//http://10.0.2.2
+//http://10.0.2.2/api
         try {
             // Add your data
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));

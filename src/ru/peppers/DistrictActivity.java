@@ -144,6 +144,7 @@ public class DistrictActivity extends Activity {
                 nameValuePairs.add(new BasicNameValuePair("district", String.valueOf(groupPosition)));
                 nameValuePairs.add(new BasicNameValuePair("subdistrict", String.valueOf(childPosition)));
 
+                // TODO:crash
                 Document doc = PhpData.postData(DistrictActivity.this, nameValuePairs);
                 Node errorNode = doc.getElementsByTagName("error").item(0);
 

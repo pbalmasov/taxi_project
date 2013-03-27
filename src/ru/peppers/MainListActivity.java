@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -69,9 +70,15 @@ public class MainListActivity extends Activity {
         itemsList.add(createItem("item", "Мои заказы: " + driver.getOrdersCount()));
         itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
         itemsList.add(createItem("item", "Свободные заказы"));
-        if (driver.getStatus() != 1)
-            itemsList
-                    .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
+        if (driver.getStatus() != 1) {
+            String rayonString = "";
+            if (driver.getDistrict() != "")
+                rayonString = driver.getDistrict() + "," + driver.getSubdistrict();
+            else
+                rayonString = "не выбран";
+
+            itemsList.add(createItem("item", "Район: " + rayonString));
+        }
         itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
         itemsList.add(createItem("item", "Отчет"));
         itemsList.add(createItem("item", "Звонок из офиса"));
@@ -186,20 +193,75 @@ public class MainListActivity extends Activity {
             public void onClick(DialogInterface dialog, int item) {
                 Driver driver = TaxiApplication.getDriver();
                 if (item != driver.getStatus()) {
+
+                    if (item == 0 && driver.getDistrict() == "") {
+                        Bundle extras = getIntent().getExtras();
+                        int id = extras.getInt("id");
+                        Intent intent = new Intent(MainListActivity.this, DistrictActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", id);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+
+                        dialog.dismiss();
+                        return;
+                    }
+
+                    if (item == 2 && driver.getOrdersCount() != 0) {
+                        new AlertDialog.Builder(MainListActivity.this).setTitle("Заказы")
+                                .setMessage("К сожалению у вас есть не закрытые заказы.")
+                                .setNeutralButton("Закрыть", null).show();
+                        dialog.dismiss();
+                        return;
+                    }
+
+                    // TODO:goto district activity
+
                     driver.setStatus(item);
-                    if (item != 1 && itemsList.size() == 8)
-                        itemsList.add(
-                                3,
-                                createItem("item",
-                                        "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
+                    if (item != 1 && itemsList.size() == 8) {
+                        String rayonString = "";
+                        if (driver.getDistrict() != "")
+                            rayonString = driver.getDistrict() + "," + driver.getSubdistrict();
+                        else
+                            rayonString = "не выбран";
+                        itemsList.add(3, createItem("item", "Район: " + rayonString));
+                    }
                     if (item == 1)
                         itemsList.remove(3);
                     itemsList.set(position, createItem("item", "Статус: " + driver.getStatusString()));
                     simpleAdpt.notifyDataSetChanged();
+                    // TODO:post to php data
                 }
                 dialog.dismiss();
             }
         };
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Handle the back button
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+            // Ask the user if they want to quit
+            Driver driver = TaxiApplication.getDriver();
+            if (driver.getOrdersCount() != 0) {
+                new AlertDialog.Builder(MainListActivity.this).setTitle("Заказы")
+                        .setMessage("К сожалению у вас есть не закрытые заказы.")
+                        .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                // Stop the activity
+                                MainListActivity.this.finish();
+                            }
+
+                        }).setNegativeButton("Отменить", null).show();
+            }
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+
     }
 
     private OnClickListener onClassContextMenuItemListener(final int position) {

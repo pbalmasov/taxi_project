@@ -215,7 +215,7 @@ public class MainListActivity extends Activity {
                         return;
                     }
 
-                    // TODO:goto district activity test test
+                    // TODO:goto district activity test test test
 
                     driver.setStatus(item);
                     if (item != 1 && itemsList.size() == 8) {

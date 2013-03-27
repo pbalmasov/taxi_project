@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ru.peppers"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="8" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" android:name="TaxiApplication">
+        <activity
+            android:name=".PozivnoiActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainListActivity"></activity>
+        <activity android:name=".MyOrderActivity"></activity>
+        <activity android:name=".MyOrderItemActivity"></activity>
+        <activity android:name=".FreeOrderActivity"></activity>
+        <activity android:name=".FreeOrderItemActivity"></activity>
+        <activity android:name=".ReportActivity"></activity>
+        <activity android:name=".ReportListActivity"></activity>
+        <activity android:name=".ReportListItemActivity"></activity>
+        <activity android:name=".DistrictActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".MessageActivity"></activity>
+        <activity android:name=".PasswordActivity"></activity>
+    </application>
+
+</manifest>

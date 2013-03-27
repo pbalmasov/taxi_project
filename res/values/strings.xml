@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, TaxiProjectActivity!</string>
+    <string name="app_name">TaxiProject</string>
+    <string name="pozivnoi">Позывной</string>
+    <string name="password">Пароль</string>
+    <string name="select">Выбор</string>
+    <string name="noOrders">На линии достаточно машин</string>
+    <string name="defaultOrder">Уведомлять о предлагаемых заказах</string>
+    <string name="defaultStatus">Предлагать заказы в статусе Перерыв</string>
+    <string name="passwordCheck">Пароль</string>
+
+</resources>

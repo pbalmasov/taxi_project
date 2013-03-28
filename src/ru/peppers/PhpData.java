@@ -19,12 +19,18 @@ import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 final public class PhpData {
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
+
+        if(isNetworkAvailable(activity)){
+
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://10.0.2.2/api/index.php");
+        HttpPost httppost = new HttpPost("http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
         //http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
 //http://10.0.2.2/api
         try {
@@ -62,6 +68,20 @@ final public class PhpData {
                     .setMessage("Ошибка в обработке ответа от сервера.").setNeutralButton("Закрыть", null)
                     .show();
         }
+        }
+        else{
+            new AlertDialog.Builder(activity).setTitle("Ошибка")
+            .setMessage("Нету связи с интернетом.").setNeutralButton("Закрыть", null)
+            .show();
+        }
         return null;
     }
+
+    private static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+              = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 }

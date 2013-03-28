@@ -5,12 +5,11 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class PasswordActivity extends Activity {
@@ -19,6 +18,38 @@ public class PasswordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password);
+
+        Button passwordButton = (Button) findViewById(R.id.passwordButton);
+        passwordButton.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
+                Log.d("My_tag",  settings.getString("password", ""));
+
+                EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+
+                if (settings.getString("password", "").equals(passwordEditText.getText().toString())) {
+                    Bundle extras = getIntent().getExtras();
+                    int id = extras.getInt("id");
+
+                    Intent intent = new Intent(PasswordActivity.this, MainListActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", id);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    new AlertDialog.Builder(PasswordActivity.this).setTitle("Ошибка")
+                    .setMessage("Неправильный пароль. Повторите попытку")
+                    .setNeutralButton("Закрыть", null).show();
+                }
+            }
+
+        });
+
 
         EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 

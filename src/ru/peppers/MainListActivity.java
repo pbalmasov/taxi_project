@@ -79,8 +79,6 @@ public class MainListActivity extends Activity {
 
             itemsList.add(createItem("item", "Район: " + rayonString));
         }
-        itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
-        itemsList.add(createItem("item", "Отчет"));
         itemsList.add(createItem("item", "Звонок из офиса"));
         itemsList.add(createItem("item", "Настройки"));
         itemsList.add(createItem("item", "Сообщения"));
@@ -107,13 +105,11 @@ public class MainListActivity extends Activity {
                         startActivity(intent);
                         break;
                     case 1:
-                        final CharSequence[] items = { "Свободен", "Перерыв", "Недоступен" };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainListActivity.this);
-                        builder.setTitle("Выбор статуса");
-                        builder.setSingleChoiceItems(items, driver.getStatus(),
-                                onStatusContextMenuItemListener(position));
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                        intent = new Intent(MainListActivity.this, ReportActivity.class);
+                        bundle = new Bundle();
+                        bundle.putInt("id", id);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                         break;
                     case 2:
                         intent = new Intent(MainListActivity.this, FreeOrderActivity.class);
@@ -137,22 +133,6 @@ public class MainListActivity extends Activity {
                 if (driver.getStatus() != 1)
                     position--;
                 if (position == 3) {
-                    final CharSequence[] items = { "Эконом", "Стандарт", "Базовый" };
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainListActivity.this);
-                    builder.setTitle("Выбор статуса");
-                    builder.setSingleChoiceItems(items, driver.getClassAuto(),
-                            onClassContextMenuItemListener(position));
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }
-                if (position == 4) {
-                    intent = new Intent(MainListActivity.this, ReportActivity.class);
-                    bundle = new Bundle();
-                    bundle.putInt("id", id);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-                if (position == 5) {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
                     nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
@@ -170,14 +150,14 @@ public class MainListActivity extends Activity {
                                 .setNeutralButton("Закрыть", null).show();
                     }
                 }
-                if (position == 6) {
+                if (position == 4) {
                     intent = new Intent(MainListActivity.this, SettingsActivity.class);
                     bundle = new Bundle();
                     bundle.putInt("id", id);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
-                if (position == 7) {
+                if (position == 5) {
                     intent = new Intent(MainListActivity.this, MessageActivity.class);
                     bundle = new Bundle();
                     bundle.putInt("id", id);
@@ -188,54 +168,6 @@ public class MainListActivity extends Activity {
         });
     }
 
-    private OnClickListener onStatusContextMenuItemListener(final int position) {
-        return new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                Driver driver = TaxiApplication.getDriver();
-                if (item != driver.getStatus()) {
-
-                    if (item == 0 && driver.getDistrict() == "") {
-                        Bundle extras = getIntent().getExtras();
-                        int id = extras.getInt("id");
-                        Intent intent = new Intent(MainListActivity.this, DistrictActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("id", id);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-
-                        dialog.dismiss();
-                        return;
-                    }
-
-                    if (item == 2 && driver.getOrdersCount() != 0) {
-                        new AlertDialog.Builder(MainListActivity.this).setTitle("Заказы")
-                                .setMessage("К сожалению у вас есть не закрытые заказы.")
-                                .setNeutralButton("Закрыть", null).show();
-                        dialog.dismiss();
-                        return;
-                    }
-
-                    // TODO:goto district activity test test test
-
-                    driver.setStatus(item);
-                    if (item != 1 && itemsList.size() == 8) {
-                        String rayonString = "";
-                        if (driver.getDistrict() != "")
-                            rayonString = driver.getDistrict() + "," + driver.getSubdistrict();
-                        else
-                            rayonString = "не выбран";
-                        itemsList.add(3, createItem("item", "Район: " + rayonString));
-                    }
-                    if (item == 1)
-                        itemsList.remove(3);
-                    itemsList.set(position, createItem("item", "Статус: " + driver.getStatusString()));
-                    simpleAdpt.notifyDataSetChanged();
-                    // TODO:post to php data
-                }
-                dialog.dismiss();
-            }
-        };
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -262,20 +194,6 @@ public class MainListActivity extends Activity {
             return super.onKeyDown(keyCode, event);
         }
 
-    }
-
-    private OnClickListener onClassContextMenuItemListener(final int position) {
-        return new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                Driver driver = TaxiApplication.getDriver();
-                if (item != driver.getClassAuto()) {
-                    driver.setClassAuto(item);
-                    itemsList.set(position, createItem("item", "Класс: " + driver.getClassAutoString()));
-                    simpleAdpt.notifyDataSetChanged();
-                }
-                dialog.dismiss();
-            }
-        };
     }
 
     private HashMap<String, String> createItem(String key, String name) {

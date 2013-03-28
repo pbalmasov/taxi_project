@@ -10,5 +10,6 @@
     <string name="defaultOrder">Уведомлять о предлагаемых заказах</string>
     <string name="defaultStatus">Предлагать заказы в статусе Перерыв</string>
     <string name="passwordCheck">Пароль</string>
+    <string name="Ok">Ок</string>
 
 </resources>

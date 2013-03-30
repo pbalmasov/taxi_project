@@ -31,6 +31,8 @@
         <activity android:name=".SettingsActivity"></activity>
         <activity android:name=".MessageActivity"></activity>
         <activity android:name=".PasswordActivity"></activity>
+        <activity android:name=".DistrictListActivity"></activity>
+        <activity android:name=".DistrictListItemActivity"></activity>
     </application>
 
 </manifest>

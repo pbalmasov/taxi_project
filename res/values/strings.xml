@@ -2,7 +2,7 @@
 <resources>
 
     <string name="hello">Hello World, TaxiProjectActivity!</string>
-    <string name="app_name">TaxiProject</string>
+    <string name="app_name">АБС Такси</string>
     <string name="pozivnoi">Позывной</string>
     <string name="password">Пароль</string>
     <string name="select">Выбор</string>

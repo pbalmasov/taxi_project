@@ -28,19 +28,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MyOrderItemActivity extends Activity {
 
     private CountDownTimer timer;
     private ArrayList<String> orderList;
-    private ArrayAdapter<String> arrayAdapter;
+    private TextView counterView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.order);
-
-        // TODO: добавляем таймер первой строкой
+        setContentView(R.layout.myorder);
 
         Bundle bundle = getIntent().getExtras();
         int id = bundle.getInt("id");
@@ -50,20 +49,28 @@ public class MyOrderItemActivity extends Activity {
 
         orderList = order.toArrayList();
 
-        if (order.getTimerDate() != null) {
-
-            orderList.add(0, "");
+        counterView = (TextView) findViewById(R.id.textView1);
+        
+        TextView tv = (TextView) findViewById(R.id.textView2);
+        
+        int arraySize = orderList.size();
+        for(int i = 0; i < arraySize; i++) {
+        	tv.append(orderList.get(i));
+        	tv.append("\n");
         }
 
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orderList);
+        //arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orderList);
 
         if (order.getTimerDate() != null) {
             timerInit(order);
         }
 
-        ListView lv = (ListView) findViewById(R.id.listView1);
+        //ListView lv = (ListView) findViewById(R.id.listView1);
 
-        lv.setAdapter(arrayAdapter);
+        //lv.setAdapter(arrayAdapter);
+
+    	
+        
         Button button = (Button) findViewById(R.id.button1);
         button.setText("Выбор действия");
         button.setOnClickListener(new Button.OnClickListener() {
@@ -210,9 +217,14 @@ public class MyOrderItemActivity extends Activity {
         timer = new CountDownTimer(diffInMs, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                orderList.set(0, "" + ((int) millisUntilFinished / 1000) / 60 + ":"
-                        + ((int) millisUntilFinished / 1000) % 60);
-                arrayAdapter.notifyDataSetChanged();
+            	int seconds = ((int) millisUntilFinished / 1000) % 60;
+            	String secondsStr = String.valueOf(seconds);
+            	if(seconds<=9)
+            		secondsStr = "0"+seconds;
+            	
+            	
+            	counterView.setText(((int) millisUntilFinished / 1000) / 60 + ":"
+                        + secondsStr);
                 if((((int) millisUntilFinished / 1000) / 60)==1 && (((int) millisUntilFinished / 1000) % 60)==0)
                 {
                     final CharSequence[] items = { "Пригласить", "Отложить", "Закрыть", "Звонок из офиса" };
@@ -225,8 +237,7 @@ public class MyOrderItemActivity extends Activity {
             }
 
             public void onFinish() {
-                orderList.set(0, "Кончилось");
-                arrayAdapter.notifyDataSetChanged();
+            	counterView.setText("Кончилось");
                 alertDelay(order);
 
                 MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));

@@ -250,16 +250,20 @@ public class PozivnoiActivity extends Activity {
         String symbols = randomString(24);
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("action", "savepozivnoi"));
-        nameValuePairs.add(new BasicNameValuePair("pozivnoi", pozivnoi));
-        nameValuePairs.add(new BasicNameValuePair("token",symbols));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "app"));
+        nameValuePairs.add(new BasicNameValuePair("action","authrequest"));
+        nameValuePairs.add(new BasicNameValuePair("devserial", symbols));
+        nameValuePairs.add(new BasicNameValuePair("drvnumber",pozivnoi));
         //TODO: сохранить токен
         Log.d("My_tag", symbols);
 
-        Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs);
+        Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,"https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
         if (doc != null) {
             Node errorNode = doc.getElementsByTagName("error").item(0);
-
+            
+            Log.d("My_tag",doc.getElementsByTagName("login").item(0).toString());
+            
             if (Integer.parseInt(errorNode.getTextContent()) == 1)
                 new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
                         .setMessage("Неправильный позывной.").setNeutralButton("Закрыть", null).show();

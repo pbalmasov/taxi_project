@@ -30,124 +30,143 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 final public class PhpData {
-    static boolean withDebug = false;
+	static boolean withDebug = false;
 
-    static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
+	static public Document postData(Activity activity,
+			List<NameValuePair> nameValuePairs, String url) {
+		if (isNetworkAvailable(activity)) {
 
-        if (isNetworkAvailable(activity)) {
+			// Create a new HttpClient and Post Header
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(url);
+			// http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
+			// http://10.0.2.2/api
+			try {
+				// Add your data
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-            // Create a new HttpClient and Post Header
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
-            // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
-            // http://10.0.2.2/api
-            try {
-                // Add your data
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				// Execute HTTP Post Request
+				HttpResponse response = httpclient.execute(httppost);
+				DocumentBuilderFactory factory = DocumentBuilderFactory
+						.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
 
-                // Execute HTTP Post Request
-                HttpResponse response = httpclient.execute(httppost);
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
+				Document doc;
+				if (withDebug) {
+					String str = EntityUtils.toString(response.getEntity());
+					Log.d("My_tag", str);
+					InputSource is = new InputSource();
+					is.setCharacterStream(new StringReader(str));
+					// response.getEntity().getContent()
+					doc = builder.parse(is);
+				} else {
+					doc = builder.parse(response.getEntity().getContent());
 
-                Document doc;
-                if (withDebug) {
-                    String str = EntityUtils.toString(response.getEntity());
-                    Log.d("My_tag", str);
-                    InputSource is = new InputSource();
-                    is.setCharacterStream(new StringReader(str));
-                    // response.getEntity().getContent()
-                    doc = builder.parse(is);
-                } else {
-                    doc = builder.parse(response.getEntity().getContent());
+				}
 
-                }
+				return doc;
 
-                return doc;
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity)
+						.setTitle("Ошибка")
+						.setMessage("Произошла ошибка в соединение с сервером.")
+						.setNeutralButton("Закрыть", null).show();
+			} catch (IOException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity)
+						.setTitle("Ошибка")
+						.setMessage("Произошла ошибка в соединение с сервером.")
+						.setNeutralButton("Закрыть", null).show();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity).setTitle("Ошибка")
+						.setMessage("Ошибка в обработке ответа от сервера.")
+						.setNeutralButton("Закрыть", null).show();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity).setTitle("Ошибка")
+						.setMessage("Ошибка в обработке ответа от сервера.")
+						.setNeutralButton("Закрыть", null).show();
+			} catch (SAXException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity).setTitle("Ошибка")
+						.setMessage("Ошибка в обработке ответа от сервера.")
+						.setNeutralButton("Закрыть", null).show();
+			}
+		} else {
+			new AlertDialog.Builder(activity).setTitle("Ошибка")
+					.setMessage("Подключение к интернету отсутствует.")
+					.setNeutralButton("Закрыть", null).show();
+		}
+		Log.d("My_tag", "no connection");
+		return null;
+	}
 
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (SAXException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
-            }
-        } else {
-            new AlertDialog.Builder(activity).setTitle("Ошибка").setMessage("Подключение к интернету отсутствует.")
-                    .setNeutralButton("Закрыть", null).show();
-        }
-        Log.d("My_tag", "no connection");
-        return null;
-    }
+	static public Document postData(Activity activity,
+			List<NameValuePair> nameValuePairs) {
 
-    private static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+		return postData(activity, nameValuePairs,
+				"http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
 
-    public static Date getFileDate(Activity activity){
-        if (isNetworkAvailable(activity)) {
+	}
 
-            // Create a new HttpClient and Post Header
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpHead httpphead = new HttpHead("http://sandbox.peppers-studio.ru/dell/accelerometer/TaxiProject.apk");
-            // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
-            // http://10.0.2.2/api
-            try {
+	private static boolean isNetworkAvailable(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
 
-                // Execute HTTP Post Request
-                HttpResponse response = httpclient.execute(httpphead);
-                //for(int i = 0; i<response.getAllHeaders().length;i++){
-                //    Log.d("My_tag",response.getAllHeaders()[i].toString());
-                //}
-                Log.d("My_tag",response.getFirstHeader("Last-Modified").getValue());
+	public static Date getFileDate(Activity activity) {
+		if (isNetworkAvailable(activity)) {
 
-                return new Date(response.getFirstHeader("Last-Modified").getValue());
+			// Create a new HttpClient and Post Header
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpHead httpphead = new HttpHead(
+					"http://sandbox.peppers-studio.ru/dell/accelerometer/TaxiProject.apk");
+			// http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
+			// http://10.0.2.2/api
+			try {
 
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            }catch (IllegalStateException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
-            }
-        } else {
-            new AlertDialog.Builder(activity).setTitle("Ошибка").setMessage("Подключение к интернету отсутствует.")
-                    .setNeutralButton("Закрыть", null).show();
-        }
-        Log.d("My_tag", "no connection");
-        return null;
+				// Execute HTTP Post Request
+				HttpResponse response = httpclient.execute(httpphead);
+				// for(int i = 0; i<response.getAllHeaders().length;i++){
+				// Log.d("My_tag",response.getAllHeaders()[i].toString());
+				// }
+				Log.d("My_tag", response.getFirstHeader("Last-Modified")
+						.getValue());
 
-    }
+				return new Date(response.getFirstHeader("Last-Modified")
+						.getValue());
+
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity)
+						.setTitle("Ошибка")
+						.setMessage("Произошла ошибка в соединение с сервером.")
+						.setNeutralButton("Закрыть", null).show();
+			} catch (IOException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity)
+						.setTitle("Ошибка")
+						.setMessage("Произошла ошибка в соединение с сервером.")
+						.setNeutralButton("Закрыть", null).show();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				new AlertDialog.Builder(activity).setTitle("Ошибка")
+						.setMessage("Ошибка в обработке ответа от сервера.")
+						.setNeutralButton("Закрыть", null).show();
+			}
+		} else {
+			new AlertDialog.Builder(activity).setTitle("Ошибка")
+					.setMessage("Подключение к интернету отсутствует.")
+					.setNeutralButton("Закрыть", null).show();
+		}
+		Log.d("My_tag", "no connection");
+		return null;
+
+	}
 
 }

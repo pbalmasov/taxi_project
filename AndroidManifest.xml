@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <application
         android:icon="@drawable/icon"
-        android:label="@string/app_name" android:name="TaxiApplication">
+        android:label="@string/app_name" android:name=".TaxiApplication">
         <activity
             android:name=".PozivnoiActivity"
             android:label="@string/app_name" >
@@ -37,7 +37,7 @@
         <activity android:label="Заказы района"  android:name=".DistrictListActivity"></activity>
         <activity android:label="Заказ района"  android:name=".DistrictListItemActivity"></activity>
         <activity android:label="Сообщение из сервиса"  android:name=".MessageFromServiceActivity"></activity>
-        <service android:name="PhpService" android:process=":process"></service>
+        <service android:name=".PhpService" android:process=":process"></service>
         <receiver android:name=".NetworkStateReceiver">
              <intent-filter>
                   <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

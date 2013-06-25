@@ -1,6 +1,5 @@
 package ru.peppers;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import model.Message;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -47,7 +47,6 @@ public class PozivnoiActivity extends Activity {
     private static final String MY_TAG = "My_tag";
     protected static final String PREFS_NAME = "MyNamePrefs1";
     protected Integer index;
-
 
     /** Called when the activity is first created. */
     @Override
@@ -102,7 +101,6 @@ public class PozivnoiActivity extends Activity {
             init(settings);
         }
     }
-
 
     private void init(SharedPreferences settings) {
         boolean isFirstTime = settings.getBoolean("isFirstTime", false);
@@ -206,10 +204,10 @@ public class PozivnoiActivity extends Activity {
                         || event.getAction() == KeyEvent.ACTION_DOWN
                         && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 
-                    if (!event.isShiftPressed() && input.getText().toString().length() != 0){
+                    if (!event.isShiftPressed() && input.getText().toString().length() != 0) {
                         getRequest(input.getText().toString());
                         return true;
-                    }else
+                    } else
                         new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
                                 .setMessage("Позывной не может быть пустым.")
                                 .setNeutralButton("Закрыть", null).show();
@@ -237,45 +235,43 @@ public class PozivnoiActivity extends Activity {
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     static Random rnd = new Random();
 
-    String randomString( int len )
-    {
-       StringBuilder sb = new StringBuilder( len );
-       for( int i = 0; i < len; i++ )
-          sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
-       return sb.toString();
+    String randomString(int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
     }
 
     private void getRequest(String pozivnoi) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String symbols = randomString(24);
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "app"));
-        nameValuePairs.add(new BasicNameValuePair("action","authrequest"));
+        nameValuePairs.add(new BasicNameValuePair("action", "authrequest"));
         nameValuePairs.add(new BasicNameValuePair("devserial", symbols));
-        nameValuePairs.add(new BasicNameValuePair("drvnumber",pozivnoi));
-        //TODO: сохранить токен
-        Log.d("My_tag", symbols);
-
-        Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,"https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+        nameValuePairs.add(new BasicNameValuePair("drvnumber", pozivnoi));
+        // TODO: сохранить токен
+        Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
+                "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
         if (doc != null) {
-            Node errorNode = doc.getElementsByTagName("error").item(0);
-            
-            Log.d("My_tag",doc.getElementsByTagName("login").item(0).toString());
-            
-            if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-                        .setMessage("Неправильный позывной.").setNeutralButton("Закрыть", null).show();
-            else {
-                //TODO: сохранить логин пароль
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putBoolean("isFirstTime", true);
-                editor.putString("pozivnoidata", pozivnoi);
-                editor.commit();
+            // Node errorNode = doc.getElementsByTagName("error").item(0);
 
-                init(settings);
-            }
+            // if (Integer.parseInt(errorNode.getTextContent()) == 1)
+            // new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
+            // .setMessage("Неправильный позывной.").setNeutralButton("Закрыть", null).show();
+            // else {
+            // TODO: сохранить логин пароль
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("isFirstTime", true);
+            editor.putString("pozivnoidata", pozivnoi);
+            editor.putString("password", doc.getElementsByTagName("password").item(0).getTextContent());
+            editor.putString("login", doc.getElementsByTagName("login").item(0).getTextContent());
+            editor.commit();
+
+            init(settings);
+            // }
         }
     }
 
@@ -306,116 +302,126 @@ public class PozivnoiActivity extends Activity {
 
     private boolean loginWithPozivnoi(String pozivnoi) {
         {
-            Log.d(MY_TAG, pozivnoi);
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            // TODO:убрать позывной
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+            nameValuePairs.add(new BasicNameValuePair("action", "login"));
+            nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+            nameValuePairs.add(new BasicNameValuePair("object", "session"));
+            nameValuePairs.add(new BasicNameValuePair("login", settings.getString("login", "")));
+            nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("action", "savepozivnoi"));
-            nameValuePairs.add(new BasicNameValuePair("pozivnoi", pozivnoi));
-
-            Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs);
+            Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
+                    "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
             if (doc != null) {
-                Node errorNode = doc.getElementsByTagName("error").item(0);
-
-                if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                    new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-                            .setMessage("Неправильный позывной.").setNeutralButton("Закрыть", null).show();
-                else {
-
-                    // save pozivnoi if all ok
-
-                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("pozivnoidata", pozivnoi);
-                    editor.commit();
-
-                    initMessages(doc);
-                }
-            } else {
-
-                // EditText pozivnoiEditText = (EditText) findViewById(R.id.pozivnoiEditText);
-                // // may cause bugs
+                // Node errorNode = doc.getElementsByTagName("error").item(0);
                 //
-                // InputFilter filter = new InputFilter() {
-                // public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
-                // int dstart, int dend) {
-                // for (int i = start; i < end; i++) {
-                // if (!Character.isDigit(source.charAt(i))) {
-                // return "";
-                // }
-                // }
-                // return null;
-                // }
-                // };
-                // pozivnoiEditText.setFilters(new InputFilter[] { filter });
-                //
-                // pozivnoiEditText.setOnKeyListener(new EditText.OnKeyListener() {
-                //
-                // @Override
-                // public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //
-                // EditText pozivnoiEditText = (EditText) v;
-                //
-                // if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE
-                // || event.getAction() == KeyEvent.ACTION_DOWN
-                // && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                //
-                // if (!event.isShiftPressed()
-                // && pozivnoiEditText.getText().toString().length() != 0)
-                // return loginWithPozivnoi(pozivnoiEditText.getText().toString());
-                // else
+                // if (Integer.parseInt(errorNode.getTextContent()) == 1)
                 // new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-                // .setMessage("Позывной не может быть пустым.")
-                // .setNeutralButton("Закрыть", null).show();
-                //
-                // }
-                // return false; // pass on to other listeners.
-                // }
-                //
-                // });
+                // .setMessage("Неправильный позывной.").setNeutralButton("Закрыть", null).show();
+                // else {
+                // save pozivnoi if all ok
+
+                // SharedPreferences.Editor editor = settings.edit();
+                // editor.putString("pozivnoidata", pozivnoi);
+                // editor.commit();
+
+                PhpData.sessionid = doc.getElementsByTagName("sessionid").item(0).getTextContent();
+                Log.d("My_tag", doc.getElementsByTagName("sessionid").item(0).getTextContent());
+                initMessages(doc);
             }
+            // } else {
+
+            // EditText pozivnoiEditText = (EditText) findViewById(R.id.pozivnoiEditText);
+            // // may cause bugs
+            //
+            // InputFilter filter = new InputFilter() {
+            // public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
+            // int dstart, int dend) {
+            // for (int i = start; i < end; i++) {
+            // if (!Character.isDigit(source.charAt(i))) {
+            // return "";
+            // }
+            // }
+            // return null;
+            // }
+            // };
+            // pozivnoiEditText.setFilters(new InputFilter[] { filter });
+            //
+            // pozivnoiEditText.setOnKeyListener(new EditText.OnKeyListener() {
+            //
+            // @Override
+            // public boolean onKey(View v, int keyCode, KeyEvent event) {
+            //
+            // EditText pozivnoiEditText = (EditText) v;
+            //
+            // if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE
+            // || event.getAction() == KeyEvent.ACTION_DOWN
+            // && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            //
+            // if (!event.isShiftPressed()
+            // && pozivnoiEditText.getText().toString().length() != 0)
+            // return loginWithPozivnoi(pozivnoiEditText.getText().toString());
+            // else
+            // new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
+            // .setMessage("Позывной не может быть пустым.")
+            // .setNeutralButton("Закрыть", null).show();
+            //
+            // }
+            // return false; // pass on to other listeners.
+            // }
+            //
+            // });
+            // }
             return true;
         }
     }
 
     private void initMessages(Document doc) {
-        List<NameValuePair> nameValuePairs;
-        Node errorNode;
-        Node idNode = doc.getElementsByTagName("id").item(0);
-        index = Integer.valueOf(idNode.getTextContent());
-        nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("action", "messagedata"));
-        nameValuePairs.add(new BasicNameValuePair("id", idNode.getTextContent()));
 
-        doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "message"));
+        nameValuePairs.add(new BasicNameValuePair("login", settings.getString("login", "")));
+        nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
+
+        doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
+                "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+        PhpData.sessionid = "";
         if (doc != null) {
-            errorNode = doc.getElementsByTagName("error").item(0);
+            // errorNode = doc.getElementsByTagName("error").item(0);
 
-            if (Integer.parseInt(errorNode.getTextContent()) == 1)
+            // if (Integer.parseInt(errorNode.getTextContent()) == 1)
+            // new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
+            // .setMessage("Ошибка в получении сообщений").setNeutralButton("Закрыть", null).show();
+            // else {
+            try {
+                getMessages(doc);
+            } catch (ParseException e) {
                 new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-                        .setMessage("Ошибка в получении сообщений").setNeutralButton("Закрыть", null).show();
-            else {
-                try {
-                    getMessages(doc);
-                } catch (ParseException e) {
-                    new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-                            .setMessage("Сервер недоступен перезагрузите приложение.")
-                            .setNeutralButton("Закрыть", null).show();
-                }
+                        .setMessage("Сервер недоступен перезагрузите приложение.")
+                        .setNeutralButton("Закрыть", null).show();
+                // }
             }
         }
     }
 
     private void getMessages(Document doc) throws ParseException {
-        NodeList nodeList = doc.getElementsByTagName("message");
+        NodeList nodeList = doc.getElementsByTagName("item");
         final ArrayList<Message> unreaded = new ArrayList<Message>();
         for (int i = 0; i < nodeList.getLength(); i++) {
-            NamedNodeMap attributes = nodeList.item(i).getAttributes();
 
-            boolean isRead = Boolean.parseBoolean(attributes.getNamedItem("readed").getTextContent());
-            int index = Integer.valueOf(attributes.getNamedItem("index").getTextContent());
+            Element item = (Element) nodeList.item(i);
+            boolean isRead = true;
+            if(item.getElementsByTagName("readed").item(0)==null)
+                isRead = false;
+            int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            Date date = format.parse(attributes.getNamedItem("date").getTextContent());
-            String text = nodeList.item(i).getTextContent();
+            Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
+            String text = item.getElementsByTagName("message").item(0).getTextContent();
 
             Message message = new Message(text, date, isRead, index);
             if (!isRead) {

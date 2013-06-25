@@ -39,7 +39,7 @@ public class MyOrderItemActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.myorder);
+       // setContentView(R.layout.myorder);
 
         Bundle bundle = getIntent().getExtras();
         int id = bundle.getInt("id");

@@ -59,7 +59,7 @@ public class PhpService extends Service {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         Intent intent = new Intent(this, MainListActivity.class);
-        intent.putExtra("id", String.valueOf(TaxiApplication.getDriverId()));
+       // intent.putExtra("id", String.valueOf(TaxiApplication.getDriverId()));
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         Notification notif = new Notification(R.drawable.icon, "Запущен сервис уведомлений такси",
@@ -201,7 +201,7 @@ public class PhpService extends Service {
 
 
             Intent intent = new Intent(this, FreeOrderItemActivity.class);
-            intent.putExtra("id", TaxiApplication.getDriverId());
+           // intent.putExtra("id", TaxiApplication.getDriverId());
             intent.putExtra("orderindex", index);
             intent.putExtra("service", true);
             intent.putExtra("type", type);
@@ -260,7 +260,7 @@ public class PhpService extends Service {
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "messageandserverdata"));
-        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication.getDriverId())));
+       // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication.getDriverId())));
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost("http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");

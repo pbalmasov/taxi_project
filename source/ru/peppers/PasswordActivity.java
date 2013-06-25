@@ -31,13 +31,13 @@ public class PasswordActivity extends Activity {
 
                 if (settings.getString("password", "").equals(passwordEditText.getText().toString())) {
                     Bundle extras = getIntent().getExtras();
-                    int id = extras.getInt("id");
+                    //int id = extras.getInt("id");
 
                     Intent intent = new Intent(PasswordActivity.this, MainListActivity.class);
 
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", id);
-                    intent.putExtras(bundle);
+                    //Bundle bundle = new Bundle();
+                    //bundle.putInt("id", id);
+                    //intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
                 }
@@ -69,13 +69,12 @@ public class PasswordActivity extends Activity {
                         Log.d("My_tag",  settings.getString("password", ""));
                         if (settings.getString("password", "").equals(passwordEditText.getText().toString())) {
                             Bundle extras = getIntent().getExtras();
-                            int id = extras.getInt("id");
+                            //int id = extras.getInt("id");
 
                             Intent intent = new Intent(PasswordActivity.this, MainListActivity.class);
 
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("id", id);
-                            intent.putExtras(bundle);
+                            //Bundle bundle = new Bundle();
+                            //bundle.putInt("id", id);
                             startActivity(intent);
                             finish();
                         }

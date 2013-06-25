@@ -47,8 +47,8 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                         nameValuePairs.add(new BasicNameValuePair("action", "status"));
-                        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication
-                                .getDriverId())));
+                        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication
+                         //       .getDriverId())));
                         nameValuePairs.add(new BasicNameValuePair("status", String.valueOf(TaxiApplication
                                 .getDriver().getStatus())));
 

@@ -40,15 +40,15 @@ public class DistrictListActivity extends Activity {
         setContentView(R.layout.main);
 
         Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //int id = bundle.getInt("id");
         int group = bundle.getInt("group");
         int child = bundle.getInt("child");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "districtlist"));
-        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
-        nameValuePairs.add(new BasicNameValuePair("group", String.valueOf(id)));
-        nameValuePairs.add(new BasicNameValuePair("child", String.valueOf(id)));
+        //snameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        nameValuePairs.add(new BasicNameValuePair("group", String.valueOf(group)));
+        nameValuePairs.add(new BasicNameValuePair("child", String.valueOf(child)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {
@@ -133,12 +133,12 @@ public class DistrictListActivity extends Activity {
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                    Bundle extras = getIntent().getExtras();
-                    int id = extras.getInt("id");
+                    //Bundle extras = getIntent().getExtras();
+                    ////int id = extras.getInt("id");
 
                     Intent intent = new Intent(DistrictListActivity.this, DistrictListItemActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putInt("id", id);
+                    //bundle.putInt("id", id);
                     bundle.putInt("index", position);
                     intent.putExtras(bundle);
                     startActivity(intent);

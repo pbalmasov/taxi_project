@@ -16,8 +16,8 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
 
-        Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //Bundle bundle = getIntent().getExtras();
+       // int id = bundle.getInt("id");
 
         CheckBox box = (CheckBox) findViewById(R.id.checkBox3);
         SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);

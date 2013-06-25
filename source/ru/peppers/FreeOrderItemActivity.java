@@ -98,13 +98,13 @@ public class FreeOrderItemActivity extends Activity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Bundle extras = getIntent().getExtras();
-                        int id = extras.getInt("id");
+                        //Bundle extras = getIntent().getExtras();
+                        //int id = extras.getInt("id");
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
                         nameValuePairs.add(new BasicNameValuePair("action", "saveminutes"));
                         nameValuePairs.add(new BasicNameValuePair("order_id", String.valueOf(order
                                 .get_index())));
-                        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+                        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
                         nameValuePairs.add(new BasicNameValuePair("minutes", String.valueOf(cs[which])));
                         Document doc = PhpData.postData(FreeOrderItemActivity.this, nameValuePairs);
                         if (doc != null) {
@@ -123,10 +123,11 @@ public class FreeOrderItemActivity extends Activity {
                                     driver.setOrders(arrayList);
                                 }
                                 driver.setStatus(3);
+
                                 Intent intent = new Intent(FreeOrderItemActivity.this,
                                         MyOrderItemActivity.class);
                                 Bundle bundle = new Bundle();
-                                bundle.putInt("id", id);
+                                //bundle.putInt("id", id);
                                 bundle.putInt("index", driver.getOrders().size() - 1);
 
                                 Calendar cal = Calendar.getInstance();

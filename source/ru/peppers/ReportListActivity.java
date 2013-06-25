@@ -32,14 +32,14 @@ public class ReportListActivity extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                Bundle extras = getIntent().getExtras();
-                int id = extras.getInt("id");
+//                Bundle extras = getIntent().getExtras();
+                //int id = extras.getInt("id");
 
                 Intent intent = new Intent(ReportListActivity.this, ReportListItemActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", id);
-                bundle.putInt("index", position);
-                intent.putExtras(bundle);
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("id", id);
+//                bundle.putInt("index", position);
+//                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

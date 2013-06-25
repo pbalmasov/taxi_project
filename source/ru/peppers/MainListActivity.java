@@ -17,7 +17,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -47,12 +46,12 @@ public class MainListActivity extends Activity {
     }
 
     private void init() {
-        Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //Bundle bundle = getIntent().getExtras();
+        //int id = bundle.getInt("id");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "mainlist"));
-        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {
@@ -78,8 +77,8 @@ public class MainListActivity extends Activity {
         String district = doc.getElementsByTagName("district").item(0).getTextContent();
         String subdistrict = doc.getElementsByTagName("subdistrict").item(0).getTextContent();
 
-        Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //Bundle bundle = getIntent().getExtras();
+        //int id = bundle.getInt("id");
         Driver driver = TaxiApplication.getDriver();
         driver.setStatus(status);
         driver.setClassAuto(carClass);
@@ -119,46 +118,29 @@ public class MainListActivity extends Activity {
 
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
                     Bundle extras = getIntent().getExtras();
-                    int id = extras.getInt("id");
+                    ////int id = extras.getInt("id");
                     Intent intent;
-                    Bundle bundle;
                     switch (position) {
                         case 0:
                             intent = new Intent(MainListActivity.this, MyOrderActivity.class);
-                            bundle = new Bundle();
-                            bundle.putInt("id", id);
-                            intent.putExtras(bundle);
                             startActivity(intent);
                             break;
                         case 1:
                             if (driver.getStatus() != 3) {
                                 intent = new Intent(MainListActivity.this, ReportActivity.class);
-                                bundle = new Bundle();
-                                bundle.putInt("id", id);
-                                intent.putExtras(bundle);
                                 startActivity(intent);
                             } else {
                                 intent = new Intent(MainListActivity.this, MyOrderActivity.class);
-                                bundle = new Bundle();
-                                bundle.putInt("id", id);
-                                intent.putExtras(bundle);
                                 startActivity(intent);
                             }
                             break;
                         case 2:
                             intent = new Intent(MainListActivity.this, FreeOrderActivity.class);
-                            bundle = new Bundle();
-                            bundle.putInt("id", id);
-                            intent.putExtras(bundle);
                             startActivity(intent);
                             break;
                         case 3:
                             if (driver.getStatus() != 1) {
                                 intent = new Intent(MainListActivity.this, DistrictActivity.class);
-                                bundle = new Bundle();
-                                bundle.putInt("id", id);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
                                 return;
                             }
                         default:
@@ -169,7 +151,7 @@ public class MainListActivity extends Activity {
                     if (position == 3) {
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                         nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
-                        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+                       // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
                         Document doc = PhpData.postData(MainListActivity.this, nameValuePairs);
                         if (doc != null) {
@@ -188,16 +170,10 @@ public class MainListActivity extends Activity {
                     }
                     if (position == 4) {
                         intent = new Intent(MainListActivity.this, SettingsActivity.class);
-                        bundle = new Bundle();
-                        bundle.putInt("id", id);
-                        intent.putExtras(bundle);
                         startActivity(intent);
                     }
                     if (position == 5) {
                         intent = new Intent(MainListActivity.this, MessageActivity.class);
-                        bundle = new Bundle();
-                        bundle.putInt("id", id);
-                        intent.putExtras(bundle);
                         startActivity(intent);
                     }
                     if (position == 6) {

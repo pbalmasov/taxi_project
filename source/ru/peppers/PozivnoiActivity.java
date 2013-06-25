@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import model.Driver;
 import model.Message;
@@ -15,25 +14,18 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.provider.Settings.Secure;
-import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -378,19 +370,13 @@ public class PozivnoiActivity extends Activity {
     }
 
     private void initMessages(Document doc) {
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
-        nameValuePairs.add(new BasicNameValuePair("login", settings.getString("login", "")));
-        nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
 
         doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
                 "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
-        PhpData.sessionid = "";
         if (doc != null) {
             // errorNode = doc.getElementsByTagName("error").item(0);
 
@@ -402,7 +388,7 @@ public class PozivnoiActivity extends Activity {
                 getMessages(doc);
             } catch (ParseException e) {
                 new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-                        .setMessage("Сервер недоступен перезагрузите приложение.")
+                        .setMessage("Ошибка в получении сообщений - " + e.toString())
                         .setNeutralButton("Закрыть", null).show();
                 // }
             }
@@ -416,10 +402,10 @@ public class PozivnoiActivity extends Activity {
 
             Element item = (Element) nodeList.item(i);
             boolean isRead = true;
-            if(item.getElementsByTagName("readed").item(0)==null)
+            if (item.getElementsByTagName("readdate").item(0) == null)
                 isRead = false;
             int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
             Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
             String text = item.getElementsByTagName("message").item(0).getTextContent();
 
@@ -430,7 +416,7 @@ public class PozivnoiActivity extends Activity {
         }
         if (unreaded.size() == 0) {
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            // if password type password then check password then loginWithPozivnoi
+
             Intent intent;
             boolean isPassword = settings.getBoolean("isPassword", false);
             if (!isPassword)
@@ -438,10 +424,6 @@ public class PozivnoiActivity extends Activity {
             else
                 intent = new Intent(PozivnoiActivity.this, PasswordActivity.class);
 
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", index);
-            intent.putExtras(bundle);
-            TaxiApplication.setDriverId(index);
             startActivity(intent);
             startService(new Intent(this, PhpService.class));
             finish();
@@ -455,35 +437,37 @@ public class PozivnoiActivity extends Activity {
         }
     }
 
-    private OnClickListener onMessageClick(final ArrayList<Message> readed) {
+    private OnClickListener onMessageClick(final ArrayList<Message> unreaded) {
         return new OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                readed.remove(0);
-                if (readed.size() != 0) {
-                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                    nameValuePairs.add(new BasicNameValuePair("action", "sendmessage"));
-                    nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(index)));
-                    nameValuePairs.add(new BasicNameValuePair("idMessage", String.valueOf(readed.get(0)
+                unreaded.remove(0);
+                if (unreaded.size() != 0) {
+                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+                    nameValuePairs.add(new BasicNameValuePair("action", "markread"));
+                    nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                    nameValuePairs.add(new BasicNameValuePair("object", "message"));
+                    nameValuePairs.add(new BasicNameValuePair("messageid", String.valueOf(unreaded.get(0)
                             .get_index())));
 
-                    Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs);
+                    Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
+                            "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
                     if (doc != null) {
-                        Node errorNode = doc.getElementsByTagName("error").item(0);
+                        // Node errorNode = doc.getElementsByTagName("error").item(0);
 
-                        if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                            new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-                                    .setMessage("Сервер недоступен перезагрузите приложение.")
-                                    .setNeutralButton("Закрыть", null).show();
-                        else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(PozivnoiActivity.this);
-                            builder.setTitle(readed.get(0).getDate().toGMTString());
-                            builder.setMessage(readed.get(0).getText());
-                            builder.setNeutralButton("Ок", onMessageClick(readed));
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                        }
+                        // if (Integer.parseInt(errorNode.getTextContent()) == 1)
+                        // new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
+                        // .setMessage("Сервер недоступен перезагрузите приложение.")
+                        // .setNeutralButton("Закрыть", null).show();
+                        // else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PozivnoiActivity.this);
+                        builder.setTitle(unreaded.get(0).getDate().toGMTString());
+                        builder.setMessage(unreaded.get(0).getText());
+                        builder.setNeutralButton("Ок", onMessageClick(unreaded));
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        // }
                     }
                 } else {
                     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -497,7 +481,7 @@ public class PozivnoiActivity extends Activity {
                     Bundle bundle = new Bundle();
                     bundle.putInt("id", index);
                     intent.putExtras(bundle);
-                    TaxiApplication.setDriverId(index);
+                    // TaxiApplication.setDriverId(index);
                     startActivity(intent);
                     startService(new Intent(PozivnoiActivity.this, PhpService.class));
                     finish();

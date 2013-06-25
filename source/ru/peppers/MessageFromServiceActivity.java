@@ -43,7 +43,7 @@ public class MessageFromServiceActivity extends Activity {
                 if (TaxiApplication.getDriver() != null) {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("action", "districtdata"));
-                    nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication.getDriverId())));
+                   // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication.getDriverId())));
 
                     Document doc = PhpData.postData(MessageFromServiceActivity.this, nameValuePairs);
                     if (doc != null) {

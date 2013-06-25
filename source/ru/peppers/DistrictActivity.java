@@ -36,12 +36,12 @@ public class DistrictActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sublist);
 
-        Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //Bundle bundle = getIntent().getExtras();
+        //int id = bundle.getInt("id");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "districtdata"));
-        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {
@@ -153,12 +153,12 @@ public class DistrictActivity extends Activity {
                     int childPosition, long id) {
                 // Toast.makeText(DistrictActivity.this, groupPosition+" "+childPosition,
                 // Toast.LENGTH_LONG).show();
-                Bundle bundle = getIntent().getExtras();
-                int ind = bundle.getInt("id");
+                //Bundle bundle = getIntent().getExtras();
+                //int ind = bundle.getInt("id");
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
                 nameValuePairs.add(new BasicNameValuePair("action", "savedistrict"));
-                nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(ind)));
+                //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(ind)));
                 nameValuePairs.add(new BasicNameValuePair("district", String.valueOf(groupPosition)));
                 nameValuePairs.add(new BasicNameValuePair("subdistrict", String.valueOf(childPosition)));
 
@@ -194,12 +194,12 @@ public class DistrictActivity extends Activity {
                             .setMessage("Свободен здесь.").setNeutralButton("Закрыть", null).show();
                 }
                 if (item == 1) {
-                    Bundle extras = getIntent().getExtras();
-                    int id = extras.getInt("id");
+                    //Bundle extras = getIntent().getExtras();
+                    ////int id = extras.getInt("id");
 
                     Intent intent = new Intent(DistrictActivity.this, DistrictListActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putInt("id", id);
+                   // bundle.putInt("id", id);
                     bundle.putInt("group", groupPosition);
                     bundle.putInt("child", childPosition);
                     intent.putExtras(bundle);

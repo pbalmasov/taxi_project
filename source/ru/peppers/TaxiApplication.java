@@ -14,7 +14,6 @@ public class TaxiApplication extends Application {
 
     /** The type list. */
     private static Driver driver;
-    private static int driverId;
     public static NetworkStateReceiver networkStateReceiver;
 
 
@@ -42,14 +41,6 @@ public class TaxiApplication extends Application {
 
     public static void setDriver(Driver driver) {
         TaxiApplication.driver = driver;
-    }
-
-    public static int getDriverId() {
-        return driverId;
-    }
-
-    public static void setDriverId(int driverId) {
-        TaxiApplication.driverId = driverId;
     }
 
 }

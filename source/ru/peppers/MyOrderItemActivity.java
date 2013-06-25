@@ -39,10 +39,10 @@ public class MyOrderItemActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.myorder);
+        setContentView(R.layout.myorder);
 
         Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+       // int id = bundle.getInt("id");
         int index = bundle.getInt("index");
 
         Order order = TaxiApplication.getDriver().getOrder(index);
@@ -50,9 +50,9 @@ public class MyOrderItemActivity extends Activity {
         orderList = order.toArrayList();
 
         counterView = (TextView) findViewById(R.id.textView1);
-        
+
         TextView tv = (TextView) findViewById(R.id.textView2);
-        
+
         int arraySize = orderList.size();
         for(int i = 0; i < arraySize; i++) {
         	tv.append(orderList.get(i));
@@ -69,8 +69,8 @@ public class MyOrderItemActivity extends Activity {
 
         //lv.setAdapter(arrayAdapter);
 
-    	
-        
+
+
         Button button = (Button) findViewById(R.id.button1);
         button.setText("Выбор действия");
         button.setOnClickListener(new Button.OnClickListener() {
@@ -105,11 +105,11 @@ public class MyOrderItemActivity extends Activity {
                         break;
                     case 3:
                         Bundle bundle = getIntent().getExtras();
-                        int id = bundle.getInt("id");
+                        //int id = bundle.getInt("id");
                         int index = bundle.getInt("index");
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
                         nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
-                        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+                        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
                         nameValuePairs.add(new BasicNameValuePair("index", String.valueOf(index)));
 
                         Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
@@ -138,11 +138,11 @@ public class MyOrderItemActivity extends Activity {
 
     private void inviteDialog() {
         Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //int id = bundle.getInt("id");
         int index = bundle.getInt("index");
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
         nameValuePairs.add(new BasicNameValuePair("action", "invite"));
-        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
         nameValuePairs.add(new BasicNameValuePair("index", String.valueOf(index)));
 
         Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
@@ -172,11 +172,11 @@ public class MyOrderItemActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bundle extras = getIntent().getExtras();
-                int id = extras.getInt("id");
+                //int id = extras.getInt("id");
                 int index = extras.getInt("index");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
                 nameValuePairs.add(new BasicNameValuePair("action", "savetime"));
-                nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+               // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
                 nameValuePairs.add(new BasicNameValuePair("index", String.valueOf(index)));
                 nameValuePairs.add(new BasicNameValuePair("value", String.valueOf(cs[which])));
                 Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
@@ -221,8 +221,8 @@ public class MyOrderItemActivity extends Activity {
             	String secondsStr = String.valueOf(seconds);
             	if(seconds<=9)
             		secondsStr = "0"+seconds;
-            	
-            	
+
+
             	counterView.setText(((int) millisUntilFinished / 1000) / 60 + ":"
                         + secondsStr);
                 if((((int) millisUntilFinished / 1000) / 60)==1 && (((int) millisUntilFinished / 1000) % 60)==0)
@@ -258,12 +258,12 @@ public class MyOrderItemActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Bundle extras = getIntent().getExtras();
-                int id = extras.getInt("id");
+                //Bundle extras = getIntent().getExtras();
+                //int id = extras.getInt("id");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
                 nameValuePairs.add(new BasicNameValuePair("action", "saveminutes"));
                 nameValuePairs.add(new BasicNameValuePair("order_id", String.valueOf(order.get_index())));
-                nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+                //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
                 nameValuePairs.add(new BasicNameValuePair("minutes", String.valueOf(cs[which])));
                 Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
                 if (doc != null) {

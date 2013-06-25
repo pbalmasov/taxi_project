@@ -154,14 +154,14 @@ public class ReportActivity extends Activity {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
                 Bundle extras = getIntent().getExtras();
-                int id = extras.getInt("id");
+                //int id = extras.getInt("id");
                 Intent intent;
                 Bundle bundle;
                 if (position == 2) {
                     intent = new Intent(ReportActivity.this, ReportListActivity.class);
-                    bundle = new Bundle();
-                    bundle.putInt("id", id);
-                    intent.putExtras(bundle);
+//                    bundle = new Bundle();
+//                    bundle.putInt("id", id);
+//                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
                 if (position == 1) {
@@ -194,11 +194,11 @@ public class ReportActivity extends Activity {
 
                     if (item == 0 && driver.getDistrict() == "") {
                         Bundle extras = getIntent().getExtras();
-                        int id = extras.getInt("id");
+                        //int id = extras.getInt("id");
                         Intent intent = new Intent(ReportActivity.this, DistrictActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("id", id);
-                        intent.putExtras(bundle);
+//                        Bundle bundle = new Bundle();
+//                        bundle.putInt("id", id);
+//                        intent.putExtras(bundle);
                         startActivity(intent);
 
                         dialog.dismiss();
@@ -217,8 +217,8 @@ public class ReportActivity extends Activity {
 
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("action", "status"));
-                    nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication
-                            .getDriverId())));
+                   //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication
+                   //         .getDriverId())));
                     nameValuePairs.add(new BasicNameValuePair("status", String.valueOf(TaxiApplication
                             .getDriver().getStatus())));
 

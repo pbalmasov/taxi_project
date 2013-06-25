@@ -36,12 +36,12 @@ public class MyOrderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //Bundle bundle = getIntent().getExtras();
+        //int id = bundle.getInt("id");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "myorderdata"));
-        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+       // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {
@@ -141,12 +141,12 @@ public class MyOrderActivity extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                Bundle extras = getIntent().getExtras();
-                int id = extras.getInt("id");
+                //Bundle extras = getIntent().getExtras();
+                //int id = extras.getInt("id");
 
                 Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt("id", id);
+                //bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
                 startActivity(intent);

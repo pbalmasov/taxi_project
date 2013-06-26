@@ -236,7 +236,7 @@ public class PozivnoiActivity extends Activity {
 		});
         
 		builder.setView(input);
-		builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("Ок", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.dismiss();
 				String pozivnoi = input.getText().toString();
@@ -281,7 +281,11 @@ public class PozivnoiActivity extends Activity {
 				new AlertDialog.Builder(PozivnoiActivity.this)
                 .setTitle("Ошибка")
                 .setMessage(errorNode.getTextContent())
-                .setNeutralButton("Закрыть", null).show();
+                .setNeutralButton("Закрыть", new OnClickListener(){
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						initRegistration();						
+					}}).show();
 			else {
 				// TODO: сохранить логин пароль
 				SharedPreferences.Editor editor = settings.edit();
@@ -304,7 +308,7 @@ public class PozivnoiActivity extends Activity {
 		builder.setTitle("Обновление");
 		builder.setMessage("Вышло обновление скачать?");
 		builder.setCancelable(false);
-		builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("Ок", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.dismiss();
 				Intent intent = new Intent(
@@ -352,7 +356,11 @@ public class PozivnoiActivity extends Activity {
 					new AlertDialog.Builder(PozivnoiActivity.this)
                     .setTitle("Ошибка")
                     .setMessage(errorNode.getTextContent())
-                    .setNeutralButton("Закрыть", null).show();
+                    .setNeutralButton("Закрыть", new OnClickListener(){
+    					@Override
+    					public void onClick(DialogInterface arg0, int arg1) {
+    						initRegistration();						
+    					}}).show();
 				else {
 					// save pozivnoi if all ok
                     

@@ -244,6 +244,12 @@ public class PozivnoiActivity extends Activity {
 			}
             
 		});
+		builder.setNegativeButton("Выход", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+		        finish();
+			}
+            
+		});
 		AlertDialog alert = builder.create();
 		alert.show();
         

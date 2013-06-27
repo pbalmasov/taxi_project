@@ -64,8 +64,8 @@ public class MessageActivity extends Activity {
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
-        ArrayList<Message> unreaded = new ArrayList<Message>();
-        ArrayList<Message> readed = new ArrayList<Message>();
+        ArrayList<Message> all = new ArrayList<Message>();
+        // ArrayList<Message> readed = new ArrayList<Message>();
         for (int i = 0; i < nodeList.getLength(); i++) {
 
             Element item = (Element) nodeList.item(i);
@@ -78,22 +78,22 @@ public class MessageActivity extends Activity {
             String text = item.getElementsByTagName("message").item(0).getTextContent();
 
             Message message = new Message(text, date, isRead, index);
-            if (!isRead) {
-                unreaded.add(message);
-            } else {
-                readed.add(message);
-            }
+            // if (!isRead) {
+            all.add(message);
+            // } else {
+            // readed.add(message);
+            // }
         }
 
-        Collections.sort(unreaded);
-        Collections.sort(readed);
-        unreaded.addAll(readed);
+        // Collections.sort(all);
+        // Collections.sort(readed);
+        // all.addAll(readed);
 
         ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1,
-                unreaded);
+                all);
 
-        final Driver driver = TaxiApplication.getDriver();
-        driver.setMessages(unreaded);
+        // final Driver driver = TaxiApplication.getDriver();
+        // driver.setMessages(all);
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
 

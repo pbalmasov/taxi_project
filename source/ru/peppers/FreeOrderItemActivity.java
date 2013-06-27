@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class FreeOrderItemActivity extends Activity {
 
@@ -37,7 +38,7 @@ public class FreeOrderItemActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.order);
+        setContentView(R.layout.freeorder);
 
         Bundle bundle = getIntent().getExtras();
         //int id = bundle.getInt("id");
@@ -74,12 +75,15 @@ public class FreeOrderItemActivity extends Activity {
         } else
             order = TaxiApplication.getDriver().getFreeOrders().get(index);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, order.toArrayList());
 
-        ListView lv = (ListView) findViewById(R.id.listView1);
+        TextView tv = (TextView) findViewById(R.id.textView1);
 
-        lv.setAdapter(arrayAdapter);
+        int arraySize = order.toArrayList().size();
+        for(int i = 0; i < arraySize; i++) {
+            tv.append(order.toArrayList().get(i));
+            tv.append("\n");
+        }
+
 
         Button button = (Button) findViewById(R.id.button1);
         button.setText("Принять");

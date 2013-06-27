@@ -40,7 +40,7 @@ public class FreeOrderItemActivity extends Activity {
         setContentView(R.layout.order);
 
         Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //int id = bundle.getInt("id");
         int index = bundle.getInt("index");
         if (bundle.getBoolean("service")) {
             int type = bundle.getInt("type");

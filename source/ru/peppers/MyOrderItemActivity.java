@@ -247,6 +247,12 @@ public class MyOrderItemActivity extends Activity {
         }.start();
     }
 
+    @Override
+    protected void onPause() {
+        timer.cancel();
+        super.onPause();
+    }
+
     private void alertDelay(final Order order) {
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
         alert.setTitle("Время");

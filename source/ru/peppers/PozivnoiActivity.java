@@ -26,6 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -47,7 +48,7 @@ import android.widget.EditText;
 
 public class PozivnoiActivity extends Activity {
     private static final String URL_APK = "http://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk";
-    private static final String URL_MANIFEST = "http://raw.github.com/Icesman/taxi_project/master/version.xml";
+    private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
     private static final String MY_TAG = "My_tag";
     protected static final String PREFS_NAME = "MyNamePrefs1";
     protected Integer index;
@@ -89,14 +90,14 @@ public class PozivnoiActivity extends Activity {
                     // if (doc != null) {
                     try {
                         // проверяем версию на сервере
-                        URL url = new URL(URL_MANIFEST);
                         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                         DocumentBuilder db = dbf.newDocumentBuilder();
-                        Document doc = db.parse(new InputSource(url.openStream()));
+                        Document doc = db.parse(URL_MANIFEST);
                         //doc.getDocumentElement().normalize();
                         //NamedNodeMap idNode = doc.getElementsByTagName("manifest").item(0).getAttributes();
                         //Log.d("My_tag", idNode.toString());
-                        Log.d("My_tag", doc.getElementsByTagName("manifest").item(0).getAttributes().getNamedItem("versionCode").toString());
+                        Log.d("My_tag", doc.getElementsByTagName("manifest").item(0).getAttributes().getNamedItem("android:versionCode").getTextContent());
+                        Log.d("My_tag", String.valueOf(settings.getInt("version", 0)));
                         //index = Integer.valueOf(idNode.getTextContent());
                         if (settings.getInt("version", 0) < 99) {
                             update = true;
@@ -106,6 +107,10 @@ public class PozivnoiActivity extends Activity {
                             // оно само сохранится
                         }
 
+                    }catch (SAXParseException e) {
+                        Log.d("My_tag", String.valueOf(e.getColumnNumber()));
+                       // new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
+                         //       .setMessage(e.toString()).setNeutralButton("Закрыть", null).show();
                     } catch (Exception e) {
                         Log.d("My_tag", e.toString());
                        // new AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")

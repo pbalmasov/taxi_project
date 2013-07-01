@@ -6,6 +6,9 @@ package model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.app.Activity;
+import android.content.Context;
+
 /**
  *
  * @author papas
@@ -21,8 +24,10 @@ public class Order implements OrderInterface {
     protected Date _timerDate;
     protected int rides;
     protected String abonent;
+    protected Context context;
 
-    public Order(int costRide, String adress, String carClass, String orderText, String where, int index) {
+    public Order(Context context, int costRide, String adress, String carClass, String orderText, String where, int index) {
+        this.context = context;
         _adress = adress;
         _carClass = carClass;
         _orderText = orderText;

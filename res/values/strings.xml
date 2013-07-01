@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, TaxiProjectActivity!</string>
     <string name="app_name">АБС Такси</string>
     <string name="pozivnoi">Позывной</string>
     <string name="password">Пароль</string>
@@ -11,5 +10,28 @@
     <string name="defaultStatus">Предлагать заказы в статусе Перерыв</string>
     <string name="passwordCheck">Пароль</string>
     <string name="Ok">Ок</string>
-
+    <string-array name="status_array">
+        <item>свободен</item>
+        <item>перерыв</item>
+        <item>недоступен</item>
+        <item>на заказе</item>
+    </string-array>
+    <string-array name="class_array">
+        <item>эконом</item>
+        <item>стандарт</item>
+        <item>базовый</item>
+    </string-array>
+    <string name="accepted">Заказ принят:</string>
+    <string name="date">Время подачи:</string>
+    <string name="date_invite">Время приглашения:</string>
+    <string name="adress">Адрес:</string>
+    <string name="where">Куда:</string>
+    <string name="car_class">Класс:</string>
+    <string name="cost_type">Оплата:</string>
+    <string name="cost">Сумма:</string>
+    <string name="cost_ride">Стоимость поездки:</string>
+    <string name="abonent">Абонент:</string>
+    <string name="rides">Кол-во поездок:</string>
+    <string name="currency">р</string>
+    <string name="preliminary">Предварительный заказ</string>
 </resources>

@@ -91,17 +91,17 @@ public class MyOrderActivity extends Activity {
                 Date dateInvite = format.parse(attributes.getNamedItem("dateInvite").getTextContent());
                 Date dateAccept = format.parse(attributes.getNamedItem("dateAccept").getTextContent());
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new MyCostOrder(costOrder,index, date, adress, carClass, text, where, cost, costType,
+                orders.add(new MyCostOrder(this,costOrder,index, date, adress, carClass, text, where, cost, costType,
                         dateInvite, dateAccept));
             }
             if (type == 1) {
                 Date dateAccept = format.parse(attributes.getNamedItem("dateAccept").getTextContent());
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new MyNoCostOrder(costOrder,index, date, adress, carClass, text, where, dateAccept));
+                orders.add(new MyNoCostOrder(this,costOrder,index, date, adress, carClass, text, where, dateAccept));
             }
             if (type == 2) {
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new MyPreliminaryOrder(costOrder,index, date, adress, carClass, text, where));
+                orders.add(new MyPreliminaryOrder(this,costOrder,index, date, adress, carClass, text, where));
             }
 
             Date dateDelay = format.parse(attributes.getNamedItem("dateDelay").getTextContent());

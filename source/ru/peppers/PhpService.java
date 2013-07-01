@@ -219,18 +219,18 @@ public class PhpService extends Service {
                 intent.putExtra("cost", cost);
                 intent.putExtra("costType", costType);
                 intent.putExtra("text", text);
-                orders.add(new CostOrder(costOrder, index, date, adress, carClass, text, where, cost,
+                orders.add(new CostOrder(this,costOrder, index, date, adress, carClass, text, where, cost,
                         costType));
             }
             if (type == 1) {
                 String text = nodeList.item(i).getTextContent();
                 intent.putExtra("text", text);
-                orders.add(new NoCostOrder(costOrder, index, date, adress, carClass, text, where));
+                orders.add(new NoCostOrder(this,costOrder, index, date, adress, carClass, text, where));
             }
             if (type == 2) {
                 String text = nodeList.item(i).getTextContent();
                 intent.putExtra("text", text);
-                orders.add(new PreliminaryOrder(costOrder, index, date, adress, carClass, text, where));
+                orders.add(new PreliminaryOrder(this,costOrder, index, date, adress, carClass, text, where));
             }
 
 

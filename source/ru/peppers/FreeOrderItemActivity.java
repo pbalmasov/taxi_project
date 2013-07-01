@@ -62,15 +62,15 @@ public class FreeOrderItemActivity extends Activity {
                 int cost = bundle.getInt("cost");
                 String costType = bundle.getString("costType");
                 String text = bundle.getString("text");
-                order = new CostOrder(costOrder, orderindex, date, adress, carClass, text, where, cost, costType);
+                order = new CostOrder(this,costOrder, orderindex, date, adress, carClass, text, where, cost, costType);
             }
             if (type == 1) {
                 String text = bundle.getString("text");
-                order = new NoCostOrder(costOrder, orderindex, date, adress, carClass, text, where);
+                order = new NoCostOrder(this,costOrder, orderindex, date, adress, carClass, text, where);
             }
             if (type == 2) {
                 String text = bundle.getString("text");
-                order = new PreliminaryOrder(costOrder, orderindex, date, adress, carClass, text, where);
+                order = new PreliminaryOrder(this,costOrder, orderindex, date, adress, carClass, text, where);
             }
         } else
             order = TaxiApplication.getDriver().getFreeOrders().get(index);

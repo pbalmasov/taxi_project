@@ -58,7 +58,7 @@ public class PozivnoiActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         boolean update = false;
-        TaxiApplication.setDriver(new Driver(0, 0, 0, "", ""));
+        TaxiApplication.setDriver(new Driver(this,0, 0, 0, "", ""));
         Log.d("My_tag", "INIT DRIVER");
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 

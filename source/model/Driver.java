@@ -5,6 +5,12 @@ package model;
 
 import java.util.ArrayList;
 
+import ru.peppers.PozivnoiActivity;
+import ru.peppers.R;
+
+import android.app.Activity;
+import android.content.res.Resources;
+
 /**
  *
  * @author papas
@@ -33,8 +39,11 @@ public class Driver {
     private int indistrict;
     private int inall;
 
+    private Activity _context;
 
-    public Driver(int status, int carClass, int ordersCount, String district, String subdistrict) {
+    public Driver(Activity context, int status, int carClass, int ordersCount, String district,
+            String subdistrict) {
+        this._context = context;
         this._status = status;
         this._carClass = carClass;
         this.ordersCount = ordersCount;
@@ -46,12 +55,12 @@ public class Driver {
         return getStatusString() + " " + _area + " " + _city + " " + getClassAuto();
     }
 
-  //naher ne nado
+    // naher ne nado
     public Message getMessage(int index) {
         return _messages.get(index);
     }
 
-  //naher ne nado
+    // naher ne nado
     public int reportsCount() {
         return _reports.size();
     }
@@ -59,27 +68,28 @@ public class Driver {
     public Order getReport(int index) {
         return _reports.get(index);
     }
-//naher ne nado
+
+    // naher ne nado
     public Order getFreeOrder(int index) {
         return _freeOrders.get(index);
     }
 
-  //naher ne nado
+    // naher ne nado
     public int ordersFreeCount() {
         return _freeOrders.size();
     }
 
-  //naher ne nado
+    // naher ne nado
     public Order getOrder(int index) {
         return getOrders().get(index);
     }
 
-  //naher ne nado
+    // naher ne nado
     public int ordersCount() {
         return _myOrders.size();
     }
 
-  //naher ne nado
+    // naher ne nado
     public int messagesCount() {
         return _messages.size();
     }
@@ -141,25 +151,15 @@ public class Driver {
     }
 
     public String getStatusString() {
-        if (_status == 0)
-            return "свободен";
-        if (_status == 1)
-            return "перерыв";
-        if (_status == 2)
-            return "недоступен";
-        if (_status == 3)
-            return "на заказе";
-        return null;
+        Resources res = _context.getResources();
+        String[] status = res.getStringArray(R.array.status_array);
+        return status[_status];
     }
 
     public String getClassAutoString() {
-        if (_carClass == 0)
-            return "эконом";
-        if (_carClass == 1)
-            return "стандарт";
-        if (_carClass == 2)
-            return "базовый";
-        return null;
+        Resources res = _context.getResources();
+        String[] carClass = res.getStringArray(R.array.class_array);
+        return carClass[_carClass];
     }
 
     /**

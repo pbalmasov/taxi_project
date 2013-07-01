@@ -8,7 +8,6 @@
     <string name="noOrders">На линии достаточно машин</string>
     <string name="defaultOrder">Уведомлять о предлагаемых заказах</string>
     <string name="defaultStatus">Предлагать заказы в статусе Перерыв</string>
-    <string name="passwordCheck">Пароль</string>
     <string name="Ok">Ок</string>
     <string-array name="status_array">
         <item>свободен</item>
@@ -34,4 +33,37 @@
     <string name="rides">Кол-во поездок:</string>
     <string name="currency">р</string>
     <string name="preliminary">Предварительный заказ</string>
+    <string name="error_title">Ошибка</string>
+    <string name="error_message">Ошибка на сервере. Перезапустите приложение.</string>
+    <string name="close">Закрыть</string>
+    <string name="drivers">Водитилей</string>
+    <string name="all_drivers">Все</string>
+    <string name="free_here">Свободен здесь</string>
+    <string name="orders">Заказы</string>
+    <string name="choose_action">Выбор действия</string>
+    <string name="time">Время</string>
+    <string name="accept">Принять</string>
+    <string name="info">Информация</string>
+    <string name="my_orders">Мои заказы:</string>
+    <string name="status">Статус:</string>
+    <string name="free_orders">Свободные заказы</string>
+    <string name="no_region">не выбран</string>
+    <string name="region">Район:</string>
+    <string name="call_office">Звонок из офиса</string>
+    <string name="messages">Сообщения</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+    <string name="exit_action">Выйти</string>
+    <string name="sorry_exit">К сожалению у вас есть незакрытые заказы.</string>
+    <string name="cancel">Отменить</string>
+    <string name="invite">Пригласить</string>
+    <string name="delay">Отложить</string>
+    <string name="wait_call">Ваш звонок принят. Ожидайте звонка.</string>
+    <string name="invite_sended">Приглашение отправлено.</string>
+    <string name="order_delayed">Заказ отложен.</string>
+    <string name="ended_timer">Кончилось</string>
+    <string name="price">Цена</string>
+    <string name="price_ride">Цена поездки</string>
+    <string name="order_closed">Заказ закрыт.</string>
+
 </resources>

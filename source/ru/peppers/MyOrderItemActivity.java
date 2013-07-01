@@ -72,17 +72,12 @@ public class MyOrderItemActivity extends Activity {
 
 
         Button button = (Button) findViewById(R.id.button1);
-        button.setText("Выбор действия");
+        button.setText(this.getString(R.string.choose_action));
         button.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = { "Пригласить", "Отложить", "Закрыть", "Звонок из офиса" };
-                AlertDialog.Builder builder = new AlertDialog.Builder(MyOrderItemActivity.this);
-                builder.setTitle("Выбор действия");
-                builder.setItems(items, onContextMenuItemListener());
-                AlertDialog alert = builder.create();
-                alert.show();
+                initActionDialog();
             }
 
         });
@@ -91,7 +86,6 @@ public class MyOrderItemActivity extends Activity {
     private OnClickListener onContextMenuItemListener() {
         return new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                Log.d("My_tag", "действие - " + item);
                 dialog.dismiss();
                 switch (item) {
                     case 0:
@@ -117,13 +111,11 @@ public class MyOrderItemActivity extends Activity {
                             Node errorNode = doc.getElementsByTagName("error").item(0);
 
                             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                                new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ошибка")
-                                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                        .setNeutralButton("Закрыть", null).show();
+                                errorHandler();
                             else {
-                                new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ок")
-                                        .setMessage("Ваш звонок принят. Ожидайте звонка.")
-                                        .setNeutralButton("Закрыть", null).show();
+                                new AlertDialog.Builder(MyOrderItemActivity.this).setTitle(MyOrderItemActivity.this.getString(R.string.Ok))
+                                        .setMessage(MyOrderItemActivity.this.getString(R.string.wait_call))
+                                        .setNeutralButton(MyOrderItemActivity.this.getString(R.string.close), null).show();
                             }
                         }
                         break;
@@ -150,19 +142,24 @@ public class MyOrderItemActivity extends Activity {
             Node errorNode = doc.getElementsByTagName("error").item(0);
 
             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ошибка")
-                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                        .setNeutralButton("Закрыть", null).show();
+                errorHandler();
             else {
-                new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ок")
-                        .setMessage("Приглашение отправлено.").setNeutralButton("Закрыть", null).show();
+                new AlertDialog.Builder(MyOrderItemActivity.this).setTitle(this.getString(R.string.Ok))
+                        .setMessage(this.getString(R.string.invite_sended)).setNeutralButton(this.getString(R.string.close), null).show();
             }
         }
     }
 
+    private void errorHandler() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.error_message))
+                .setNeutralButton(this.getString(R.string.close), null).show();
+    }
+
+
     private void timeDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
-        alert.setTitle("Время");
+        alert.setTitle(this.getString(R.string.time));
         final CharSequence cs[];
 
         cs = new String[]{"3","5","7","10","15","20","25","30","35"};
@@ -183,9 +180,7 @@ public class MyOrderItemActivity extends Activity {
                 if (doc != null) {
                     Node errorNode = doc.getElementsByTagName("error").item(0);
                     if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ошибка")
-                                .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                .setNeutralButton("Закрыть", null).show();
+                        errorHandler();
                     else {
 
                         final Order order = TaxiApplication.getDriver().getOrder(index);
@@ -198,8 +193,8 @@ public class MyOrderItemActivity extends Activity {
                             timer.cancel();
                             timerInit(order);
                         }
-                        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ок")
-                                .setMessage("Заказ отложен.").setNeutralButton("Закрыть", null).show();
+                        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle(MyOrderItemActivity.this.getString(R.string.Ok))
+                                .setMessage(MyOrderItemActivity.this.getString(R.string.order_delayed)).setNeutralButton(MyOrderItemActivity.this.getString(R.string.close), null).show();
                     }
                 }
             }
@@ -209,6 +204,15 @@ public class MyOrderItemActivity extends Activity {
 
 
 
+    }
+
+    private void initActionDialog() {
+        final CharSequence[] items = { MyOrderItemActivity.this.getString(R.string.invite), MyOrderItemActivity.this.getString(R.string.delay), MyOrderItemActivity.this.getString(R.string.close), MyOrderItemActivity.this.getString(R.string.call_office) };
+        AlertDialog.Builder builder = new AlertDialog.Builder(MyOrderItemActivity.this);
+        builder.setTitle(MyOrderItemActivity.this.getString(R.string.choose_action));
+        builder.setItems(items, onContextMenuItemListener());
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void timerInit(final Order order) {
@@ -227,17 +231,14 @@ public class MyOrderItemActivity extends Activity {
                         + secondsStr);
                 if((((int) millisUntilFinished / 1000) / 60)==1 && (((int) millisUntilFinished / 1000) % 60)==0)
                 {
-                    final CharSequence[] items = { "Пригласить", "Отложить", "Закрыть", "Звонок из офиса" };
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MyOrderItemActivity.this);
-                    builder.setTitle("Выбор действия");
-                    builder.setItems(items, onContextMenuItemListener());
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                    initActionDialog();
                 }
             }
 
+
+
             public void onFinish() {
-            	counterView.setText("Кончилось");
+            	counterView.setText(MyOrderItemActivity.this.getString(R.string.ended_timer));
                 alertDelay(order);
 
                 MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
@@ -255,7 +256,7 @@ public class MyOrderItemActivity extends Activity {
 
     private void alertDelay(final Order order) {
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
-        alert.setTitle("Время");
+        alert.setTitle(this.getString(R.string.time));
         final CharSequence cs[];
 
         cs = new String[]{"3","5","7","10","15","20","25","30","35"};
@@ -275,9 +276,7 @@ public class MyOrderItemActivity extends Activity {
                 if (doc != null) {
                     Node errorNode = doc.getElementsByTagName("error").item(0);
                     if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ошибка")
-                                .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                .setNeutralButton("Закрыть", null).show();
+                    errorHandler();
                     else {
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(new Date());
@@ -295,15 +294,15 @@ public class MyOrderItemActivity extends Activity {
     private void priceDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
 
-        alert.setTitle("Цена");
-        alert.setMessage("Цена поездки");
+        alert.setTitle(this.getString(R.string.price));
+        alert.setMessage(this.getString(R.string.price_ride));
 
         // Set an EditText view to get user input
         final EditText input = new EditText(MyOrderItemActivity.this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         alert.setView(input);
 
-        alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+        alert.setNeutralButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 Bundle bundle = getIntent().getExtras();
@@ -320,13 +319,11 @@ public class MyOrderItemActivity extends Activity {
                     Node errorNode = doc.getElementsByTagName("error").item(0);
 
                     if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ошибка")
-                                .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                .setNeutralButton("Закрыть", null).show();
+                    errorHandler();
                     else {
-                        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Ок")
-                                .setMessage("Заказ закрыт.")
-                                .setNeutralButton("Закрыть", new OnClickListener() {
+                        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle(MyOrderItemActivity.this.getString(R.string.error_title))
+                                .setMessage(MyOrderItemActivity.this.getString(R.string.order_closed))
+                                .setNeutralButton(MyOrderItemActivity.this.getString(R.string.close), new OnClickListener() {
 
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

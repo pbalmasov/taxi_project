@@ -92,7 +92,7 @@ public class FreeOrderItemActivity extends Activity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(FreeOrderItemActivity.this);
-                alert.setTitle("Время");
+                alert.setTitle(FreeOrderItemActivity.this.getString(R.string.time));
                 final CharSequence cs[];
 
 
@@ -114,9 +114,7 @@ public class FreeOrderItemActivity extends Activity {
                         if (doc != null) {
                             Node errorNode = doc.getElementsByTagName("error").item(0);
                             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                                new AlertDialog.Builder(FreeOrderItemActivity.this).setTitle("Ошибка")
-                                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                        .setNeutralButton("Закрыть", null).show();
+                                errorHandler();
                             else {
                                 Driver driver = TaxiApplication.getDriver();
                                 if (driver.getOrders() != null)
@@ -152,5 +150,10 @@ public class FreeOrderItemActivity extends Activity {
             }
 
         });
+    }
+    private void errorHandler() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.error_message))
+                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 }

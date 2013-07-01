@@ -44,13 +44,13 @@ public class DistrictListItemActivity extends Activity {
         lv.setAdapter(arrayAdapter);
 
         Button button = (Button) findViewById(R.id.button1);
-        button.setText("Принять");
+        button.setText(this.getString(R.string.accept));
         button.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(DistrictListItemActivity.this);
-                alert.setTitle("Время");
+                alert.setTitle(DistrictListItemActivity.this.getString(R.string.time));
                 final CharSequence cs[];
 
                 cs = new String[]{"3","5","7","10","15","20","25","30","35"};
@@ -70,9 +70,7 @@ public class DistrictListItemActivity extends Activity {
                         if (doc != null) {
                             Node errorNode = doc.getElementsByTagName("error").item(0);
                             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                                new AlertDialog.Builder(DistrictListItemActivity.this).setTitle("Ошибка")
-                                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                        .setNeutralButton("Закрыть", null).show();
+                                errorHandler();
                             else {
                                 Driver driver = TaxiApplication.getDriver();
                                 if (driver.getOrders() != null)
@@ -110,5 +108,11 @@ public class DistrictListItemActivity extends Activity {
             }
 
         });
+    }
+
+    private void errorHandler() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.error_message))
+                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 }

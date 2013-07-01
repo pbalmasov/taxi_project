@@ -152,50 +152,6 @@ final public class PhpData {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static Date getFileDate(Activity activity) {
-        if (isNetworkAvailable(activity)) {
 
-            // Create a new HttpClient and Post Header
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpHead httpphead = new HttpHead(
-                    "http://sandbox.peppers-studio.ru/dell/accelerometer/TaxiProject.apk");
-            // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
-            // http://10.0.2.2/api
-            try {
-
-                // Execute HTTP Post Request
-                HttpResponse response = httpclient.execute(httpphead);
-                // for(int i = 0; i<response.getAllHeaders().length;i++){
-                // Log.d("My_tag",response.getAllHeaders()[i].toString());
-                // }
-                Log.d("My_tag", response.getFirstHeader("Last-Modified").getValue());
-
-                return new Date(response.getFirstHeader("Last-Modified").getValue());
-
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
-            }
-        } else {
-            new AlertDialog.Builder(activity).setTitle("Ошибка")
-                    .setMessage("Подключение к интернету отсутствует.").setNeutralButton("Закрыть", null)
-                    .show();
-        }
-        Log.d("My_tag", "no connection");
-        return null;
-
-    }
 
 }

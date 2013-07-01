@@ -36,23 +36,22 @@ public class MessageFromServiceActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(MessageFromServiceActivity.this);
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setNeutralButton("Ок", new OnClickListener() {
+        builder.setNeutralButton(this.getString(R.string.Ok), new OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (TaxiApplication.getDriver() != null) {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("action", "districtdata"));
-                   // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication.getDriverId())));
+                    // nameValuePairs.add(new BasicNameValuePair("id",
+                    // String.valueOf(TaxiApplication.getDriverId())));
 
                     Document doc = PhpData.postData(MessageFromServiceActivity.this, nameValuePairs);
                     if (doc != null) {
                         Node errorNode = doc.getElementsByTagName("error").item(0);
 
                         if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                            new AlertDialog.Builder(MessageFromServiceActivity.this).setTitle("Ошибка")
-                                    .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                    .setNeutralButton("Закрыть", null).show();
+                            errorHandler();
                         else {
                             finish();
                         }
@@ -63,6 +62,12 @@ public class MessageFromServiceActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
 
+    }
+
+    private void errorHandler() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.error_message))
+                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 
 }

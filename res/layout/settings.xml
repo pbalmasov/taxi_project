@@ -29,7 +29,7 @@
             android:id="@+id/checkBox3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/passwordCheck" />
+            android:text="@string/password" />
 
         <EditText
             android:id="@+id/editText1"

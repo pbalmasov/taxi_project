@@ -1,6 +1,5 @@
 package ru.peppers;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,21 +45,19 @@ public class MainListActivity extends Activity {
     }
 
     private void init() {
-        //Bundle bundle = getIntent().getExtras();
-        //int id = bundle.getInt("id");
+        // Bundle bundle = getIntent().getExtras();
+        // int id = bundle.getInt("id");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "mainlist"));
-        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {
             Node errorNode = doc.getElementsByTagName("error").item(0);
 
             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                new AlertDialog.Builder(this).setTitle("Ошибка")
-                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                        .setNeutralButton("Закрыть", null).show();
+                errorHandler();
             else {
                 parseMainList(doc);
                 initMainList();
@@ -70,6 +67,12 @@ public class MainListActivity extends Activity {
         }
     }
 
+    private void errorHandler() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.error_message))
+                .setNeutralButton(this.getString(R.string.close), null).show();
+    }
+
     private void parseMainList(Document doc) {
         int ordersCount = Integer.valueOf(doc.getElementsByTagName("ordersCount").item(0).getTextContent());
         int carClass = Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
@@ -77,8 +80,8 @@ public class MainListActivity extends Activity {
         String district = doc.getElementsByTagName("district").item(0).getTextContent();
         String subdistrict = doc.getElementsByTagName("subdistrict").item(0).getTextContent();
 
-        //Bundle bundle = getIntent().getExtras();
-        //int id = bundle.getInt("id");
+        // Bundle bundle = getIntent().getExtras();
+        // int id = bundle.getInt("id");
         Driver driver = TaxiApplication.getDriver();
         driver.setStatus(status);
         driver.setClassAuto(carClass);
@@ -91,22 +94,22 @@ public class MainListActivity extends Activity {
         final Driver driver = TaxiApplication.getDriver();
         if (driver != null) {
             itemsList = new ArrayList<Map<String, String>>();
-            itemsList.add(createItem("item", "Мои заказы: " + driver.getOrdersCount()));
-            itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
-            itemsList.add(createItem("item", "Свободные заказы"));
+            itemsList.add(createItem("item", this.getString(R.string.my_orders)+" " + driver.getOrdersCount()));
+            itemsList.add(createItem("item", this.getString(R.string.status)+" " + driver.getStatusString()));
+            itemsList.add(createItem("item", this.getString(R.string.free_orders)));
             if (driver.getStatus() != 1) {
                 String rayonString = "";
                 if (driver.getDistrict() != "")
                     rayonString = driver.getDistrict() + "," + driver.getSubdistrict();
                 else
-                    rayonString = "не выбран";
+                    rayonString = this.getString(R.string.no_region);
 
-                itemsList.add(createItem("item", "Район: " + rayonString));
+                itemsList.add(createItem("item", this.getString(R.string.region)+" " + rayonString));
             }
-            itemsList.add(createItem("item", "Звонок из офиса"));
-            itemsList.add(createItem("item", "Настройки"));
-            itemsList.add(createItem("item", "Сообщения"));
-            itemsList.add(createItem("item", "Выход"));
+            itemsList.add(createItem("item", this.getString(R.string.call_office)));
+            itemsList.add(createItem("item", this.getString(R.string.settings)));
+            itemsList.add(createItem("item", this.getString(R.string.messages)));
+            itemsList.add(createItem("item", this.getString(R.string.exit)));
 
             lv = (ListView) findViewById(R.id.mainListView);
 
@@ -118,7 +121,7 @@ public class MainListActivity extends Activity {
 
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
                     Bundle extras = getIntent().getExtras();
-                    ////int id = extras.getInt("id");
+                    // //int id = extras.getInt("id");
                     Intent intent;
                     switch (position) {
                         case 0:
@@ -151,20 +154,16 @@ public class MainListActivity extends Activity {
                     if (position == 3) {
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                         nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
-                       // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+                        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
                         Document doc = PhpData.postData(MainListActivity.this, nameValuePairs);
                         if (doc != null) {
                             Node errorNode = doc.getElementsByTagName("error").item(0);
 
                             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                                new AlertDialog.Builder(MainListActivity.this).setTitle("Ошибка")
-                                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                        .setNeutralButton("Закрыть", null).show();
+                                errorHandler();
                             else {
-                                new AlertDialog.Builder(MainListActivity.this).setTitle("Ок")
-                                        .setMessage("Ваш звонок принят. Ожидайте звонка.")
-                                        .setNeutralButton("Закрыть", null).show();
+                                errorHandler();
                             }
                         }
                     }
@@ -189,9 +188,9 @@ public class MainListActivity extends Activity {
     }
 
     private void exitDialog() {
-        new AlertDialog.Builder(MainListActivity.this).setTitle("Заказы")
-                .setMessage("К сожалению у вас есть незакрытые заказы.")
-                .setPositiveButton("Выйти", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
+                .setMessage(this.getString(R.string.sorry_exit))
+                .setPositiveButton(this.getString(R.string.exit_action), new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -201,7 +200,7 @@ public class MainListActivity extends Activity {
                         finish();
                     }
 
-                }).setNegativeButton("Отменить", null).show();
+                }).setNegativeButton(this.getString(R.string.cancel), null).show();
     }
 
     @Override

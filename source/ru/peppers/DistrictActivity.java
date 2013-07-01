@@ -1,6 +1,5 @@
 package ru.peppers;
 
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,37 +35,33 @@ public class DistrictActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sublist);
 
-        //Bundle bundle = getIntent().getExtras();
-        //int id = bundle.getInt("id");
+        // Bundle bundle = getIntent().getExtras();
+        // int id = bundle.getInt("id");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "districtdata"));
-        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {
             Node errorNode = doc.getElementsByTagName("error").item(0);
 
             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                new AlertDialog.Builder(this).setTitle("Ошибка")
-                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                        .setNeutralButton("Закрыть", null).show();
+                errorHandler();
             else {
                 try {
                     initMainList(doc);
-                } catch (DOMException e) {
-                    e.printStackTrace();
-                    new AlertDialog.Builder(this).setTitle("Ошибка")
-                            .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                            .setNeutralButton("Закрыть", null).show();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    new AlertDialog.Builder(this).setTitle("Ошибка")
-                            .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                            .setNeutralButton("Закрыть", null).show();
+                } catch (Exception e) {
+                    errorHandler();
                 }
             }
         }
+    }
+
+    private void errorHandler() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.error_message))
+                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
@@ -108,13 +103,13 @@ public class DistrictActivity extends Activity {
                     districts.get(i).getDistrictName() + "- ("
                             + String.valueOf(districts.get(i).getDrivers()) + "/"
                             + String.valueOf(districts.get(i).getOrders()) + ")");
-            curGroupMap.put("even", "Водителей - (" + String.valueOf(districts.get(i).getDrivers()) + "/"
+            curGroupMap.put("even", this.getString(R.string.drivers)+" - (" + String.valueOf(districts.get(i).getDrivers()) + "/"
                     + String.valueOf(districts.get(i).getOrders()) + ")");
 
             List<Map<String, String>> children = new ArrayList<Map<String, String>>();
 
             Map<String, String> curChildMap = new HashMap<String, String>();
-            curChildMap.put("name", "Все");
+            curChildMap.put("name", this.getString(R.string.all_drivers));
             curChildMap.put("even", "");
             children.add(curChildMap);
 
@@ -128,10 +123,9 @@ public class DistrictActivity extends Activity {
         }
         // Set up our adapter
         final SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(this, groupData,
-                R.layout.group, new String[] { "name", "even" }, new int[] {
-                    android.R.id.text1, android.R.id.text2 }, childData,
-                android.R.layout.simple_expandable_list_item_2, new String[] { "name", "even" }, new int[] {
-                    android.R.id.text1, android.R.id.text2 });
+                R.layout.group, new String[] { "name", "even" }, new int[] { android.R.id.text1,
+                    android.R.id.text2 }, childData, android.R.layout.simple_expandable_list_item_2,
+                new String[] { "name", "even" }, new int[] { android.R.id.text1, android.R.id.text2 });
         final ExpandableListView lv = (ExpandableListView) findViewById(R.id.expandableListView1);
 
         lv.setAdapter(adapter);
@@ -153,12 +147,12 @@ public class DistrictActivity extends Activity {
                     int childPosition, long id) {
                 // Toast.makeText(DistrictActivity.this, groupPosition+" "+childPosition,
                 // Toast.LENGTH_LONG).show();
-                //Bundle bundle = getIntent().getExtras();
-                //int ind = bundle.getInt("id");
+                // Bundle bundle = getIntent().getExtras();
+                // int ind = bundle.getInt("id");
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
                 nameValuePairs.add(new BasicNameValuePair("action", "savedistrict"));
-                //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(ind)));
+                // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(ind)));
                 nameValuePairs.add(new BasicNameValuePair("district", String.valueOf(groupPosition)));
                 nameValuePairs.add(new BasicNameValuePair("subdistrict", String.valueOf(childPosition)));
 
@@ -167,14 +161,12 @@ public class DistrictActivity extends Activity {
                     Node errorNode = doc.getElementsByTagName("error").item(0);
 
                     if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                        new AlertDialog.Builder(DistrictActivity.this).setTitle("Ошибка")
-                                .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                                .setNeutralButton("Закрыть", null).show();
+                        errorHandler();
                     else {
 
-                        final CharSequence[] items = { "Свободен здесь", "Заказы" };
+                        final CharSequence[] items = { DistrictActivity.this.getString(R.string.free_here), DistrictActivity.this.getString(R.string.orders) };
                         AlertDialog.Builder builder = new AlertDialog.Builder(DistrictActivity.this);
-                        builder.setTitle("Выбор действия");
+                        builder.setTitle(DistrictActivity.this.getString(R.string.choose_action));
                         builder.setItems(items, onContextMenuItemListener(groupPosition, childPosition));
                         AlertDialog alert = builder.create();
                         alert.show();
@@ -190,16 +182,16 @@ public class DistrictActivity extends Activity {
             public void onClick(DialogInterface dialog, int item) {
 
                 if (item == 0) {
-                    new AlertDialog.Builder(DistrictActivity.this).setTitle("Ок")
-                            .setMessage("Свободен здесь.").setNeutralButton("Закрыть", null).show();
+                    new AlertDialog.Builder(DistrictActivity.this).setTitle(DistrictActivity.this.getString(R.string.Ok))
+                            .setMessage(DistrictActivity.this.getString(R.string.free_here)).setNeutralButton(DistrictActivity.this.getString(R.string.close), null).show();
                 }
                 if (item == 1) {
-                    //Bundle extras = getIntent().getExtras();
-                    ////int id = extras.getInt("id");
+                    // Bundle extras = getIntent().getExtras();
+                    // //int id = extras.getInt("id");
 
                     Intent intent = new Intent(DistrictActivity.this, DistrictListActivity.class);
                     Bundle bundle = new Bundle();
-                   // bundle.putInt("id", id);
+                    // bundle.putInt("id", id);
                     bundle.putInt("group", groupPosition);
                     bundle.putInt("child", childPosition);
                     intent.putExtras(bundle);

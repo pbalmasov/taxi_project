@@ -98,8 +98,9 @@ public class PozivnoiActivity extends Activity {
                         //Log.d("My_tag", idNode.toString());
                         Log.d("My_tag", doc.getElementsByTagName("manifest").item(0).getAttributes().getNamedItem("android:versionCode").getTextContent());
                         Log.d("My_tag", String.valueOf(settings.getInt("version", 0)));
+                        int new_version = Integer.valueOf( doc.getElementsByTagName("manifest").item(0).getAttributes().getNamedItem("android:versionCode").getTextContent());
                         //index = Integer.valueOf(idNode.getTextContent());
-                        if (settings.getInt("version", 0) < 99) {
+                        if (settings.getInt("version", 0) < new_version) {
                             update = true;
                             // предлагаем перейти на сайт
                             initDialog();

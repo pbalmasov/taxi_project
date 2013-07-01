@@ -1,6 +1,5 @@
 package ru.peppers;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,12 +37,12 @@ public class FreeOrderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        //Bundle bundle = getIntent().getExtras();
-        //int id = bundle.getInt("id");
+        // Bundle bundle = getIntent().getExtras();
+        // int id = bundle.getInt("id");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "orderdata"));
-       // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {
@@ -51,41 +50,37 @@ public class FreeOrderActivity extends Activity {
             Node canViewNode = doc.getElementsByTagName("canview").item(0);
 
             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                new AlertDialog.Builder(this).setTitle("Ошибка")
-                        .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                        .setNeutralButton("Закрыть", null).show();
+                errorHandler();
             else if (Integer.parseInt(canViewNode.getTextContent()) == 1) {
-                new AlertDialog.Builder(this).setTitle("Информация").setMessage("На линии достаточно машин.")
-                        .setNeutralButton("Закрыть", new OnClickListener() {
+                new AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).setMessage(this.getString(R.string.noOrders))
+                        .setNeutralButton(this.getString(R.string.close), new OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Bundle extras = getIntent().getExtras();
-                                //int id = extras.getInt("id");
+                                // Bundle extras = getIntent().getExtras();
+                                // int id = extras.getInt("id");
 
                                 Intent intent = new Intent(FreeOrderActivity.this, MainListActivity.class);
-                                //Bundle bundle = new Bundle();
-                                //bundle.putInt("id", id);
-                                //intent.putExtras(bundle);
+                                // Bundle bundle = new Bundle();
+                                // bundle.putInt("id", id);
+                                // intent.putExtras(bundle);
                                 startActivity(intent);
                             }
                         }).show();
             } else {
                 try {
                     initMainList(doc);
-                } catch (DOMException e) {
-                    e.printStackTrace();
-                    new AlertDialog.Builder(this).setTitle("Ошибка")
-                            .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                            .setNeutralButton("Закрыть", null).show();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    new AlertDialog.Builder(this).setTitle("Ошибка")
-                            .setMessage("Ошибка на сервере. Перезапустите приложение.")
-                            .setNeutralButton("Закрыть", null).show();
+                } catch (Exception e) {
+                    errorHandler();
                 }
             }
         }
+    }
+
+    private void errorHandler() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.error_message))
+                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
@@ -107,17 +102,18 @@ public class FreeOrderActivity extends Activity {
                 int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
                 String costType = attributes.getNamedItem("costType").getTextContent();
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new CostOrder(this,costOrder,index, date, adress, carClass, text, where, cost, costType));
+                orders.add(new CostOrder(this, costOrder, index, date, adress, carClass, text, where, cost,
+                        costType));
             }
             if (type == 1) {
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new NoCostOrder(this,costOrder,index, date, adress, carClass, text, where));
+                orders.add(new NoCostOrder(this, costOrder, index, date, adress, carClass, text, where));
             }
             if (type == 2) {
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new PreliminaryOrder(this,costOrder,index, date, adress, carClass, text, where));
+                orders.add(new PreliminaryOrder(this, costOrder, index, date, adress, carClass, text, where));
             }
-            if(attributes.getNamedItem("abonent") != null){
+            if (attributes.getNamedItem("abonent") != null) {
                 String abonent = attributes.getNamedItem("abonent").getTextContent();
                 int rides = Integer.parseInt(attributes.getNamedItem("rides").getTextContent());
                 orders.get(i).setAbonent(abonent);
@@ -150,12 +146,12 @@ public class FreeOrderActivity extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-               // Bundle extras = getIntent().getExtras();
-                //int id = extras.getInt("id");
+                // Bundle extras = getIntent().getExtras();
+                // int id = extras.getInt("id");
 
                 Intent intent = new Intent(FreeOrderActivity.this, FreeOrderItemActivity.class);
                 Bundle bundle = new Bundle();
-               // bundle.putInt("id", id);
+                // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
                 startActivity(intent);

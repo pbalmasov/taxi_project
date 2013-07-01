@@ -20,36 +20,32 @@ public class PasswordActivity extends Activity {
         setContentView(R.layout.password);
 
         Button passwordButton = (Button) findViewById(R.id.passwordButton);
-        passwordButton.setOnClickListener(new Button.OnClickListener(){
+        passwordButton.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
-                Log.d("My_tag",  settings.getString("password", ""));
+                Log.d("My_tag", settings.getString("password", ""));
 
                 EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
                 if (settings.getString("password", "").equals(passwordEditText.getText().toString())) {
                     Bundle extras = getIntent().getExtras();
-                    //int id = extras.getInt("id");
+                    // int id = extras.getInt("id");
 
                     Intent intent = new Intent(PasswordActivity.this, MainListActivity.class);
 
-                    //Bundle bundle = new Bundle();
-                    //bundle.putInt("id", id);
-                    //intent.putExtras(bundle);
+                    // Bundle bundle = new Bundle();
+                    // bundle.putInt("id", id);
+                    // intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
-                }
-                else{
-                    new AlertDialog.Builder(PasswordActivity.this).setTitle("Ошибка")
-                    .setMessage("Неправильный пароль. Повторите попытку")
-                    .setNeutralButton("Закрыть", null).show();
+                } else {
+                    onErrorPassword();
                 }
             }
 
         });
-
 
         EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
@@ -66,22 +62,19 @@ public class PasswordActivity extends Activity {
 
                     if (!event.isShiftPressed() && passwordEditText.getText().toString().length() != 0) {
                         SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
-                        Log.d("My_tag",  settings.getString("password", ""));
+                        Log.d("My_tag", settings.getString("password", ""));
                         if (settings.getString("password", "").equals(passwordEditText.getText().toString())) {
                             Bundle extras = getIntent().getExtras();
-                            //int id = extras.getInt("id");
+                            // int id = extras.getInt("id");
 
                             Intent intent = new Intent(PasswordActivity.this, MainListActivity.class);
 
-                            //Bundle bundle = new Bundle();
-                            //bundle.putInt("id", id);
+                            // Bundle bundle = new Bundle();
+                            // bundle.putInt("id", id);
                             startActivity(intent);
                             finish();
-                        }
-                        else{
-                            new AlertDialog.Builder(PasswordActivity.this).setTitle("Ошибка")
-                            .setMessage("Неправильный пароль. Повторите попытку")
-                            .setNeutralButton("Закрыть", null).show();
+                        } else {
+                            onErrorPassword();
                         }
                     }
 
@@ -90,5 +83,11 @@ public class PasswordActivity extends Activity {
             }
 
         });
+    }
+
+    private void onErrorPassword() {
+        new AlertDialog.Builder(PasswordActivity.this).setTitle("Ошибка")
+                .setMessage("Неправильный пароль. Повторите попытку").setNeutralButton("Закрыть", null)
+                .show();
     }
 }

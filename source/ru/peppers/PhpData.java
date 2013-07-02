@@ -31,6 +31,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -69,6 +70,12 @@ final public class PhpData {
         }
     }
 
+    static public void errorFromServer(Context context, Node errorNode) {
+        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                .setMessage(errorNode.getTextContent())
+                .setNeutralButton(context.getString(R.string.close), null).show();
+    }
+
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs, String url) {
         if (isNetworkAvailable(activity)) {
 
@@ -104,23 +111,23 @@ final public class PhpData {
                 return doc;
 
             } catch (Exception e) {
-            	errorHandler(activity);
+                errorHandler(activity);
             }
         } else {
             new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-                    .setMessage(activity.getString(R.string.no_internet)).setNeutralButton(activity.getString(R.string.close), null)
-                    .show();
+                    .setMessage(activity.getString(R.string.no_internet))
+                    .setNeutralButton(activity.getString(R.string.close), null).show();
         }
         Log.d("My_tag", "no connection");
         return null;
     }
 
-        private static void errorHandler(Context context) {
-            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                    .setMessage(context.getString(R.string.error_message))
-                    .setNeutralButton(context.getString(R.string.close), null).show();
-        }
-        
+    private static void errorHandler(Context context) {
+        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                .setMessage(context.getString(R.string.error_message))
+                .setNeutralButton(context.getString(R.string.close), null).show();
+    }
+
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
 
         return postData(activity, nameValuePairs,
@@ -134,7 +141,5 @@ final public class PhpData {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-
 
 }

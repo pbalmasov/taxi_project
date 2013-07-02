@@ -38,16 +38,20 @@ public class DistrictActivity extends Activity {
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "districtdata"));
-        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "district"));
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
 
-        Document doc = PhpData.postData(this, nameValuePairs);
+        Document doc = PhpData.postData(this, nameValuePairs, "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
         if (doc != null) {
-            Node errorNode = doc.getElementsByTagName("error").item(0);
 
-            if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                errorHandler();
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
             else {
                 try {
                     initMainList(doc);

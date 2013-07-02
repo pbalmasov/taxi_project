@@ -96,6 +96,7 @@ public class PozivnoiActivity extends Activity {
 						Log.d("My_tag", String.valueOf(settings.getInt("version", 0)));
 						int new_version = Integer.valueOf(doc.getElementsByTagName("manifest").item(0).getAttributes()
 								.getNamedItem("android:versionCode").getTextContent());
+						Log.d("My_tag", String.valueOf(new_version));
 						// index = Integer.valueOf(idNode.getTextContent());
 						if (settings.getInt("version", 0) < new_version) {
 							update = true;
@@ -356,6 +357,8 @@ public class PozivnoiActivity extends Activity {
 			nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
 			nameValuePairs.add(new BasicNameValuePair("object", "session"));
 			nameValuePairs.add(new BasicNameValuePair("login", settings.getString("login", "")));
+			Log.d("My_tag", settings.getString("login", ""));
+            Log.d("My_tag", settings.getString("password", ""));
 			nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
 
 			Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
@@ -503,9 +506,9 @@ public class PozivnoiActivity extends Activity {
 						intent = new Intent(PozivnoiActivity.this, MainListActivity.class);
 					else
 						intent = new Intent(PozivnoiActivity.this, PasswordActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putInt("id", index);
-					intent.putExtras(bundle);
+					//Bundle bundle = new Bundle();
+					//bundle.putInt("id", index);
+					//intent.putExtras(bundle);
 					// TaxiApplication.setDriverId(index);
 					startActivity(intent);
 					startService(new Intent(PozivnoiActivity.this, PhpService.class));

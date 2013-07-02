@@ -103,41 +103,24 @@ final public class PhpData {
 
                 return doc;
 
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Произошла ошибка в соединение с сервером.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
-            } catch (SAXException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(activity).setTitle("Ошибка")
-                        .setMessage("Ошибка в обработке ответа от сервера.")
-                        .setNeutralButton("Закрыть", null).show();
+            } catch (Exception e) {
+            	errorHandler(activity);
             }
         } else {
-            new AlertDialog.Builder(activity).setTitle("Ошибка")
-                    .setMessage("Подключение к интернету отсутствует.").setNeutralButton("Закрыть", null)
+            new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+                    .setMessage(activity.getString(R.string.no_internet)).setNeutralButton(activity.getString(R.string.close), null)
                     .show();
         }
         Log.d("My_tag", "no connection");
         return null;
     }
 
+        private static void errorHandler(Context context) {
+            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                    .setMessage(context.getString(R.string.error_message))
+                    .setNeutralButton(context.getString(R.string.close), null).show();
+        }
+        
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
 
         return postData(activity, nameValuePairs,

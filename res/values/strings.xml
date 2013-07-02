@@ -65,5 +65,17 @@
     <string name="price">Цена</string>
     <string name="price_ride">Цена поездки</string>
     <string name="order_closed">Заказ закрыт.</string>
-
+    <string name="no_internet">Подключение к интернету отсутствует.</string>
+    <string name="service">Сервис такси</string>
+    <string name="service_started">Запущен сервис уведомлений такси</string>
+    <string name="message">Сообщение</string>
+    <string name="new_message">Новое сообщение</string>
+    <string name="new_order">Новый заказ</string>
+    <string name="empty_pozivnoi">Позывной не может быть пустым.</string>
+    <string name="registration">Регистрация</string>
+    <string name="registration_message">Введите ваш позывной или обратитесь к администратору</string>
+    <string name="update">Обновление</string>
+    <string name="update_message">Вышло обновление скачать?</string>
+    <string name="update_delay">Вышло обновление скачать?</string>
+    
 </resources>

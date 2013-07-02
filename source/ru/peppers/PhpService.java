@@ -62,9 +62,9 @@ public class PhpService extends Service {
        // intent.putExtra("id", String.valueOf(TaxiApplication.getDriverId()));
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        Notification notif = new Notification(R.drawable.icon, "Запущен сервис уведомлений такси",
+        Notification notif = new Notification(R.drawable.icon, this.getString(R.string.service_started),
                 System.currentTimeMillis());
-        notif.setLatestEventInfo(this, "Сервис такси", "Запущен сервис уведомлений такси", pIntent);
+        notif.setLatestEventInfo(this, this.getString(R.string.service), this.getString(R.string.service_started), pIntent);
 
         // ставим флаг, чтобы уведомление пропало после нажатия
         notif.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -164,9 +164,9 @@ public class PhpService extends Service {
             intent.putExtra(MessageFromServiceActivity.TITLE, unreaded.get(i).getDate().toGMTString());
             intent.putExtra(MessageFromServiceActivity.MESSAGE, unreaded.get(i).getText());
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            Notification notif = new Notification(R.drawable.icon, "Новое сообщение",
+            Notification notif = new Notification(R.drawable.icon, this.getString(R.string.new_message),
                     System.currentTimeMillis());
-            notif.setLatestEventInfo(this, "Сообщение", unreaded.get(i).getText(), pIntent);
+            notif.setLatestEventInfo(this, this.getString(R.string.message), unreaded.get(i).getText(), pIntent);
 
             // ставим флаг, чтобы уведомление пропало после нажатия
             notif.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -235,7 +235,7 @@ public class PhpService extends Service {
 
 
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            Notification notif = new Notification(R.drawable.icon, "Новый заказ", System.currentTimeMillis());
+            Notification notif = new Notification(R.drawable.icon, this.getString(R.string.new_order), System.currentTimeMillis());
             notif.setLatestEventInfo(this, "Заказ", orders.get(i).toString(), pIntent);
 
             // ставим флаг, чтобы уведомление пропало после нажатия

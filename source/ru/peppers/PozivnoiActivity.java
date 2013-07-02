@@ -44,7 +44,6 @@ public class PozivnoiActivity extends Activity {
 	private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
 	private static final String MY_TAG = "My_tag";
 	protected static final String PREFS_NAME = "MyNamePrefs1";
-	protected Integer index;
 
 	/** Called when the activity is first created. */
 	@Override

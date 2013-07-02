@@ -76,6 +76,6 @@
     <string name="registration_message">Введите ваш позывной или обратитесь к администратору</string>
     <string name="update">Обновление</string>
     <string name="update_message">Вышло обновление скачать?</string>
-    <string name="update_delay">Вышло обновление скачать?</string>
+    <string name="update_delay">Позже</string>
     
 </resources>

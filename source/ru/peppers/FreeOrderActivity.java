@@ -8,6 +8,8 @@ import java.util.List;
 
 import model.Driver;
 import model.Order;
+import model.SubDistrict;
+import myorders.MyCostOrder;
 import orders.CostOrder;
 import orders.NoCostOrder;
 import orders.PreliminaryOrder;
@@ -16,6 +18,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,32 +29,43 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class FreeOrderActivity extends Activity {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
 
-        // Bundle bundle = getIntent().getExtras();
-        // int id = bundle.getInt("id");
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+		nameValuePairs.add(new BasicNameValuePair("action", "list"));
+		nameValuePairs.add(new BasicNameValuePair("mode", "available"));
+		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+		nameValuePairs.add(new BasicNameValuePair("object", "order"));
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("action", "orderdata"));
-        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+		Document doc = PhpData.postData(this, nameValuePairs,PhpData.newURL);
+		if (doc != null) {
+			Node responseNode = doc.getElementsByTagName("response").item(0);
+			Node errorNode = doc.getElementsByTagName("message").item(0);
 
-        Document doc = PhpData.postData(this, nameValuePairs);
-        if (doc != null) {
-            Node errorNode = doc.getElementsByTagName("error").item(0);
-            Node canViewNode = doc.getElementsByTagName("canview").item(0);
-
-            if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                errorHandler();
-            else if (Integer.parseInt(canViewNode.getTextContent()) == 1) {
+			if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+				PhpData.errorFromServer(this, errorNode);
+			else {
+				try {
+					initMainList(doc);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Log.d("My_tag", e.toString());
+					errorHandler();
+				}
+			}
+		}
+		//TODO:нету заказов
+		/*
                 new AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).setMessage(this.getString(R.string.noOrders))
                         .setNeutralButton(this.getString(R.string.close), new OnClickListener() {
 
@@ -67,95 +81,118 @@ public class FreeOrderActivity extends Activity {
                                 startActivity(intent);
                             }
                         }).show();
-            } else {
-                try {
-                    initMainList(doc);
-                } catch (Exception e) {
-                    errorHandler();
-                }
-            }
-        }
-    }
+		 */
+	}
 
-    private void errorHandler() {
-        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-                .setMessage(this.getString(R.string.error_message))
-                .setNeutralButton(this.getString(R.string.close), null).show();
-    }
+	private void errorHandler() {
+		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+		.setMessage(this.getString(R.string.error_message))
+		.setNeutralButton(this.getString(R.string.close), null).show();
+	}
 
-    private void initMainList(Document doc) throws DOMException, ParseException {
-        NodeList nodeList = doc.getElementsByTagName("order");
-        ArrayList<Order> orders = new ArrayList<Order>();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            NamedNodeMap attributes = nodeList.item(i).getAttributes();
+	private void initMainList(Document doc) throws DOMException, ParseException {
+		NodeList nodeList = doc.getElementsByTagName("item");
+		ArrayList<Order> orders = new ArrayList<Order>();
+		for (int i = 0; i < nodeList.getLength(); i++) {        	
+			//        	nominalcost - рекомендуемая стоимость заказа
+			//        	class - класс автомобля (0 - все равно, 1 - Эконом, 2 - Стандарт, 3 - Базовый)
+			//        	addressdeparture - адрес подачи автомобиля
+			//        	departuretime - время подачи
+			//        	paymenttype - форма оплаты (0 - наличные, 1 - безнал)
+			//        	invitationtime - время приглашения (если пригласили)
+			//        	quantity - количество заказов от этого клиента
+			//        	comment - примечание
+			//        	nickname - ник абонента (если есть)
+			//        	registrationtime - время регистрации заказа
+			//        	addressarrival - куда поедут
 
-            int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
-            int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            Date date = format.parse(attributes.getNamedItem("date").getTextContent());
-            String carClass = attributes.getNamedItem("class").getTextContent();
-            String adress = attributes.getNamedItem("adress").getTextContent();
-            String where = attributes.getNamedItem("where").getTextContent();
-            int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
+			Element item = (Element) nodeList.item(i);
 
-            if (type == 0) {
-                int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
-                String costType = attributes.getNamedItem("costType").getTextContent();
-                String text = nodeList.item(i).getTextContent();
-                orders.add(new CostOrder(this, costOrder, index, date, adress, carClass, text, where, cost,
-                        costType));
-            }
-            if (type == 1) {
-                String text = nodeList.item(i).getTextContent();
-                orders.add(new NoCostOrder(this, costOrder, index, date, adress, carClass, text, where));
-            }
-            if (type == 2) {
-                String text = nodeList.item(i).getTextContent();
-                orders.add(new PreliminaryOrder(this, costOrder, index, date, adress, carClass, text, where));
-            }
-            if (attributes.getNamedItem("abonent") != null) {
-                String abonent = attributes.getNamedItem("abonent").getTextContent();
-                int rides = Integer.parseInt(attributes.getNamedItem("rides").getTextContent());
-                orders.get(i).setAbonent(abonent);
-                orders.get(i).setRides(rides);
-            }
-        }
+			Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
+			Node classNode = item.getElementsByTagName("class").item(0);
+			Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
+			Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
+			Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
+			Node invitationtimeNode = item.getElementsByTagName("invitationtime").item(0);
+			Node quantityNode = item.getElementsByTagName("quantity").item(0);
+			Node commentNode = item.getElementsByTagName("comment").item(0);
+			Node nicknameNode = item.getElementsByTagName("nickname").item(0);
+			Node registrationtimeNode = item.getElementsByTagName("registrationtime").item(0);
+			Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
 
-        Driver driver = TaxiApplication.getDriver();
-        driver.setFreeOrders(orders);
-        // driver = new Driver(status, carClass, ordersCount, district, subdistrict);
+			String carClass = "0";
+			int costOrder = 0;
+			int cost = 0;
+			if (!classNode.getTextContent().equalsIgnoreCase(""))
+				carClass = classNode.getTextContent();
 
-        // itemsList = new ArrayList<Map<String, String>>();
-        // itemsList.add(createItem("item", "Мои закакзы: " + driver.getOrdersCount()));
-        // itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
-        // itemsList.add(createItem("item", "Свободные заказы"));
-        // if (driver.getStatus() != 1)
-        // itemsList
-        // .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
-        // itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
-        // itemsList.add(createItem("item", "Отчет"));
-        // itemsList.add(createItem("item", "Звонок из офиса"));
-        // itemsList.add(createItem("item", "Настройки"));
+			if (!nominalcostNode.getTextContent().equalsIgnoreCase("")){
+				costOrder = Integer.parseInt(nominalcostNode.getTextContent());
+				cost = Integer.parseInt(nominalcostNode.getTextContent());
+			}
 
-        ListView lv = (ListView) findViewById(R.id.mainListView);
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+			Date date = format.parse(registrationtimeNode.getTextContent());
+			String adress = addressdepartureNode.getTextContent();
+			String where = addressarrivalNode.getTextContent();
+			
+			String costType = paymenttypeNode.getTextContent();
+			//TODO: добавить время приглашения
+			//Date dateInvite = format.parse(invitationtimeNode.getTextContent());
+			Date dateAccept = new Date();
+			if(!departuretimeNode.getTextContent().equalsIgnoreCase(""))
+			dateAccept = format.parse(departuretimeNode.getTextContent());
+			
+			String text = commentNode.getTextContent();
+			orders.add(new MyCostOrder(this, costOrder, 0, date, adress, carClass, text, where, cost,
+					costType, dateAccept, dateAccept));
+			
+			if (nicknameNode != null) {
+				String abonent = nicknameNode.getTextContent();
+				
+				int rides = 0;
+				if(!quantityNode.getTextContent().equalsIgnoreCase(""))
+					rides = Integer.parseInt(quantityNode.getTextContent());
+				orders.get(i).setAbonent(abonent);
+				orders.get(i).setRides(rides);
+			}
+		}
 
-        ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1,
-                orders);
+		Driver driver = TaxiApplication.getDriver();
+		driver.setFreeOrders(orders);
+		// driver = new Driver(status, carClass, ordersCount, district, subdistrict);
 
-        lv.setAdapter(arrayAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		// itemsList = new ArrayList<Map<String, String>>();
+		// itemsList.add(createItem("item", "Мои закакзы: " + driver.getOrdersCount()));
+		// itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
+		// itemsList.add(createItem("item", "Свободные заказы"));
+		// if (driver.getStatus() != 1)
+		// itemsList
+		// .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
+		// itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
+		// itemsList.add(createItem("item", "Отчет"));
+		// itemsList.add(createItem("item", "Звонок из офиса"));
+		// itemsList.add(createItem("item", "Настройки"));
 
-            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                // Bundle extras = getIntent().getExtras();
-                // int id = extras.getInt("id");
+		ListView lv = (ListView) findViewById(R.id.mainListView);
 
-                Intent intent = new Intent(FreeOrderActivity.this, FreeOrderItemActivity.class);
-                Bundle bundle = new Bundle();
-                // bundle.putInt("id", id);
-                bundle.putInt("index", position);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-    }
+		ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1,
+				orders);
+
+		lv.setAdapter(arrayAdapter);
+		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
+				// Bundle extras = getIntent().getExtras();
+				// int id = extras.getInt("id");
+
+				Intent intent = new Intent(FreeOrderActivity.this, FreeOrderItemActivity.class);
+				Bundle bundle = new Bundle();
+				// bundle.putInt("id", id);
+				bundle.putInt("index", position);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
+	}
 }

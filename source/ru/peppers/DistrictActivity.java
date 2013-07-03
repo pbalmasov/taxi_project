@@ -28,6 +28,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -62,7 +63,6 @@ public class DistrictActivity extends Activity {
                 try {
                     initMainList(doc);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     errorHandler();
                 }
             }
@@ -77,31 +77,14 @@ public class DistrictActivity extends Activity {
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
-        ArrayList<District> districts = new ArrayList<District>();
+        final ArrayList<District> districts = new ArrayList<District>();
         for (int i = 0; i < nodeList.getLength(); i++) {
-            // NodeList childList = nodeList.item(i).getChildNodes();
-
-            // ArrayList<SubDistrict> subdistricts = new ArrayList<SubDistrict>();
-            // for (int j = 0; j < childList.getLength(); j++) {
-            // if (childList.item(j).getNodeType() == Node.ELEMENT_NODE) {
-            // NamedNodeMap attributes = childList.item(j).getAttributes();
-            // int drivers = Integer.parseInt(attributes.getNamedItem("drivers").getTextContent());
-            // int orders = Integer.parseInt(attributes.getNamedItem("orders").getTextContent());
-            // String name = attributes.getNamedItem("name").getTextContent();
-
-            // SubDistrict subdistrict = new SubDistrict(drivers, orders, name);
-            // subdistricts.add(subdistrict);
-            // }
-            // }
 
             Element item = (Element) nodeList.item(i);
-            // NamedNodeMap attributes = nodeList.item(i).getAttributes();
-            //Log.d("My_tag", String.valueOf(item.getChildNodes().getLength()));
-            if(item.getChildNodes() == null)
-                Log.d("My_tag", "nevedomaya huyana");
             Node titleNode = item.getElementsByTagName("title").item(0);
             Node orderNode = item.getElementsByTagName("ordercount").item(0);
             Node vehicleNode = item.getElementsByTagName("vehiclecount").item(0);
+            Node districtIdNode = item.getElementsByTagName("districtid").item(0);
 
             int orders = 0;
             int drivers = 0;
@@ -110,13 +93,11 @@ public class DistrictActivity extends Activity {
             if (!orderNode.getTextContent().equalsIgnoreCase(""))
                 orders = Integer.parseInt(orderNode.getTextContent());
 
+            String districtId = districtIdNode.getTextContent();
             String name = titleNode.getTextContent();
 
-            Log.d("My_tag", titleNode.getTextContent());
-            Log.d("My_tag", String.valueOf(orders));
-            Log.d("My_tag", String.valueOf(drivers));
 
-            District district = new District(drivers, orders, name, null);
+            District district = new District(drivers, orders, name,districtId, null);
             districts.add(district);
         }
 
@@ -127,7 +108,20 @@ public class DistrictActivity extends Activity {
 
         lv.setAdapter(adapter);
 
-
+        lv.setOnItemClickListener(new ListView.OnItemClickListener(){
+        	
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				
+				Intent intent = new Intent(DistrictActivity.this, SubDistrictActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("districtid", districts.get(arg2).getDistrictId());
+                intent.putExtras(bundle);
+                startActivity(intent);
+				
+			}
+        	
+        });
 
         // List<Map<String, String>> groupData = new ArrayList<Map<String, String>>();
         // List<List<Map<String, String>>> childData = new ArrayList<List<Map<String, String>>>();
@@ -215,31 +209,5 @@ public class DistrictActivity extends Activity {
         // });
     }
 
-    private OnClickListener onContextMenuItemListener(final int groupPosition, final int childPosition) {
-        return new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (item == 0) {
-                    new AlertDialog.Builder(DistrictActivity.this)
-                            .setTitle(DistrictActivity.this.getString(R.string.Ok))
-                            .setMessage(DistrictActivity.this.getString(R.string.free_here))
-                            .setNeutralButton(DistrictActivity.this.getString(R.string.close), null).show();
-                }
-                if (item == 1) {
-                    // Bundle extras = getIntent().getExtras();
-                    // //int id = extras.getInt("id");
-
-                    Intent intent = new Intent(DistrictActivity.this, DistrictListActivity.class);
-                    Bundle bundle = new Bundle();
-                    // bundle.putInt("id", id);
-                    bundle.putInt("group", groupPosition);
-                    bundle.putInt("child", childPosition);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-
-                dialog.dismiss();
-            }
-        };
-    }
+    
 }

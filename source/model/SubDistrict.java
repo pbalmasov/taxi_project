@@ -10,17 +10,17 @@ package model;
  */
 public class SubDistrict {
     private int _drivers;
-    private int _orders;
     private String _subDistrictName;
+    private String _subDistrictId;
 
-    public SubDistrict(int drivers, int orders, String subDistrictName) {
+    public SubDistrict(int drivers, String subDistrictName, String subDistrictId) {
         _drivers = drivers;
-        _orders = orders;
         _subDistrictName = subDistrictName;
+		_subDistrictId = subDistrictId;
     }
 
     public String toString(){
-        return "     - "+_subDistrictName+"("+_drivers+"/"+_orders+")";
+        return "     - "+_subDistrictName+"("+_drivers+")";
     }
 
     /**
@@ -38,20 +38,6 @@ public class SubDistrict {
     }
 
     /**
-     * @return the _orders
-     */
-    public int getOrders() {
-        return _orders;
-    }
-
-    /**
-     * @param orders the _orders to set
-     */
-    public void setOrders(int orders) {
-        this._orders = orders;
-    }
-
-    /**
      * @return the _subDistrictName
      */
     public String getSubDistrictName() {
@@ -64,4 +50,9 @@ public class SubDistrict {
     public void setSubDistrictName(String subDistrictName) {
         this._subDistrictName = subDistrictName;
     }
+
+	public String get_subDistrictId() {
+		return _subDistrictId;
+	}
+
 }

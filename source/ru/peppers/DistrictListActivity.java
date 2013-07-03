@@ -129,8 +129,6 @@ public class DistrictListActivity extends Activity {
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                    // Bundle extras = getIntent().getExtras();
-                    // //int id = extras.getInt("id");
 
                     Intent intent = new Intent(DistrictListActivity.this, DistrictListItemActivity.class);
                     Bundle bundle = new Bundle();

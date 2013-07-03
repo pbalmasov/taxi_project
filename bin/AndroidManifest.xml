@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.peppers"
-    android:versionCode="13"
+    android:versionCode="15"
     android:versionName="1.4" >
 
     <uses-sdk android:minSdkVersion="8" />
@@ -31,6 +31,7 @@
         <activity android:label="Отчет заказов"  android:name=".ReportListActivity"></activity>
         <activity android:label="Отчет заказа"  android:name=".ReportListItemActivity"></activity>
         <activity android:label="Районы"  android:name=".DistrictActivity"></activity>
+        <activity android:label="Подрайоны"  android:name=".SubDistrictActivity"></activity>
         <activity android:label="Настройки"  android:name=".SettingsActivity"></activity>
         <activity android:label="Сообщения"  android:name=".MessageActivity"></activity>
         <activity android:label="Пароль водителя"  android:name=".PasswordActivity"></activity>

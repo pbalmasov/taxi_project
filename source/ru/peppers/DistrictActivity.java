@@ -41,10 +41,15 @@ public class DistrictActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
+        init();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
+    }
 
-        // Bundle bundle = getIntent().getExtras();
-        // int id = bundle.getInt("id");
-
+    private void init() {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "district"));
@@ -66,10 +71,10 @@ public class DistrictActivity extends Activity {
                     errorHandler();
                 }
             }
-        }
-    }
-
-    private void errorHandler() {
+        }		
+	}
+    
+	private void errorHandler() {
         new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
                 .setMessage(this.getString(R.string.error_message))
                 .setNeutralButton(this.getString(R.string.close), null).show();

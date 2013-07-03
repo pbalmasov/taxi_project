@@ -142,10 +142,12 @@ public class MainListActivity extends Activity {
                             startActivity(intent);
                             break;
                         case 3:
-                            if (driver.getStatus() != 1) {
+                            //TODO:вернуть
+                            //if (driver.getStatus() != 1) {
                                 intent = new Intent(MainListActivity.this, DistrictActivity.class);
+                                startActivity(intent);
                                 return;
-                            }
+                            //}
                         default:
                             break;
                     }
@@ -161,6 +163,7 @@ public class MainListActivity extends Activity {
                             Node errorNode = doc.getElementsByTagName("error").item(0);
 
                             if (Integer.parseInt(errorNode.getTextContent()) == 1)
+                                //TODO:fix
                                 errorHandler();
                             else {
                                 errorHandler();

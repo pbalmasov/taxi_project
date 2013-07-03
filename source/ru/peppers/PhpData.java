@@ -1,22 +1,17 @@
 package ru.peppers;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.security.KeyStore;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -31,8 +26,8 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -67,6 +62,12 @@ final public class PhpData {
         } catch (Exception e) {
             return new DefaultHttpClient();
         }
+    }
+
+    static public void errorFromServer(Context context, Node errorNode) {
+        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                .setMessage(errorNode.getTextContent())
+                .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs, String url) {
@@ -104,23 +105,23 @@ final public class PhpData {
                 return doc;
 
             } catch (Exception e) {
-            	errorHandler(activity);
+                errorHandler(activity);
             }
         } else {
             new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-                    .setMessage(activity.getString(R.string.no_internet)).setNeutralButton(activity.getString(R.string.close), null)
-                    .show();
+                    .setMessage(activity.getString(R.string.no_internet))
+                    .setNeutralButton(activity.getString(R.string.close), null).show();
         }
         Log.d("My_tag", "no connection");
         return null;
     }
 
-        private static void errorHandler(Context context) {
-            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                    .setMessage(context.getString(R.string.error_message))
-                    .setNeutralButton(context.getString(R.string.close), null).show();
-        }
-        
+    private static void errorHandler(Context context) {
+        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                .setMessage(context.getString(R.string.error_message))
+                .setNeutralButton(context.getString(R.string.close), null).show();
+    }
+
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
 
         return postData(activity, nameValuePairs,
@@ -134,7 +135,5 @@ final public class PhpData {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-
 
 }

@@ -103,6 +103,7 @@ public class PozivnoiActivity extends Activity {
                         // .getNamedItem("android:versionCode").getTextContent());
                         // Log.d("My_tag", String.valueOf(new_version));
                         int index = Integer.valueOf(str.substring(str.length() - 3, str.length() - 1));
+                        Log.d("My_tag", String.valueOf(index));
                         if (settings.getInt("version", 0) < index) {
                             update = true;
                             // предлагаем перейти на сайт

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keepScreenOn="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:orientation="vertical" >
-
+
     <CheckBox
         android:id="@+id/checkBox1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
         android:text="@string/defaultOrder" />
-
+
     <CheckBox
         android:id="@+id/checkBox2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
         android:text="@string/defaultStatus" />
-
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
@@ -30,14 +30,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/password" />
-
+
         <EditText
             android:id="@+id/editText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:inputType="textPassword" />
-
+            android:inputType="textPassword"
+            android:singleLine="true" />
     </LinearLayout>
 
 </LinearLayout>

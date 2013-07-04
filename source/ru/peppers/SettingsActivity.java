@@ -40,14 +40,14 @@ public class SettingsActivity extends Activity {
         });
 
         final EditText passwordEditText = (EditText) findViewById(R.id.editText1);
-        passwordEditText.setText(settings.getString("password", ""));
+        passwordEditText.setText(settings.getString("passwordApp", ""));
         passwordEditText.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("password", passwordEditText.getText().toString());
+                editor.putString("passwordApp", passwordEditText.getText().toString());
                 editor.commit();
-                Log.d("My_tag", "password" + passwordEditText.getText().toString());
+                Log.d("My_tag", "passwordApp" + passwordEditText.getText().toString());
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

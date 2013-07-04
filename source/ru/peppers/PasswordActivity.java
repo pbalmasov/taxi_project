@@ -25,11 +25,11 @@ public class PasswordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
-                Log.d("My_tag", settings.getString("password", ""));
+                Log.d("My_tag", settings.getString("passwordApp", ""));
 
                 EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
-                if (settings.getString("password", "").equals(passwordEditText.getText().toString())) {
+                if (settings.getString("passwordApp", "").equals(passwordEditText.getText().toString())) {
                     Bundle extras = getIntent().getExtras();
                     // int id = extras.getInt("id");
 
@@ -62,8 +62,8 @@ public class PasswordActivity extends Activity {
 
                     if (!event.isShiftPressed() && passwordEditText.getText().toString().length() != 0) {
                         SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
-                        Log.d("My_tag", settings.getString("password", ""));
-                        if (settings.getString("password", "").equals(passwordEditText.getText().toString())) {
+                        Log.d("My_tag", settings.getString("passwordApp", ""));
+                        if (settings.getString("passwordApp", "").equals(passwordEditText.getText().toString())) {
                             Bundle extras = getIntent().getExtras();
                             // int id = extras.getInt("id");
 

@@ -31,8 +31,8 @@ public class SubDistrictActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
-
 		Bundle bundle = getIntent().getExtras();
+        setTitle(bundle.getString("districtname"));
 		String districtid = bundle.getString("districtid");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);

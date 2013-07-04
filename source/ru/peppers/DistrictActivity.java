@@ -71,9 +71,9 @@ public class DistrictActivity extends Activity {
                     errorHandler();
                 }
             }
-        }		
+        }
 	}
-    
+
 	private void errorHandler() {
         new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
                 .setMessage(this.getString(R.string.error_message))
@@ -114,18 +114,19 @@ public class DistrictActivity extends Activity {
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new ListView.OnItemClickListener(){
-        	
+
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				
+
 				Intent intent = new Intent(DistrictActivity.this, SubDistrictActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("districtid", districts.get(arg2).getDistrictId());
+                bundle.putString("districtname", districts.get(arg2).getDistrictName());
                 intent.putExtras(bundle);
                 startActivity(intent);
-				
+
 			}
-        	
+
         });
 
         // List<Map<String, String>> groupData = new ArrayList<Map<String, String>>();
@@ -214,5 +215,5 @@ public class DistrictActivity extends Activity {
         // });
     }
 
-    
+
 }

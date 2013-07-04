@@ -25,7 +25,7 @@ public class MyNoCostOrder extends Order {
 
     public MyNoCostOrder(Activity activity, int costRide, int index, Date date, String adress, Integer type,
             String orderText, String where, Date dateAccept) {
-        super(activity, costRide, adress, type, orderText, where, index);
+        super(activity, costRide, adress, type, orderText, where, index,0);
         _date = date;
         _dateAccept = dateAccept;
     }
@@ -33,16 +33,16 @@ public class MyNoCostOrder extends Order {
     public ArrayList<String> toArrayList() {
         ArrayList<String> array = new ArrayList<String>();
         if (nickname != null) {
-            array.add(context.getString(R.string.abonent) + " " + nickname);
-            array.add(context.getString(R.string.rides) + " " + quantity);
+            array.add(_context.getString(R.string.abonent) + " " + nickname);
+            array.add(_context.getString(R.string.rides) + " " + quantity);
         }
-        array.add(context.getString(R.string.accepted) + " " + getTimeString(_dateAccept));
-        array.add(context.getString(R.string.date) + " " + getTimeString(_date));
-        array.add(context.getString(R.string.adress) + " " + _addressdeparture);
-        array.add(context.getString(R.string.where) + " " + _addressarrival);
-        array.add(context.getString(R.string.car_class) + " " + _carClass);
-        array.add(context.getString(R.string.cost_ride) + " " + _nominalcost + " "
-                + context.getString(R.string.currency));
+        array.add(_context.getString(R.string.accepted) + " " + getTimeString(_dateAccept));
+        array.add(_context.getString(R.string.date) + " " + getTimeString(_date));
+        array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
+        array.add(_context.getString(R.string.where) + " " + _addressarrival);
+        array.add(_context.getString(R.string.car_class) + " " + _carClass);
+        array.add(_context.getString(R.string.cost_ride) + " " + _nominalcost + " "
+                + _context.getString(R.string.currency));
         array.add(_comment);
         return array;
     }

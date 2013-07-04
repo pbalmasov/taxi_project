@@ -20,6 +20,10 @@
         <item>стандарт</item>
         <item>базовый</item>
     </string-array>
+    <string-array name="payment_array">
+        <item>наличные</item>
+        <item>без наличные</item>
+    </string-array>
     <string name="accepted">Заказ принят:</string>
     <string name="date">Время подачи:</string>
     <string name="date_invite">Время приглашения:</string>
@@ -77,5 +81,6 @@
     <string name="update">Обновление</string>
     <string name="update_message">Вышло обновление скачать?</string>
     <string name="update_delay">Позже</string>
+    <string name="dont_care">Все равно</string>
     
 </resources>

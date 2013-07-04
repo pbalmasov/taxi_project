@@ -23,49 +23,47 @@ import model.Order;
  */
 public class MyCostOrder extends Order {
 
-    private Integer _paymenttype;
     private Date _registrationtime;
     private Date _invitationtime;
     private Date _departuretime;
 
     public MyCostOrder(Context context, Integer nominalcost, Date registrationtime, String addressdeparture, Integer carClass, String comment, String addressarrival,Integer paymenttype,Date invitationtime,Date departuretime) {
-        super(context,nominalcost,addressdeparture, carClass, comment, addressarrival,0);
+        super(context,nominalcost,addressdeparture, carClass, comment, addressarrival,paymenttype,0);
         //TODO:wrong index
         _registrationtime = registrationtime;
         _invitationtime = invitationtime;
         _departuretime = departuretime;
-        _paymenttype = paymenttype;
     }
 
     public String toString(){
     	String pred = "";
     	if(_departuretime!=null)
     		pred = "П "+getTimeString(_departuretime)+", ";
+    	else pred = getTimeString(_registrationtime)+", ";
+    	
     	String over = "";
     	if(_nominalcost!=0)
-    		over = ", "+_nominalcost+" "+context.getString(R.string.currency);
+    		over = ", "+_nominalcost+" "+_context.getString(R.string.currency);
     	
     	return pred+_addressdeparture+over;
     }
 
     public ArrayList<String> toArrayList(){
         ArrayList<String> array = new ArrayList<String>();
-        if (nickname != null) {
-            array.add(context.getString(R.string.abonent)+" " + nickname);
-            array.add(context.getString(R.string.rides)+" " + quantity);
-        }
+        array.addAll(getAbonentArray());
         if(_departuretime!=null)
-        array.add(context.getString(R.string.accepted)+" "+getTimeString(_departuretime));
-        array.add(context.getString(R.string.date)+" "+getTimeString(_registrationtime));
-        array.add(context.getString(R.string.date_invite)+" "+getTimeString(_invitationtime));
+        array.add(_context.getString(R.string.accepted)+" "+getTimeString(_departuretime));
+        array.add(_context.getString(R.string.date)+" "+getTimeString(_registrationtime));
+        array.add(_context.getString(R.string.date_invite)+" "+getTimeString(_invitationtime));
         
-        array.add(context.getString(R.string.adress)+" "+_addressdeparture);
-        array.add(context.getString(R.string.where)+" "+_addressarrival);
+        array.add(_context.getString(R.string.adress)+" "+_addressdeparture);
+        array.add(_context.getString(R.string.where)+" "+_addressarrival);
         
-        array.add(context.getString(R.string.car_class)+" " + _carClass);
-        array.add(context.getString(R.string.cost_type)+" "+_paymenttype);
+        array.add(_context.getString(R.string.car_class)+" " + getCarClass());
+        array.add(_context.getString(R.string.cost_type)+" "+getPayment());
+        if(_nominalcost!=null)
+        array.add(_context.getString(R.string.cost)+" "+_nominalcost+" "+_context.getString(R.string.currency));
         array.add(_comment);
-        array.add(context.getString(R.string.cost)+" "+_nominalcost+" "+context.getString(R.string.currency));
         return array;
     }
 

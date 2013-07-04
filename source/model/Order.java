@@ -6,8 +6,11 @@ package model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ru.peppers.R;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 
 /**
  * 
@@ -24,11 +27,13 @@ public class Order implements OrderInterface {
 	protected Date _timerDate;
 	protected Integer quantity;
 	protected String nickname;
-	protected Context context;
+	private Integer _paymenttype;
+	protected Context _context;
 
 	public Order(Context context, Integer costRide, String adress, Integer carClass, String orderText, String where,
-			Integer index) {
-		this.context = context;
+			Integer paymenttype, Integer index) {
+		_context = context;
+		_paymenttype = index;
 		_addressdeparture = adress;
 		_carClass = carClass;
 		_comment = orderText;
@@ -47,16 +52,29 @@ public class Order implements OrderInterface {
 
 	public String getCarClass() {
 		if (_carClass == 0)
-			return "все равно";
-		if (_carClass == 1)
-			return "Эконом";
-		if (_carClass == 2)
-			return "Стандарт";
-		if (_carClass == 3)
-			return "Базовый";
-		return null;
+			return _context.getString(R.string.dont_care);
+		else {
+			Resources res = _context.getResources();
+			String[] payment = res.getStringArray(R.array.class_array);
+			return payment[_paymenttype].toLowerCase();
+		}
 	}
 
+	public ArrayList<String> getAbonentArray(){
+        ArrayList<String> array = new ArrayList<String>();
+        if (nickname != null) {
+        array.add(_context.getString(R.string.abonent) + " " + nickname);
+        if(quantity != null)
+        array.add(_context.getString(R.string.rides) + " " + quantity);
+    	}
+		return array;
+	}
+	
+	public String getPayment() {
+		Resources res = _context.getResources();
+		String[] payment = res.getStringArray(R.array.payment_array);
+		return payment[_paymenttype];
+	}
 
 	public Date getTimerDate() {
 		return _timerDate;
@@ -78,7 +96,7 @@ public class Order implements OrderInterface {
 		return quantity;
 	}
 
-	public void setRides(int rides) {
+	public void setRides(Integer rides) {
 		this.quantity = rides;
 	}
 }

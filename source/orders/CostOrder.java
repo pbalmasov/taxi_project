@@ -18,14 +18,12 @@ import android.content.Context;
  */
 public class CostOrder extends Order {
 
-    private Integer _paymenttype;
     private Date _registrationtime;
     private Date _departuretime;
 
     public CostOrder(Context context, Integer nominalcost, Date registrationtime, String addressdeparture, Integer carClass, String comment, String addressarrival,Integer paymenttype,Date departuretime) {
-        super(context,nominalcost,addressdeparture, carClass, comment, addressarrival,0);
+        super(context,nominalcost,addressdeparture, carClass, comment, addressarrival,paymenttype,0);
         _registrationtime = registrationtime;
-        _paymenttype = paymenttype;
         _departuretime  = departuretime;
     }
 
@@ -33,41 +31,34 @@ public class CostOrder extends Order {
     	String pred = "";
     	if(_departuretime!=null)
     		pred = "П "+getTimeString(_departuretime)+", ";
-    	else pred = getTimeString(_registrationtime);
+    	else pred = getTimeString(_registrationtime)+", ";
     		
     	String over = "";
     	if(_nominalcost!=null)
-    		over = ", "+_nominalcost+" "+context.getString(R.string.currency);
+    		over = ", "+_nominalcost+" "+_context.getString(R.string.currency);
         return pred + _addressdeparture + over;
     }
 
     public ArrayList<String> toArrayList() {
         ArrayList<String> array = new ArrayList<String>();
-        if (nickname != null) {
-            array.add(context.getString(R.string.abonent) + " " + nickname);
-            array.add(context.getString(R.string.rides) + " " + quantity);
-        }
+        array.addAll(getAbonentArray());
         if(_departuretime!=null)
-        array.add(context.getString(R.string.accepted)+" "+getTimeString(_departuretime));
-        array.add(context.getString(R.string.date) + " " + getTimeString(_registrationtime));
-        array.add(context.getString(R.string.adress) + " " + _addressdeparture);
-        array.add(context.getString(R.string.where) + " " + _addressarrival);
-        array.add(context.getString(R.string.car_class) + " " + getCarClass());
-        array.add(context.getString(R.string.cost_type) + " " + getPayment());
-        array.add(_comment);
+        array.add(_context.getString(R.string.accepted)+" "+getTimeString(_departuretime));
+        array.add(_context.getString(R.string.date) + " " + getTimeString(_registrationtime));
+        
+        array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
+        array.add(_context.getString(R.string.where) + " " + _addressarrival);
+        
+        array.add(_context.getString(R.string.car_class) + " " + getCarClass());
+        array.add(_context.getString(R.string.cost_type) + " " + getPayment());
         if(_nominalcost!=null)
-        array.add(context.getString(R.string.cost_ride) + " " + _nominalcost + " "
-                + context.getString(R.string.currency));
+        array.add(_context.getString(R.string.cost_ride) + " " + _nominalcost + " "
+                + _context.getString(R.string.currency));
+        array.add(_comment);
         return array;
     }
 
-	public String getPayment() {
-		if (_paymenttype == 0)
-			return "наличные";
-		if (_paymenttype == 1)
-			return "безнал";
-		return null;
-	}
+	
 	
     private String getTimeString(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");

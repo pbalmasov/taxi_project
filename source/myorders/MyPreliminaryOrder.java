@@ -24,30 +24,30 @@ public class MyPreliminaryOrder extends Order {
 
     public MyPreliminaryOrder(Activity activity, int costRide, int index, Date date, String adress,
             Integer type, String orderText, String where) {
-        super(activity, costRide, adress, type, orderText, where, index);
+        super(activity, costRide, adress, type, orderText, where, index,0);
         _date = date;
     }
 
     public ArrayList<String> toArrayList() {
         ArrayList<String> array = new ArrayList<String>();
         if (nickname != null) {
-            array.add(context.getString(R.string.abonent) + " " + nickname);
-            array.add(context.getString(R.string.rides) + " " + quantity);
+            array.add(_context.getString(R.string.abonent) + " " + nickname);
+            array.add(_context.getString(R.string.rides) + " " + quantity);
         }
-        array.add(context.getString(R.string.preliminary));
-        array.add(context.getString(R.string.date) + " " + getTimeString(_date));
-        array.add(context.getString(R.string.adress) + " " + _addressdeparture);
-        array.add(context.getString(R.string.where) + " " + _addressarrival);
-        array.add(context.getString(R.string.car_class) + " " + _carClass);
-        array.add(context.getString(R.string.cost_ride) + " " + _nominalcost + " "
-                + context.getString(R.string.currency));
+        array.add(_context.getString(R.string.preliminary));
+        array.add(_context.getString(R.string.date) + " " + getTimeString(_date));
+        array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
+        array.add(_context.getString(R.string.where) + " " + _addressarrival);
+        array.add(_context.getString(R.string.car_class) + " " + _carClass);
+        array.add(_context.getString(R.string.cost_ride) + " " + _nominalcost + " "
+                + _context.getString(R.string.currency));
         array.add(_comment);
         return array;
     }
 
     public String toString() {
 
-        return getTimeString(_date) + ", " + context.getString(R.string.preliminary).toLowerCase() + " "
+        return getTimeString(_date) + ", " + _context.getString(R.string.preliminary).toLowerCase() + " "
                 + _addressdeparture;
     }
 

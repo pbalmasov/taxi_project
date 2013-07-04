@@ -97,15 +97,15 @@ public class ReportActivity extends Activity {
                 int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
                 String costType = attributes.getNamedItem("costType").getTextContent();
                 String text = nodeList.item(i).getTextContent();
-                reports.add(new CostOrder(this,costOrder,index,date, adress, carClass, text, where, cost, costType));
+        //        reports.add(new CostOrder(this,costOrder,index,date, adress, carClass, text, where, cost, costType));
             }
             if (type == 1) {
                 String text = nodeList.item(i).getTextContent();
-                reports.add(new NoCostOrder(this,costOrder,index,date, adress, carClass, text, where));
+          //      reports.add(new NoCostOrder(this,costOrder,index,date, adress, carClass, text, where));
             }
             if (type == 2) {
                 String text = nodeList.item(i).getTextContent();
-                reports.add(new PreliminaryOrder(this,costOrder,index,date, adress, carClass, text, where));
+          //      reports.add(new PreliminaryOrder(this,costOrder,index,date, adress, carClass, text, where));
             }
             if(attributes.getNamedItem("abonent") != null){
                 String abonent = attributes.getNamedItem("abonent").getTextContent();

@@ -35,7 +35,7 @@ public class MessageActivity extends Activity {
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
 
         Document doc = PhpData.postData(this, nameValuePairs,
-                "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+                PhpData.newURL);
         if (doc != null) {
             // Node errorNode = doc.getElementsByTagName("error").item(0);
             //

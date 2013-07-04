@@ -219,36 +219,36 @@ public class PhpService extends Service {
                 intent.putExtra("cost", cost);
                 intent.putExtra("costType", costType);
                 intent.putExtra("text", text);
-                orders.add(new CostOrder(this,costOrder, index, date, adress, carClass, text, where, cost,
-                        costType));
+              //  orders.add(new CostOrder(this,costOrder, index, date, adress, carClass, text, where, cost,
+              //          costType));
             }
             if (type == 1) {
                 String text = nodeList.item(i).getTextContent();
                 intent.putExtra("text", text);
-                orders.add(new NoCostOrder(this,costOrder, index, date, adress, carClass, text, where));
+              //  orders.add(new NoCostOrder(this,costOrder, index, date, adress, carClass, text, where));
             }
             if (type == 2) {
                 String text = nodeList.item(i).getTextContent();
                 intent.putExtra("text", text);
-                orders.add(new PreliminaryOrder(this,costOrder, index, date, adress, carClass, text, where));
+             //   orders.add(new PreliminaryOrder(this,costOrder, index, date, adress, carClass, text, where));
             }
 
 
-            PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            Notification notif = new Notification(R.drawable.icon, this.getString(R.string.new_order), System.currentTimeMillis());
-            notif.setLatestEventInfo(this, "Заказ", orders.get(i).toString(), pIntent);
-
-            // ставим флаг, чтобы уведомление пропало после нажатия
-            notif.flags |= Notification.FLAG_AUTO_CANCEL;
-            notif.sound = Uri.parse("android.resource://ru.peppers/" + R.raw.sound);
-
-            notif.defaults |= Notification.DEFAULT_VIBRATE;
-            notif.defaults |= Notification.DEFAULT_LIGHTS;
-
-            notif.flags |= Notification.FLAG_NO_CLEAR;
-            // отправляем
-            NodeList nodeList1 = doc.getElementsByTagName("message");
-            nm.notify(nodeList1.getLength() + i + 1, notif);
+//            PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+//            Notification notif = new Notification(R.drawable.icon, this.getString(R.string.new_order), System.currentTimeMillis());
+//            notif.setLatestEventInfo(this, "Заказ", orders.get(i).toString(), pIntent);
+//
+//            // ставим флаг, чтобы уведомление пропало после нажатия
+//            notif.flags |= Notification.FLAG_AUTO_CANCEL;
+//            notif.sound = Uri.parse("android.resource://ru.peppers/" + R.raw.sound);
+//
+//            notif.defaults |= Notification.DEFAULT_VIBRATE;
+//            notif.defaults |= Notification.DEFAULT_LIGHTS;
+//
+//            notif.flags |= Notification.FLAG_NO_CLEAR;
+//            // отправляем
+//            NodeList nodeList1 = doc.getElementsByTagName("message");
+//            nm.notify(nodeList1.getLength() + i + 1, notif);
 
         }
 

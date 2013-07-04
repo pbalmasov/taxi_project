@@ -25,29 +25,29 @@ public class NoCostOrder extends Order {
 
     private Date _date;
 
-    public NoCostOrder(Context context, int costRide,int index,Date date, String adress, String type, String orderText, String where) {
+    public NoCostOrder(Context context, int costRide,int index,Date date, String adress, Integer type, String orderText, String where) {
         super(context,costRide,adress, type, orderText, where,index);
         _date = date;
     }
 
     public ArrayList<String> toArrayList(){
         ArrayList<String> array = new ArrayList<String>();
-        if (abonent != null) {
-            array.add(context.getString(R.string.abonent)+" " + abonent);
-            array.add(context.getString(R.string.rides)+" " + rides);
+        if (nickname != null) {
+            array.add(context.getString(R.string.abonent)+" " + nickname);
+            array.add(context.getString(R.string.rides)+" " + quantity);
         }
         array.add(context.getString(R.string.date)+" "+getTimeString(_date));
-        array.add(context.getString(R.string.adress)+" "+_adress);
-        array.add(context.getString(R.string.where)+" "+_where);
+        array.add(context.getString(R.string.adress)+" "+_addressdeparture);
+        array.add(context.getString(R.string.where)+" "+_addressarrival);
         array.add(context.getString(R.string.car_class)+" " + _carClass);
-        array.add(context.getString(R.string.cost_ride)+" " + _costRide+" "+context.getString(R.string.currency));
-        array.add(_orderText);
+        array.add(context.getString(R.string.cost_ride)+" " + _nominalcost+" "+context.getString(R.string.currency));
+        array.add(_comment);
         return array;
     }
 
 
     public String toString(){
-        return getTimeString(_date)+", "+_adress;
+        return getTimeString(_date)+", "+_addressdeparture;
     }
 
     private String getTimeString(Date date) {

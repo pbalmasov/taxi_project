@@ -91,16 +91,16 @@ public class DistrictListActivity extends Activity {
                 int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
                 String costType = attributes.getNamedItem("costType").getTextContent();
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new CostOrder(this, costOrder, index, date, adress, carClass, text, where, cost,
-                        costType));
+                //orders.add(new CostOrder(this, costOrder, index, date, adress, carClass, text, where, cost,
+                //        costType));
             }
             if (type == 1) {
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new NoCostOrder(this, costOrder, index, date, adress, carClass, text, where));
+               // orders.add(new NoCostOrder(this, costOrder, index, date, adress, carClass, text, where));
             }
             if (type == 2) {
                 String text = nodeList.item(i).getTextContent();
-                orders.add(new PreliminaryOrder(this, costOrder, index, date, adress, carClass, text, where));
+               // orders.add(new PreliminaryOrder(this, costOrder, index, date, adress, carClass, text, where));
             }
 
             if (attributes.getNamedItem("abonent") != null) {

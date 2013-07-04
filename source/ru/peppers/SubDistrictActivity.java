@@ -42,7 +42,7 @@ public class SubDistrictActivity extends Activity {
 		nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
 
 		Document doc = PhpData.postData(this, nameValuePairs,
-				"https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+				PhpData.newURL);
 		if (doc != null) {
 
 			Node responseNode = doc.getElementsByTagName("response").item(0);

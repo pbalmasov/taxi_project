@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.Context;
 
 import ru.peppers.MyOrderActivity;
 import ru.peppers.R;
@@ -22,41 +23,49 @@ import model.Order;
  */
 public class MyCostOrder extends Order {
 
-    private String _costType;
-    private int _cost;
-    private Date _date;
-    private Date _dateInvite;
-    private Date _dateAccept;
+    private Integer _paymenttype;
+    private Date _registrationtime;
+    private Date _invitationtime;
+    private Date _departuretime;
 
-    public MyCostOrder(Activity activity, int costRide,int index,Date date, String adress, String type, String orderText, String where,int cost,String costType,Date dateInvite,Date dateAccept) {
-        super(activity,costRide,adress, type, orderText, where,index);
-        _date = date;
-        _dateInvite = dateInvite;
-        _dateAccept = dateAccept;
-        _cost = cost;
-        _costType = costType;
+    public MyCostOrder(Context context, Integer nominalcost, Date registrationtime, String addressdeparture, Integer carClass, String comment, String addressarrival,Integer paymenttype,Date invitationtime,Date departuretime) {
+        super(context,nominalcost,addressdeparture, carClass, comment, addressarrival,0);
+        //TODO:wrong index
+        _registrationtime = registrationtime;
+        _invitationtime = invitationtime;
+        _departuretime = departuretime;
+        _paymenttype = paymenttype;
     }
 
     public String toString(){
-        return getTimeString(_dateAccept)+", "+_adress+", "+_cost+" "+context.getString(R.string.currency);
+    	String pred = "";
+    	if(_departuretime!=null)
+    		pred = "П "+getTimeString(_departuretime)+", ";
+    	String over = "";
+    	if(_nominalcost!=0)
+    		over = ", "+_nominalcost+" "+context.getString(R.string.currency);
+    	
+    	return pred+_addressdeparture+over;
     }
 
     public ArrayList<String> toArrayList(){
         ArrayList<String> array = new ArrayList<String>();
-        if (abonent != null) {
-            array.add(context.getString(R.string.abonent)+" " + abonent);
-            array.add(context.getString(R.string.rides)+" " + rides);
+        if (nickname != null) {
+            array.add(context.getString(R.string.abonent)+" " + nickname);
+            array.add(context.getString(R.string.rides)+" " + quantity);
         }
-        array.add(context.getString(R.string.accepted)+" "+getTimeString(_dateAccept));
-        array.add(context.getString(R.string.date)+" "+getTimeString(_date));
-        array.add(context.getString(R.string.date_invite)+" "+getTimeString(_dateInvite));
-        array.add(context.getString(R.string.adress)+" "+_adress);
-        array.add(context.getString(R.string.where)+" "+_where);
+        if(_departuretime!=null)
+        array.add(context.getString(R.string.accepted)+" "+getTimeString(_departuretime));
+        array.add(context.getString(R.string.date)+" "+getTimeString(_registrationtime));
+        array.add(context.getString(R.string.date_invite)+" "+getTimeString(_invitationtime));
+        
+        array.add(context.getString(R.string.adress)+" "+_addressdeparture);
+        array.add(context.getString(R.string.where)+" "+_addressarrival);
+        
         array.add(context.getString(R.string.car_class)+" " + _carClass);
-        array.add(context.getString(R.string.cost_type)+" "+_costType);
-        array.add(_orderText);
-        array.add(context.getString(R.string.cost)+" "+_cost+" "+context.getString(R.string.currency));
-        array.add(context.getString(R.string.cost_ride)+" " + _costRide+" "+context.getString(R.string.currency));
+        array.add(context.getString(R.string.cost_type)+" "+_paymenttype);
+        array.add(_comment);
+        array.add(context.getString(R.string.cost)+" "+_nominalcost+" "+context.getString(R.string.currency));
         return array;
     }
 

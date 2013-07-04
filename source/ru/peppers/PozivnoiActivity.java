@@ -299,7 +299,7 @@ public class PozivnoiActivity extends Activity {
         nameValuePairs.add(new BasicNameValuePair("drvnumber", pozivnoi));
         // TODO: сохранить токен
         Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
-                "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+                PhpData.newURL);
         if (doc != null) {
 
             Node responseNode = doc.getElementsByTagName("response").item(0);
@@ -366,7 +366,7 @@ public class PozivnoiActivity extends Activity {
             nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
 
             Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
-                    "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+                    PhpData.newURL);
             if (doc != null) {
                 Node responseNode = doc.getElementsByTagName("response").item(0);
                 Node errorNode = doc.getElementsByTagName("message").item(0);
@@ -406,7 +406,7 @@ public class PozivnoiActivity extends Activity {
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
 
         doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
-                "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+                PhpData.newURL);
         if (doc != null) {
             Node responseNode = doc.getElementsByTagName("response").item(0);
             Node errorNode = doc.getElementsByTagName("message").item(0);
@@ -480,7 +480,7 @@ public class PozivnoiActivity extends Activity {
                         .get_index())));
 
                 Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs,
-                        "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi");
+                        PhpData.newURL);
                 if (doc != null) {
                     Node responseNode = doc.getElementsByTagName("response").item(0);
                     Node errorNode = doc.getElementsByTagName("message").item(0);

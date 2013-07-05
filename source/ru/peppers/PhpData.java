@@ -40,6 +40,7 @@ final public class PhpData {
     static boolean withDebug = true;
     static String sessionid = "";
     static String newURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";
+    static HttpClient httpclient = getNewHttpClient();
 
     public static HttpClient getNewHttpClient() {
         try {
@@ -75,7 +76,6 @@ final public class PhpData {
         if (isNetworkAvailable(activity)) {
 
             // Create a new HttpClient and Post Header
-            HttpClient httpclient = getNewHttpClient();
             HttpPost httppost = new HttpPost(url);
             // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
             // http://10.0.2.2/api

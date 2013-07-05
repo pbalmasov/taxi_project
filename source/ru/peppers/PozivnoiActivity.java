@@ -107,7 +107,7 @@ public class PozivnoiActivity extends Activity {
                         if (settings.getInt("version", 0) < index) {
                             update = true;
                             // предлагаем перейти на сайт
-                            initDialog();
+                            initUpdateDialog();
                             // ничего не сохраняем потому что после обновления
                             // оно само сохранится
                         }
@@ -323,12 +323,38 @@ public class PozivnoiActivity extends Activity {
                 editor.putString("login", doc.getElementsByTagName("login").item(0).getTextContent());
                 editor.commit();
 
-                init(settings);
+                //init(settings);
+                initCallDialog();
             }
         }
     }
 
-    private void initDialog() {
+    private void initCallDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Регистрация");
+        builder.setMessage("Запрос на регистрацию отправлен. Позвоните в диспетчерскую службу.");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Позвонить", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:4852740000"));
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("Сменить позывной",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        initRegistration();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
+
+	private void initUpdateDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(this.getString(R.string.update));
         builder.setMessage(this.getString(R.string.update_message));
@@ -356,7 +382,6 @@ public class PozivnoiActivity extends Activity {
     private boolean loginWithPozivnoi(String pozivnoi) {
         {
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            // TODO:убрать позывной
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
             nameValuePairs.add(new BasicNameValuePair("action", "login"));
             nameValuePairs.add(new BasicNameValuePair("module", "mobile"));

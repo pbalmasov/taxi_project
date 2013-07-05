@@ -9,13 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import android.app.Activity;
-import android.content.Context;
-
-import ru.peppers.MyOrderActivity;
-import ru.peppers.R;
-
 import model.Order;
+import ru.peppers.R;
+import android.content.Context;
 
 /**
  *

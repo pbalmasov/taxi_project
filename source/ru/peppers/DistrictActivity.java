@@ -41,7 +41,7 @@ public class DistrictActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
-        init();
+        //init();
     }
     @Override
     protected void onResume() {

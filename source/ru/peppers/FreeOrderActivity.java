@@ -43,7 +43,7 @@ public class FreeOrderActivity extends Activity {
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 		nameValuePairs.add(new BasicNameValuePair("action", "list"));
-		nameValuePairs.add(new BasicNameValuePair("mode", "available"));
+		nameValuePairs.add(new BasicNameValuePair("mode", "my"));
 		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
 		nameValuePairs.add(new BasicNameValuePair("object", "order"));
 
@@ -71,11 +71,11 @@ public class FreeOrderActivity extends Activity {
 		 * setMessage(this.getString(R.string.noOrders))
 		 * .setNeutralButton(this.getString(R.string.close), new
 		 * OnClickListener() {
-		 * 
+		 *
 		 * @Override public void onClick(DialogInterface dialog, int which) { //
 		 * Bundle extras = getIntent().getExtras(); // int id =
 		 * extras.getInt("id");
-		 * 
+		 *
 		 * Intent intent = new Intent(FreeOrderActivity.this,
 		 * MainListActivity.class); // Bundle bundle = new Bundle(); //
 		 * bundle.putInt("id", id); // intent.putExtras(bundle);
@@ -160,7 +160,7 @@ public class FreeOrderActivity extends Activity {
 
 			if (!commentNode.getTextContent().equalsIgnoreCase(""))
 				comment = commentNode.getTextContent();
-			
+
 
 			orders.add(new CostOrder(this, nominalcost, registrationtime, addressdeparture, carClass, comment,
 					addressarrival, paymenttype, departuretime));

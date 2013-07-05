@@ -37,7 +37,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 final public class PhpData {
-    static boolean withDebug = false;
+    static boolean withDebug = true;
     static String sessionid = "";
     static String newURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";
 

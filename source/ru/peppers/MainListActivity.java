@@ -17,6 +17,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,7 +36,7 @@ public class MainListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        init();
+        //init();
     }
 
     @Override
@@ -48,21 +49,28 @@ public class MainListActivity extends Activity {
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("action", "mainlist"));
-        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "get"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "status"));
+        nameValuePairs.add(new BasicNameValuePair("object", "driver"));
 
-        Document doc = PhpData.postData(this, nameValuePairs);
+        Document doc = PhpData.postData(this, nameValuePairs,PhpData.newURL);
         if (doc != null) {
-            Node errorNode = doc.getElementsByTagName("error").item(0);
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-            if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                errorHandler();
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
             else {
-                parseMainList(doc);
-                initMainList();
+                try {
+                    parseMainList(doc);
+                } catch (Exception e) {
+                    errorHandler();
+                }
             }
-        } else {
+        }
+        else{
             initMainList();
         }
     }
@@ -74,7 +82,7 @@ public class MainListActivity extends Activity {
     }
 
     private void parseMainList(Document doc) {
-        int ordersCount = Integer.valueOf(doc.getElementsByTagName("ordersCount").item(0).getTextContent());
+        int ordersCount = Integer.valueOf(doc.getElementsByTagName("orderscount").item(0).getTextContent());
         int carClass = Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
         int status = Integer.valueOf(doc.getElementsByTagName("status").item(0).getTextContent());
         String district = doc.getElementsByTagName("district").item(0).getTextContent();

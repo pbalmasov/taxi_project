@@ -12,10 +12,13 @@ import myorders.MyCostOrder;
 import myorders.MyNoCostOrder;
 import myorders.MyPreliminaryOrder;
 
+import orders.CostOrder;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -24,6 +27,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,23 +39,25 @@ public class MyOrderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        // Bundle bundle = getIntent().getExtras();
-        // int id = bundle.getInt("id");
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "my"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("action", "myorderdata"));
-        // nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
-
-        Document doc = PhpData.postData(this, nameValuePairs);
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
         if (doc != null) {
-            Node errorNode = doc.getElementsByTagName("error").item(0);
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-            if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                errorHandler();
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
             else {
                 try {
                     initMainList(doc);
                 } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("My_tag", e.toString());
                     errorHandler();
                 }
             }
@@ -69,47 +75,75 @@ public class MyOrderActivity extends Activity {
         NodeList nodeList = doc.getElementsByTagName("order");
         ArrayList<Order> orders = new ArrayList<Order>();
         for (int i = 0; i < nodeList.getLength(); i++) {
-            NamedNodeMap attributes = nodeList.item(i).getAttributes();
+            Element item = (Element) nodeList.item(i);
 
-            int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
-            int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            Date date = format.parse(attributes.getNamedItem("date").getTextContent());
-            String carClass = attributes.getNamedItem("class").getTextContent();
-            String adress = attributes.getNamedItem("adress").getTextContent();
-            String where = attributes.getNamedItem("where").getTextContent();
-            int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
+            Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
+            Node classNode = item.getElementsByTagName("class").item(0);
+            Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
+            Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
+            Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
+            Node quantityNode = item.getElementsByTagName("quantity").item(0);
+            Node commentNode = item.getElementsByTagName("comment").item(0);
+            Node nicknameNode = item.getElementsByTagName("nickname").item(0);
+            Node registrationtimeNode = item.getElementsByTagName("registrationtime").item(0);
+            Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
 
-            if (type == 0) {
-                int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
-                String costType = attributes.getNamedItem("costType").getTextContent();
-                Date dateInvite = format.parse(attributes.getNamedItem("dateInvite").getTextContent());
-                Date dateAccept = format.parse(attributes.getNamedItem("dateAccept").getTextContent());
-                String text = nodeList.item(i).getTextContent();
-               // orders.add(new MyCostOrder(this, costOrder, index, date, adress, carClass, text, where, cost,
-                //        costType, dateInvite, dateAccept));
-            }
-            if (type == 1) {
-                Date dateAccept = format.parse(attributes.getNamedItem("dateAccept").getTextContent());
-                String text = nodeList.item(i).getTextContent();
-               // orders.add(new MyNoCostOrder(this, costOrder, index, date, adress, carClass, text, where,
-               //         dateAccept));
-            }
-            if (type == 2) {
-                String text = nodeList.item(i).getTextContent();
-               // orders.add(new MyPreliminaryOrder(this, costOrder, index, date, adress, carClass, text, where));
-            }
+            Integer nominalcost = null;
+            Integer carClass = 0;
+            String addressdeparture = null;
+            Date departuretime = null;
+            Integer paymenttype = null;
+            Integer quantity = null;
+            String comment = null;
+            String nickname = null;
+            Date registrationtime = null;
+            String addressarrival = null;
 
-            Date dateDelay = format.parse(attributes.getNamedItem("dateDelay").getTextContent());
-            orders.get(i).setTimerDate(dateDelay);
+            // if(departuretime==null)
+            // //TODO:не предварительный
+            // else
+            // //TODO:предварительный
 
-            if (attributes.getNamedItem("abonent") != null) {
-                String abonent = attributes.getNamedItem("abonent").getTextContent();
-                int rides = Integer.parseInt(attributes.getNamedItem("rides").getTextContent());
-                orders.get(i).setAbonent(abonent);
-                orders.get(i).setRides(rides);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+
+            if (!classNode.getTextContent().equalsIgnoreCase(""))
+                carClass = Integer.valueOf(classNode.getTextContent());
+
+            if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
+                nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
+
+            if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
+                registrationtime = format.parse(registrationtimeNode.getTextContent());
+
+            if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
+                addressdeparture = addressdepartureNode.getTextContent();
+
+            if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
+                addressarrival = addressarrivalNode.getTextContent();
+
+            if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
+                paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
+
+            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
+                departuretime = format.parse(departuretimeNode.getTextContent());
+
+            if (!commentNode.getTextContent().equalsIgnoreCase(""))
+                comment = commentNode.getTextContent();
+
+
+            orders.add(new CostOrder(this, nominalcost, registrationtime, addressdeparture, carClass, comment,
+                    addressarrival, paymenttype, departuretime));
+
+            if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
+                nickname = nicknameNode.getTextContent();
+
+                if (!quantityNode.getTextContent().equalsIgnoreCase(""))
+                    quantity = Integer.parseInt(quantityNode.getTextContent());
+                orders.get(i).setAbonent(nickname);
+                orders.get(i).setRides(quantity);
             }
         }
+
 
         Driver driver = TaxiApplication.getDriver();
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server

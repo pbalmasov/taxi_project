@@ -44,11 +44,11 @@ public class ReportActivity extends Activity {
         setContentView(R.layout.report);
 
         Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
+        //int id = bundle.getInt("id");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("action", "reportdata"));
-        nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+        //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
 
         Document doc = PhpData.postData(this, nameValuePairs);
         if (doc != null) {

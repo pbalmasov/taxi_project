@@ -82,20 +82,21 @@ public class MainListActivity extends Activity {
     }
 
     private void parseMainList(Document doc) {
-        int ordersCount = Integer.valueOf(doc.getElementsByTagName("orderscount").item(0).getTextContent());
-        int carClass = Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
-        int status = Integer.valueOf(doc.getElementsByTagName("status").item(0).getTextContent());
-        String district = doc.getElementsByTagName("district").item(0).getTextContent();
-        String subdistrict = doc.getElementsByTagName("subdistrict").item(0).getTextContent();
+        int ordersCount = Integer.valueOf(doc.getElementsByTagName("ordercount").item(0).getTextContent());
+       // int carClass = Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
+       // int status = Integer.valueOf(doc.getElementsByTagName("status").item(0).getTextContent());
+       // String district = doc.getElementsByTagName("district").item(0).getTextContent();
+       // String subdistrict = doc.getElementsByTagName("subdistrict").item(0).getTextContent();
 
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
         Driver driver = TaxiApplication.getDriver();
-        driver.setStatus(status);
-        driver.setClassAuto(carClass);
+        driver.setStatus(0);
+        driver.setClassAuto(0);
         driver.setOrdersCount(ordersCount);
-        driver.setDistrict(district);
-        driver.setSubdistrict(subdistrict);
+        driver.setDistrict("");
+        driver.setSubdistrict("");
+        initMainList();
     }
 
     private void initMainList() {

@@ -190,6 +190,11 @@ public class MainListActivity extends Activity {
                         if (driver.getOrdersCount() != 0) {
                             exitDialog();
                         }
+                        else{
+                            Intent service = new Intent(MainListActivity.this, PhpService.class);
+                            stopService(service);
+                            finish();
+                        }
                     }
                 }
 

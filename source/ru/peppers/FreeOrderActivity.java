@@ -165,6 +165,7 @@ public class FreeOrderActivity extends Activity {
 			
 			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
 				orderId = orderIdNode.getTextContent();
+			
 
 			
 			orders.add(new CostOrder(this,orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,

@@ -38,7 +38,7 @@ public class MyCostOrder extends Order {
     	else pred = getTimeString(_registrationtime)+", ";
     	
     	String over = "";
-    	if(_nominalcost!=0)
+    	if(_nominalcost!=null)
     		over = ", "+_nominalcost+" "+_context.getString(R.string.currency);
     	
     	return pred+_addressdeparture+over;

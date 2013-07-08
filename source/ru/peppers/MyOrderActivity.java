@@ -88,7 +88,8 @@ public class MyOrderActivity extends Activity {
             Node registrationtimeNode = item.getElementsByTagName("registrationtime").item(0);
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
-
+			Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
+			
             Integer nominalcost = null;
             Integer carClass = 0;
             String addressdeparture = null;
@@ -100,6 +101,7 @@ public class MyOrderActivity extends Activity {
             Date registrationtime = null;
             String addressarrival = null;
             String orderId = null;
+			Date invitationtime = null;
 
             // if(departuretime==null)
             // //TODO:не предварительный
@@ -135,8 +137,11 @@ public class MyOrderActivity extends Activity {
 			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
 				orderId = orderIdNode.getTextContent();
 
-            orders.add(new CostOrder(this, orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, departuretime));
+			if (!invitationNode.getTextContent().equalsIgnoreCase(""))
+				invitationtime = format.parse(invitationNode.getTextContent());
+			
+            orders.add(new MyCostOrder(this, orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,
+                    addressarrival, paymenttype,invitationtime, departuretime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();

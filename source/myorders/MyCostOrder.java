@@ -50,6 +50,7 @@ public class MyCostOrder extends Order {
         if(_departuretime!=null)
         array.add(_context.getString(R.string.accepted)+" "+getTimeString(_departuretime));
         array.add(_context.getString(R.string.date)+" "+getTimeString(_registrationtime));
+        if(_invitationtime!=null)
         array.add(_context.getString(R.string.date_invite)+" "+getTimeString(_invitationtime));
         
         array.add(_context.getString(R.string.adress)+" "+_addressdeparture);

@@ -338,7 +338,7 @@ public class PozivnoiActivity extends Activity {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:4852740000"));
+                intent.setData(Uri.parse("tel:740000"));
                 startActivity(intent);
                 finish();
             }

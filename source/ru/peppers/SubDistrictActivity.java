@@ -27,13 +27,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class SubDistrictActivity extends Activity {
+	private String districtid;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
 		Bundle bundle = getIntent().getExtras();
         setTitle(bundle.getString("districtname"));
-		String districtid = bundle.getString("districtid");
+		districtid = bundle.getString("districtid");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
@@ -69,7 +70,7 @@ public class SubDistrictActivity extends Activity {
 	private void initMainList(Document doc) throws DOMException, ParseException {
 		NodeList nodeList = doc.getElementsByTagName("item");
 		final ArrayList<SubDistrict> subDistricts = new ArrayList<SubDistrict>();
-		subDistricts.add(new SubDistrict(0,this.getString(R.string.all_drivers),"0"));
+		subDistricts.add(new SubDistrict(0,this.getString(R.string.all_drivers),null));
 		for (int i = 0; i < nodeList.getLength(); i++) {
 
 			Element item = (Element) nodeList.item(i);;
@@ -119,11 +120,34 @@ public class SubDistrictActivity extends Activity {
 			public void onClick(DialogInterface dialog, int item) {
 
 				if (item == 0) {
-					new AlertDialog.Builder(SubDistrictActivity.this)
-					.setTitle(SubDistrictActivity.this.getString(R.string.Ok))
-					.setMessage(SubDistrictActivity.this.getString(R.string.free_here))
-					.setNeutralButton(SubDistrictActivity.this.getString(R.string.close), null).show();
+					
+					//TODO:send request
+					int array_size = (subdistrictId!=null)?5:4;
+					Log.d("My_tag",String.valueOf(array_size));
+					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(array_size);
+					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+					nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+					nameValuePairs.add(new BasicNameValuePair("action", "relocate"));
+					nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
+					if(subdistrictId!=null)
+					nameValuePairs.add(new BasicNameValuePair("subdistrictid", subdistrictId));
+
+					Document doc = PhpData.postData(SubDistrictActivity.this, nameValuePairs,
+							PhpData.newURL);
+					if (doc != null) {
+
+						Node responseNode = doc.getElementsByTagName("response").item(0);
+						Node errorNode = doc.getElementsByTagName("message").item(0);
+
+						if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+							PhpData.errorFromServer(SubDistrictActivity.this, errorNode);
+						else{
+							setResult(RESULT_OK);
+							finish();
+						}
+					}
 				}
+				
 				if (item == 1) {
 					Intent intent = new Intent(SubDistrictActivity.this, DistrictListActivity.class);
 					Bundle bundle = new Bundle();
@@ -132,8 +156,8 @@ public class SubDistrictActivity extends Activity {
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
-
 				dialog.dismiss();
+
 			}
 		};
 	}

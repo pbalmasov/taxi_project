@@ -82,7 +82,7 @@ final public class PhpData {
             try {
                 // Add your data
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
+                Log.d("My_tag", nameValuePairs.toString());
                 if (sessionid != "" && url == newURL)
                     httppost.setHeader("cookie", "cmansid=" + sessionid);
                 // Execute HTTP Post Request

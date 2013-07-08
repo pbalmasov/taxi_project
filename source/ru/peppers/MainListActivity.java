@@ -66,6 +66,7 @@ public class MainListActivity extends Activity {
                 try {
                     parseMainList(doc);
                 } catch (Exception e) {
+                	Log.d("My_tag", e.toString());
                     errorHandler();
                 }
             }
@@ -84,18 +85,21 @@ public class MainListActivity extends Activity {
     private void parseMainList(Document doc) {
         int ordersCount = Integer.valueOf(doc.getElementsByTagName("ordercount").item(0).getTextContent());
        // int carClass = Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
-       // int status = Integer.valueOf(doc.getElementsByTagName("status").item(0).getTextContent());
-       // String district = doc.getElementsByTagName("district").item(0).getTextContent();
-       // String subdistrict = doc.getElementsByTagName("subdistrict").item(0).getTextContent();
+        int status = 2;
+        Node statusNode = doc.getElementsByTagName("status").item(1);
+        if(!statusNode.getTextContent().equalsIgnoreCase(""))
+        	status = Integer.valueOf(statusNode.getTextContent());
+        String district = doc.getElementsByTagName("districttitle").item(0).getTextContent();
+        String subdistrict = doc.getElementsByTagName("subdistricttitle").item(0).getTextContent();
 
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
         Driver driver = TaxiApplication.getDriver();
-        driver.setStatus(0);
-        driver.setClassAuto(0);
+        driver.setStatus(status);
+        //driver.setClassAuto(0);
         driver.setOrdersCount(ordersCount);
-        driver.setDistrict("");
-        driver.setSubdistrict("");
+        driver.setDistrict(district);
+        driver.setSubdistrict(subdistrict);
         initMainList();
     }
 
@@ -107,13 +111,7 @@ public class MainListActivity extends Activity {
             itemsList.add(createItem("item", this.getString(R.string.status)+" " + driver.getStatusString()));
             itemsList.add(createItem("item", this.getString(R.string.free_orders)));
             if (driver.getStatus() != 1) {
-                String rayonString = "";
-                if (driver.getDistrict() != "")
-                    rayonString = driver.getDistrict() + "," + driver.getSubdistrict();
-                else
-                    rayonString = this.getString(R.string.no_region);
-
-                itemsList.add(createItem("item", this.getString(R.string.region)+" " + rayonString));
+                itemsList.add(createItem("item", this.getString(R.string.region)+" " + driver.getFullDisctrict()));
             }
             itemsList.add(createItem("item", this.getString(R.string.call_office)));
             itemsList.add(createItem("item", this.getString(R.string.settings)));

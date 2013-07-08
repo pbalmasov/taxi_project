@@ -37,7 +37,9 @@ import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
 
 public class DistrictActivity extends Activity {
-    @Override
+    private static final int REQUEST_EXIT = 0;
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
@@ -123,7 +125,7 @@ public class DistrictActivity extends Activity {
                 bundle.putString("districtid", districts.get(arg2).getDistrictId());
                 bundle.putString("districtname", districts.get(arg2).getDistrictName());
                 intent.putExtras(bundle);
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_EXIT);
 
 			}
 
@@ -213,6 +215,16 @@ public class DistrictActivity extends Activity {
         // return false;
         // }
         // });
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_EXIT) {
+             if (resultCode == RESULT_OK) {
+                this.finish();
+             }
+         }
     }
 
 

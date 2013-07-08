@@ -26,7 +26,7 @@ public class PreliminaryOrder extends Order {
     private Date _date;
 
     public PreliminaryOrder(Context context, int costRide,int index,Date date, String adress, Integer type, String orderText, String where) {
-        super(context,costRide,adress, type, orderText, where,index,0);
+        super(context,costRide,adress, type, orderText, where,index,"0");
         _date = date;
     }
 

@@ -72,7 +72,7 @@ public class MyOrderActivity extends Activity {
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
-        NodeList nodeList = doc.getElementsByTagName("order");
+        NodeList nodeList = doc.getElementsByTagName("item");
         ArrayList<Order> orders = new ArrayList<Order>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element item = (Element) nodeList.item(i);
@@ -87,6 +87,7 @@ public class MyOrderActivity extends Activity {
             Node nicknameNode = item.getElementsByTagName("nickname").item(0);
             Node registrationtimeNode = item.getElementsByTagName("registrationtime").item(0);
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
+            Node orderIdNode = item.getElementsByTagName("orderid").item(0);
 
             Integer nominalcost = null;
             Integer carClass = 0;
@@ -98,6 +99,7 @@ public class MyOrderActivity extends Activity {
             String nickname = null;
             Date registrationtime = null;
             String addressarrival = null;
+            String orderId = null;
 
             // if(departuretime==null)
             // //TODO:не предварительный
@@ -129,9 +131,11 @@ public class MyOrderActivity extends Activity {
 
             if (!commentNode.getTextContent().equalsIgnoreCase(""))
                 comment = commentNode.getTextContent();
+            
+			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
+				orderId = orderIdNode.getTextContent();
 
-
-            orders.add(new CostOrder(this, nominalcost, registrationtime, addressdeparture, carClass, comment,
+            orders.add(new CostOrder(this, orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,
                     addressarrival, paymenttype, departuretime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {

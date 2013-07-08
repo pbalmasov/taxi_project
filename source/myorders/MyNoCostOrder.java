@@ -25,7 +25,7 @@ public class MyNoCostOrder extends Order {
 
     public MyNoCostOrder(Activity activity, int costRide, int index, Date date, String adress, Integer type,
             String orderText, String where, Date dateAccept) {
-        super(activity, costRide, adress, type, orderText, where, index,0);
+        super(activity, costRide, adress, type, orderText, where, index,"0");
         _date = date;
         _dateAccept = dateAccept;
     }

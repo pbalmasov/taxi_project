@@ -250,6 +250,7 @@ public class MyOrderItemActivity extends Activity {
 
     @Override
     protected void onPause() {
+    	if(timer != null)
         timer.cancel();
         super.onPause();
     }

@@ -22,7 +22,7 @@ public class Order implements OrderInterface {
 	protected Integer _carClass;
 	protected String _comment;
 	protected String _addressarrival;
-	protected Integer _index;
+	protected String _index;
 	protected Integer _nominalcost;
 	protected Date _timerDate;
 	protected Integer quantity;
@@ -31,9 +31,9 @@ public class Order implements OrderInterface {
 	protected Context _context;
 
 	public Order(Context context, Integer costRide, String adress, Integer carClass, String orderText, String where,
-			Integer paymenttype, Integer index) {
+			Integer paymenttype, String index) {
 		_context = context;
-		_paymenttype = index;
+		_paymenttype = paymenttype;
 		_addressdeparture = adress;
 		_carClass = carClass;
 		_comment = orderText;
@@ -42,7 +42,7 @@ public class Order implements OrderInterface {
 		_nominalcost = costRide;
 	}
 
-	public int get_index() {
+	public String get_index() {
 		return _index;
 	}
 

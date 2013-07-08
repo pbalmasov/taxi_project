@@ -23,8 +23,8 @@ public class MyCostOrder extends Order {
     private Date _invitationtime;
     private Date _departuretime;
 
-    public MyCostOrder(Context context, Integer nominalcost, Date registrationtime, String addressdeparture, Integer carClass, String comment, String addressarrival,Integer paymenttype,Date invitationtime,Date departuretime) {
-        super(context,nominalcost,addressdeparture, carClass, comment, addressarrival,paymenttype,0);
+    public MyCostOrder(Context context,String index, Integer nominalcost, Date registrationtime, String addressdeparture, Integer carClass, String comment, String addressarrival,Integer paymenttype,Date invitationtime,Date departuretime) {
+        super(context,nominalcost,addressdeparture, carClass, comment, addressarrival,paymenttype,index);
         //TODO:wrong index
         _registrationtime = registrationtime;
         _invitationtime = invitationtime;

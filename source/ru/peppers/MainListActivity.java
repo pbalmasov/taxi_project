@@ -149,12 +149,11 @@ public class MainListActivity extends Activity {
                             startActivity(intent);
                             break;
                         case 3:
-                            //TODO:вернуть
-                            //if (driver.getStatus() != 1) {
+                            if (driver.getStatus() != 1) {
                                 intent = new Intent(MainListActivity.this, DistrictActivity.class);
                                 startActivity(intent);
                                 return;
-                            //}
+                            }
                         default:
                             break;
                     }

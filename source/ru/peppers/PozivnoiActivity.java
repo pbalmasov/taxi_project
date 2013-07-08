@@ -107,7 +107,7 @@ public class PozivnoiActivity extends Activity {
                         if (settings.getInt("version", 0) < index) {
                             update = true;
                             // предлагаем перейти на сайт
-                            initUpdateDialog();
+                            initUpdateDialog(index);
                             // ничего не сохраняем потому что после обновления
                             // оно само сохранится
                         }
@@ -354,10 +354,10 @@ public class PozivnoiActivity extends Activity {
         alert.show();
 	}
 
-	private void initUpdateDialog() {
+	private void initUpdateDialog(int number) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(this.getString(R.string.update));
-        builder.setMessage(this.getString(R.string.update_message));
+        builder.setMessage(this.getString(R.string.update_message)+" Новая версия номер - "+number);
         builder.setCancelable(false);
         builder.setPositiveButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

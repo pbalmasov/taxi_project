@@ -82,5 +82,9 @@
     <string name="update_message">Вышло обновление скачать?</string>
     <string name="update_delay">Позже</string>
     <string name="dont_care">Все равно</string>
+    <string name="newPozivnoi">Новый позывной</string>
+    <string name="description">Примечание:</string>
+    <string name="free">Свободен</string>
+    <string name="unavailiable">Занят</string>
     
 </resources>

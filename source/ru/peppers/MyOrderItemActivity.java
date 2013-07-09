@@ -294,7 +294,6 @@ public class MyOrderItemActivity extends Activity {
 
     private void priceDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
-
         alert.setTitle(this.getString(R.string.price));
         alert.setMessage(this.getString(R.string.price_ride));
 

@@ -35,7 +35,7 @@ public class MyCostOrder extends Order {
 	public String toString() {
 		String pred = "";
 		if (_departuretime != null)
-			pred = "П " + getTimeString(_departuretime) + ", ";
+			pred = getTimeString(_departuretime) + ", ";
 		else
 			pred = getTimeString(_registrationtime) + ", ";
 
@@ -43,7 +43,7 @@ public class MyCostOrder extends Order {
 		if (_nominalcost != null)
 			over = ", " + _nominalcost + " " + _context.getString(R.string.currency);
 
-		return pred + _addressdeparture + over;
+		return "К " + pred + _addressdeparture + over;
 	}
 
 	public ArrayList<String> toArrayList() {

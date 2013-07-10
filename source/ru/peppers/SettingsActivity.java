@@ -25,7 +25,7 @@ public class SettingsActivity extends Activity {
 		// Bundle bundle = getIntent().getExtras();
 		// int id = bundle.getInt("id");
 
-		CheckBox box = (CheckBox) findViewById(R.id.checkBox3);
+		final CheckBox box = (CheckBox) findViewById(R.id.checkBox3);
 		SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
 		boolean checked = settings.getBoolean("isPassword", false);
 		box.setChecked(checked);
@@ -33,14 +33,7 @@ public class SettingsActivity extends Activity {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-				SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
-				SharedPreferences.Editor editor = settings.edit();
-				editor.putBoolean("isPassword", isChecked);
-
-				// Commit the edits!
-				editor.commit();
-
+				saveIsPassword(isChecked);
 			}
 
 		});
@@ -49,6 +42,12 @@ public class SettingsActivity extends Activity {
 		passwordEditText.setText(settings.getString("passwordApp", ""));
 		passwordEditText.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
+				if (passwordEditText.getText().length() == 0)
+					box.setChecked(false);
+				else
+					box.setChecked(true);
+				saveIsPassword(box.isChecked());
+
 				SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString("passwordApp", passwordEditText.getText().toString());
@@ -94,7 +93,7 @@ public class SettingsActivity extends Activity {
 						editor.putString("password", "");
 						editor.putString("login", "");
 						editor.commit();
-						
+
 						setResult(RESULT_OK);
 						finish();
 					} else
@@ -106,6 +105,15 @@ public class SettingsActivity extends Activity {
 
 		});
 
+	}
+
+	private void saveIsPassword(boolean isChecked) {
+		SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean("isPassword", isChecked);
+
+		// Commit the edits!
+		editor.commit();
 	}
 
 	private void emptyPozivnoiError() {

@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 public class MainListActivity extends Activity {
 	private ListView lv;
@@ -35,7 +36,7 @@ public class MainListActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.mainlist);
 
 		// init();
 	}
@@ -87,26 +88,37 @@ public class MainListActivity extends Activity {
 		// int carClass =
 		// Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
 		int status = 2;
+		int classid = 1;
 		Node statusNode = doc.getElementsByTagName("status").item(1);
 		if (!statusNode.getTextContent().equalsIgnoreCase(""))
 			status = Integer.valueOf(statusNode.getTextContent());
+		
+		Node classNode = doc.getElementsByTagName("classid").item(0);
+		if (!classNode.getTextContent().equalsIgnoreCase(""))
+			classid = Integer.valueOf(classNode.getTextContent());
+		
 		String district = doc.getElementsByTagName("districttitle").item(0).getTextContent();
 		String subdistrict = doc.getElementsByTagName("subdistricttitle").item(0).getTextContent();
-
+		String balance = doc.getElementsByTagName("balance").item(0).getTextContent();
+		
+		
 		// Bundle bundle = getIntent().getExtras();
 		// int id = bundle.getInt("id");
 		Driver driver = TaxiApplication.getDriver();
 		driver.setStatus(status);
-		// driver.setClassAuto(0);
+		driver.setClassAuto(classid-1);
 		driver.setOrdersCount(ordersCount);
 		driver.setDistrict(district);
 		driver.setSubdistrict(subdistrict);
+		driver.setBalance(balance);
 		initMainList();
 	}
 
 	private void initMainList() {
 		final Driver driver = TaxiApplication.getDriver();
 		if (driver != null) {
+			TextView textView = (TextView) findViewById(R.id.textView1);
+			textView.setText("Баланс: "+driver.getBalance());
 			itemsList = new ArrayList<Map<String, String>>();
 			itemsList.add(createItem("item", this.getString(R.string.my_orders) + " " + driver.getOrdersCount()));
 			itemsList.add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));
@@ -238,8 +250,9 @@ public class MainListActivity extends Activity {
 			Driver driver = TaxiApplication.getDriver();
 			if (driver.getOrdersCount() != 0) {
 				exitDialog();
+				return true;
 			}
-			return true;
+			else return super.onKeyDown(keyCode, event);
 		} else {
 			return super.onKeyDown(keyCode, event);
 		}

@@ -35,7 +35,7 @@ public class MyOrderItemActivity extends Activity {
     private CountDownTimer timer;
     private ArrayList<String> orderList;
     private TextView counterView;
-
+    //TODO:set timer date
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

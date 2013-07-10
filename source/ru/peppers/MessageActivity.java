@@ -20,14 +20,16 @@ import org.w3c.dom.NodeList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MessageActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.message);
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
@@ -87,15 +89,26 @@ public class MessageActivity extends Activity {
         // Collections.sort(readed);
         // all.addAll(readed);
 
-        ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1,
-                all);
+        TextView tv = (TextView) findViewById(R.id.textView1);
+
+        tv.setMovementMethod(new ScrollingMovementMethod());
+        
+		int arraySize = all.size();
+		for (int i = 0; i < arraySize; i++) {
+			tv.append(all.get(i).toString());
+			tv.append("\n");
+			tv.append("\n");
+		}
+        
+       // ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1,
+         //       all);
 
         // final Driver driver = TaxiApplication.getDriver();
         // driver.setMessages(all);
 
-        ListView lv = (ListView) findViewById(R.id.mainListView);
+        //ListView lv = (ListView) findViewById(R.id.mainListView);
 
-        lv.setAdapter(adapter);
+        //lv.setAdapter(adapter);
 
     }
 }

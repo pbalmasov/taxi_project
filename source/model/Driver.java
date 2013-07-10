@@ -26,7 +26,7 @@ public class Driver {
 	private ArrayList<Order> _myOrders;
 	private ArrayList<Order> _freeOrders;
 	private ArrayList<Order> _districtOrders;
-	private int balance;
+	private String balance;
 	//
 	private int ordersCount;
 	private int totalOrders;
@@ -194,7 +194,7 @@ public class Driver {
 	/**
 	 * @return the balance
 	 */
-	public int getBalance() {
+	public String getBalance() {
 		return balance;
 	}
 
@@ -202,7 +202,7 @@ public class Driver {
 	 * @param balance
 	 *            the balance to set
 	 */
-	public void setBalance(int balance) {
+	public void setBalance(String balance) {
 		this.balance = balance;
 	}
 

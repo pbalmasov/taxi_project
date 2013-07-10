@@ -89,26 +89,35 @@ public class MessageActivity extends Activity {
         // Collections.sort(readed);
         // all.addAll(readed);
 
-        TextView tv = (TextView) findViewById(R.id.textView1);
-
-        tv.setMovementMethod(new ScrollingMovementMethod());
+//        TextView tv = (TextView) findViewById(R.id.textView1);
+//
+//        tv.setMovementMethod(new ScrollingMovementMethod());
+//        
+//		int arraySize = all.size();
+//		for (int i = 0; i < arraySize; i++) {
+//			tv.append(all.get(i).toString());
+//			tv.append("\n");
+//			tv.append("\n");
+//		}
         
-		int arraySize = all.size();
-		for (int i = 0; i < arraySize; i++) {
-			tv.append(all.get(i).toString());
-			tv.append("\n");
-			tv.append("\n");
-		}
-        
-       // ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1,
-         //       all);
+       ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1,
+                all){ 
+                    public boolean areAllItemsEnabled() 
+                    { 
+                            return false; 
+                    } 
+                    public boolean isEnabled(int position) 
+                    { 
+                            return false; 
+                    } 
+            }; ;
 
-        // final Driver driver = TaxiApplication.getDriver();
-        // driver.setMessages(all);
+         //final Driver driver = TaxiApplication.getDriver();
+       //  driver.setMessages(all);
 
-        //ListView lv = (ListView) findViewById(R.id.mainListView);
+        ListView lv = (ListView) findViewById(R.id.listView1);
 
-        //lv.setAdapter(adapter);
+        lv.setAdapter(adapter);
 
     }
 }

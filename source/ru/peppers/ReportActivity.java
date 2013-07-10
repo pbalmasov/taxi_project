@@ -42,40 +42,42 @@ public class ReportActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.report);
-
-		Bundle bundle = getIntent().getExtras();
-		// int id = bundle.getInt("id");
-
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("action", "reportdata"));
-		// nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
-
-		Document doc = PhpData.postData(this, nameValuePairs);
-		if (doc != null) {
-			Node errorNode = doc.getElementsByTagName("error").item(0);
-
-			if (Integer.parseInt(errorNode.getTextContent()) == 1)
-				new AlertDialog.Builder(this).setTitle("Ошибка")
-						.setMessage("Ошибка на сервере. Перезапустите приложение.").setNeutralButton("Закрыть", null)
-						.show();
-			else {
-				try {
-					initMainList(doc);
-				} catch (DOMException e) {
-					e.printStackTrace();
-					new AlertDialog.Builder(this).setTitle("Ошибка")
-							.setMessage("Ошибка на сервере. Перезапустите приложение.")
-							.setNeutralButton("Закрыть", null).show();
-				} catch (ParseException e) {
-					e.printStackTrace();
-					new AlertDialog.Builder(this).setTitle("Ошибка")
-							.setMessage("Ошибка на сервере. Перезапустите приложение.")
-							.setNeutralButton("Закрыть", null).show();
-				}
-			}
-		} else {
-			initList();
-		}
+		initList();
+		// Bundle bundle = getIntent().getExtras();
+		// // int id = bundle.getInt("id");
+		//
+		// List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		// nameValuePairs.add(new BasicNameValuePair("action", "reportdata"));
+		// // nameValuePairs.add(new BasicNameValuePair("id",
+		// String.valueOf(id)));
+		//
+		// Document doc = PhpData.postData(this, nameValuePairs);
+		// if (doc != null) {
+		// Node errorNode = doc.getElementsByTagName("error").item(0);
+		//
+		// if (Integer.parseInt(errorNode.getTextContent()) == 1)
+		// new AlertDialog.Builder(this).setTitle("Ошибка")
+		// .setMessage("Ошибка на сервере. Перезапустите приложение.").setNeutralButton("Закрыть",
+		// null)
+		// .show();
+		// else {
+		// try {
+		// initMainList(doc);
+		// } catch (DOMException e) {
+		// e.printStackTrace();
+		// new AlertDialog.Builder(this).setTitle("Ошибка")
+		// .setMessage("Ошибка на сервере. Перезапустите приложение.")
+		// .setNeutralButton("Закрыть", null).show();
+		// } catch (ParseException e) {
+		// e.printStackTrace();
+		// new AlertDialog.Builder(this).setTitle("Ошибка")
+		// .setMessage("Ошибка на сервере. Перезапустите приложение.")
+		// .setNeutralButton("Закрыть", null).show();
+		// }
+		// }
+		// } else {
+		// initList();
+		// }
 	}
 
 	private void initMainList(Document doc) throws DOMException, ParseException {
@@ -139,13 +141,13 @@ public class ReportActivity extends Activity {
 		TextView number2 = (TextView) findViewById(R.id.textView3);
 		TextView number3 = (TextView) findViewById(R.id.textView4);
 		balance.setText("Баланс: " + driver.getBalance() + " р.");
-		number1.setText("В очереди: " + driver.getInorder());
-		number2.setText("В районе: " + driver.getIndistrict());
-		number3.setText("В общей: " + driver.getInall());
+		number1.setText("В очереди: " + 0);//driver.getInorder());
+		number2.setText("В районе: " + 0);//driver.getIndistrict());
+		number3.setText("В общей: "+ 0);//driver.getInall());
 		itemsList = new ArrayList<String>();
 		itemsList.add("Статус: " + driver.getStatusString());
 		itemsList.add("Класс: " + driver.getClassAutoString());
-		itemsList.add("Отчет: " + driver.reportsCount());
+		itemsList.add("Отчет: " + 0);//driver.reportsCount());
 
 		ListView lv = (ListView) findViewById(R.id.listView1);
 

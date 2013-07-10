@@ -17,6 +17,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 public class SettingsActivity extends Activity {
+	private EditText passwordEditText;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,12 +35,14 @@ public class SettingsActivity extends Activity {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(!isChecked&&passwordEditText.getText().length()!=0)
+					passwordEditText.setText("");
 				saveIsPassword(isChecked);
 			}
 
 		});
 
-		final EditText passwordEditText = (EditText) findViewById(R.id.editText1);
+		passwordEditText = (EditText) findViewById(R.id.editText1);
 		passwordEditText.setText(settings.getString("passwordApp", ""));
 		passwordEditText.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {

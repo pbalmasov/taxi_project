@@ -78,7 +78,7 @@ public class MyOrderActivity extends Activity {
             Element item = (Element) nodeList.item(i);
 
             Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
-            Node classNode = item.getElementsByTagName("class").item(0);
+            Node classNode = item.getElementsByTagName("classid").item(0);
             Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
             Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
             Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);

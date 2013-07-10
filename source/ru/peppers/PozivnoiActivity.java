@@ -47,10 +47,6 @@ public class PozivnoiActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(true){
-		initUpdateDialog(9);
-		return;
-		}
 		boolean update = false;
 		TaxiApplication.setDriver(new Driver(this, 0, 0, 0, "", ""));
 		Log.d("My_tag", "INIT DRIVER");

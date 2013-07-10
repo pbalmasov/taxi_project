@@ -220,7 +220,7 @@ public class PozivnoiActivity extends Activity {
 
 		final EditText input = new EditText(this);
 		input.setText(pozivnoi);
-		
+
 		InputFilter filter = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 				for (int i = start; i < end; i++) {
@@ -347,16 +347,15 @@ public class PozivnoiActivity extends Activity {
 		});
 		builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
 
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode,
-                    KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                	dialog.dismiss();
-                    finish();
-                }
-                return true;
-            }
-        });
+			@Override
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_BACK) {
+					dialog.dismiss();
+					finish();
+				}
+				return true;
+			}
+		});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -369,8 +368,12 @@ public class PozivnoiActivity extends Activity {
 		builder.setPositiveButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.dismiss();
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_APK));
-				startActivity(intent);
+				Intent install = new Intent(Intent.ACTION_VIEW);
+				install.setDataAndType(Uri.parse(URL_APK), "application/vnd.android.package-archive");
+				startActivity(install);
+				// Intent intent = new Intent(Intent.ACTION_VIEW,
+				// Uri.parse(URL_APK));
+				// startActivity(intent);
 				finish();
 			}
 		});

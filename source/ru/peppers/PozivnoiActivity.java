@@ -38,7 +38,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class PozivnoiActivity extends Activity {
-	private static final String URL_APK = "http://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk";
+	private static final String URL_APK = "https://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk?raw=true";
 	private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
 	private static final String MY_TAG = "My_tag";
 	protected static final String PREFS_NAME = "MyNamePrefs1";
@@ -47,6 +47,10 @@ public class PozivnoiActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if(true){
+		initUpdateDialog(9);
+		return;
+		}
 		boolean update = false;
 		TaxiApplication.setDriver(new Driver(this, 0, 0, 0, "", ""));
 		Log.d("My_tag", "INIT DRIVER");
@@ -368,9 +372,7 @@ public class PozivnoiActivity extends Activity {
 		builder.setPositiveButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.dismiss();
-				Intent install = new Intent(Intent.ACTION_VIEW);
-				install.setDataAndType(Uri.parse(URL_APK), "application/vnd.android.package-archive");
-				startActivity(install);
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_APK)));
 				// Intent intent = new Intent(Intent.ACTION_VIEW,
 				// Uri.parse(URL_APK));
 				// startActivity(intent);

@@ -26,7 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class SubDistrictActivity extends Activity {
+public class SubDistrictActivity extends BalanceActivity {
 	private String districtid;
 
 	@Override
@@ -34,10 +34,7 @@ public class SubDistrictActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
 		Bundle bundle = getIntent().getExtras();
-		if (TaxiApplication.getDriver() != null)
-			setTitle(bundle.getString("districtname") + " Баланс: " + TaxiApplication.getDriver().getBalance());
-		else
-			setTitle(bundle.getString("districtname"));
+		this.title.setText(bundle.getString("districtname"));
 		districtid = bundle.getString("districtid");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);

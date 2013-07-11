@@ -25,7 +25,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public class MainListActivity extends Activity {
+public class MainListActivity extends BalanceActivity {
 	private ListView lv;
 	public SimpleAdapter simpleAdpt;
 	public List<Map<String, String>> itemsList;
@@ -111,14 +111,13 @@ public class MainListActivity extends Activity {
 		driver.setDistrict(district);
 		driver.setSubdistrict(subdistrict);
 		driver.setBalance(balance);
+		this.updateBalance();
 		initMainList();
 	}
 
 	private void initMainList() {
 		final Driver driver = TaxiApplication.getDriver();
 		if (driver != null) {
-			TextView textView = (TextView) findViewById(R.id.textView1);
-			textView.setText("Баланс: "+driver.getBalance());
 			itemsList = new ArrayList<Map<String, String>>();
 			itemsList.add(createItem("item", this.getString(R.string.my_orders) + " " + driver.getOrdersCount()));
 			itemsList.add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));

@@ -250,7 +250,7 @@ public class ReportActivity extends BalanceActivity {
 					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
 					nameValuePairs.add(new BasicNameValuePair("object", "driver"));
 					nameValuePairs.add(new BasicNameValuePair("mode", "class"));
-					nameValuePairs.add(new BasicNameValuePair("classid", String.valueOf(item + 1)));
+					nameValuePairs.add(new BasicNameValuePair("currentclassid", String.valueOf(item + 1)));
 
 					Document doc = PhpData.postData(ReportActivity.this, nameValuePairs, PhpData.newURL);
 					if (doc != null) {

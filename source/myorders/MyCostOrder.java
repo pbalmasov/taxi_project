@@ -51,9 +51,10 @@ public class MyCostOrder extends Order {
 	public ArrayList<String> toArrayList() {
 		ArrayList<String> array = new ArrayList<String>();
 		array.addAll(getAbonentArray());
+		if (_registrationtime != null)
+			array.add(_context.getString(R.string.accepted) + " " + getTimeString(_registrationtime));
 		if (_departuretime != null)
-			array.add(_context.getString(R.string.accepted) + " " + getTimeString(_departuretime));
-		array.add(_context.getString(R.string.date) + " " + getTimeString(_registrationtime));
+		array.add(_context.getString(R.string.date) + " " + getTimeString(_departuretime));
 		if (_invitationtime != null)
 			array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_invitationtime));
 
@@ -71,11 +72,11 @@ public class MyCostOrder extends Order {
 	}
 
 	private String getTimeString(Date date) {
-		if(DateUtils.isToday(date))
-			return "Сегодня";
-		if(DateUtils.isAfterDay(date, new Date()))
-			return "Завтра";
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-		return dateFormat.format(date);
+		if(DateUtils.isToday(date))
+			return "Сегодня "+dateFormat.format(date);
+		if(DateUtils.isAfterDay(date, new Date()))
+			return "Завтра "+dateFormat.format(date);
+		return new SimpleDateFormat("MM-dd HH:mm").format(date);
 	}
 }

@@ -9,6 +9,7 @@ import java.util.Date;
 
 import ru.peppers.R;
 
+import model.DateUtils;
 import model.Order;
 import android.content.Context;
 
@@ -45,9 +46,10 @@ public class CostOrder extends Order {
 	public ArrayList<String> toArrayList() {
 		ArrayList<String> array = new ArrayList<String>();
 		array.addAll(getAbonentArray());
+		if (_registrationtime != null)
+			array.add(_context.getString(R.string.accepted) + " " + getTimeString(_registrationtime));
 		if (_departuretime != null)
-			array.add(_context.getString(R.string.accepted) + " " + getTimeString(_departuretime));
-		array.add(_context.getString(R.string.date) + " " + getTimeString(_registrationtime));
+		array.add(_context.getString(R.string.date) + " " + getTimeString(_departuretime));
 
 		array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
 		array.add(_context.getString(R.string.where) + " " + _addressarrival);
@@ -64,6 +66,10 @@ public class CostOrder extends Order {
 
 	private String getTimeString(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-		return dateFormat.format(date);
+		if(DateUtils.isToday(date))
+			return "Сегодня "+dateFormat.format(date);
+		if(DateUtils.isAfterDay(date, new Date()))
+			return "Завтра "+dateFormat.format(date);
+		return new SimpleDateFormat("MM-dd HH:mm").format(date);
 	}
 }

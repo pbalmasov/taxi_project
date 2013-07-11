@@ -5,9 +5,11 @@
 package myorders;
 
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 
+import model.DateUtils;
 import model.Order;
 import ru.peppers.R;
 import android.content.Context;
@@ -69,6 +71,10 @@ public class MyCostOrder extends Order {
 	}
 
 	private String getTimeString(Date date) {
+		if(DateUtils.isToday(date))
+			return "Сегодня";
+		if(DateUtils.isAfterDay(date, new Date()))
+			return "Завтра";
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		return dateFormat.format(date);
 	}

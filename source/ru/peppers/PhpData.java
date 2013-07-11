@@ -1,6 +1,7 @@
 package ru.peppers;
 
 import java.io.StringReader;
+import java.net.SocketException;
 import java.security.KeyStore;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -21,6 +23,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
@@ -59,8 +62,12 @@ final public class PhpData {
             registry.register(new Scheme("https", sf, 443));
 
             ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+            DefaultHttpClient defaultHttpClient = new DefaultHttpClient(ccm, params);
 
-            return new DefaultHttpClient(ccm, params);
+        	HttpParams httpParams = defaultHttpClient.getParams();
+        	HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+        	HttpConnectionParams.setSoTimeout(httpParams, 5000);
+            return defaultHttpClient;
         } catch (Exception e) {
             return new DefaultHttpClient();
         }
@@ -86,6 +93,7 @@ final public class PhpData {
                 if (sessionid != "" && url == newURL)
                     httppost.setHeader("cookie", "cmansid=" + sessionid);
                 // Execute HTTP Post Request
+
                 HttpResponse response = httpclient.execute(httppost);
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
@@ -105,7 +113,13 @@ final public class PhpData {
 
                 return doc;
 
-            } catch (Exception e) {
+            }
+            catch(ConnectTimeoutException e){
+                new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+                        .setMessage("Сервер не отвечает. Обратитесь к администратору.")
+                        .setNeutralButton(activity.getString(R.string.close), null).show();
+            }
+            catch (Exception e) {
                 errorHandler(activity);
             }
         } else {
@@ -117,6 +131,8 @@ final public class PhpData {
         return null;
     }
 
+    
+    
     private static void errorHandler(Context context) {
         new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
                 .setMessage(context.getString(R.string.error_message))

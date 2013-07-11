@@ -34,7 +34,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public class ReportActivity extends Activity {
+public class ReportActivity extends BalanceActivity {
 	private ArrayAdapter<String> simpleAdpt;
 	private ArrayList<String> itemsList;
 

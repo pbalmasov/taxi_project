@@ -10,13 +10,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ReportListActivity extends Activity {
+public class ReportListActivity extends BalanceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        initMainList();
+        //initMainList();
     }
 
     private void initMainList() {

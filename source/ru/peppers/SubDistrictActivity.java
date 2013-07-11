@@ -28,12 +28,16 @@ import android.widget.ListView;
 
 public class SubDistrictActivity extends Activity {
 	private String districtid;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
 		Bundle bundle = getIntent().getExtras();
-        setTitle(bundle.getString("districtname"));
+		if (TaxiApplication.getDriver() != null)
+			setTitle(bundle.getString("districtname") + " Баланс: " + TaxiApplication.getDriver().getBalance());
+		else
+			setTitle(bundle.getString("districtname"));
 		districtid = bundle.getString("districtid");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
@@ -42,8 +46,7 @@ public class SubDistrictActivity extends Activity {
 		nameValuePairs.add(new BasicNameValuePair("action", "list"));
 		nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
 
-		Document doc = PhpData.postData(this, nameValuePairs,
-				PhpData.newURL);
+		Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
 		if (doc != null) {
 
 			Node responseNode = doc.getElementsByTagName("response").item(0);
@@ -63,28 +66,29 @@ public class SubDistrictActivity extends Activity {
 
 	private void errorHandler() {
 		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-		.setMessage(this.getString(R.string.error_message))
-		.setNeutralButton(this.getString(R.string.close), null).show();
+				.setMessage(this.getString(R.string.error_message))
+				.setNeutralButton(this.getString(R.string.close), null).show();
 	}
 
 	private void initMainList(Document doc) throws DOMException, ParseException {
 		NodeList nodeList = doc.getElementsByTagName("item");
 		final ArrayList<SubDistrict> subDistricts = new ArrayList<SubDistrict>();
-		subDistricts.add(new SubDistrict(0,this.getString(R.string.all_drivers),null));
+		subDistricts.add(new SubDistrict(0, this.getString(R.string.all_drivers), null));
 		for (int i = 0; i < nodeList.getLength(); i++) {
 
-			Element item = (Element) nodeList.item(i);;
+			Element item = (Element) nodeList.item(i);
+			;
 
 			Node titleNode = item.getElementsByTagName("title").item(0);
 			Node vehicleNode = item.getElementsByTagName("vehiclecount").item(0);
-            Node subDistrictIdNode = item.getElementsByTagName("subdistrictid").item(0);
+			Node subDistrictIdNode = item.getElementsByTagName("subdistrictid").item(0);
 
 			int drivers = 0;
 			if (!vehicleNode.getTextContent().equalsIgnoreCase(""))
 				drivers = Integer.parseInt(vehicleNode.getTextContent());
 
 			String name = titleNode.getTextContent();
-            String subDistrictId = subDistrictIdNode.getTextContent();
+			String subDistrictId = subDistrictIdNode.getTextContent();
 
 			SubDistrict subDistrict = new SubDistrict(drivers, name, subDistrictId);
 			subDistricts.add(subDistrict);
@@ -92,12 +96,11 @@ public class SubDistrictActivity extends Activity {
 
 		ListView lv = (ListView) findViewById(R.id.listView1);
 
-		ArrayAdapter<SubDistrict> adapter = new ArrayAdapter<SubDistrict>(this, R.layout.group,
-				subDistricts);
+		ArrayAdapter<SubDistrict> adapter = new ArrayAdapter<SubDistrict>(this, R.layout.group, subDistricts);
 
 		lv.setAdapter(adapter);
 
-		lv.setOnItemClickListener(new ListView.OnItemClickListener(){
+		lv.setOnItemClickListener(new ListView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -120,20 +123,19 @@ public class SubDistrictActivity extends Activity {
 			public void onClick(DialogInterface dialog, int item) {
 
 				if (item == 0) {
-					
-					//TODO:send request
-					int array_size = (subdistrictId!=null)?5:4;
-					Log.d("My_tag",String.valueOf(array_size));
+
+					// TODO:send request
+					int array_size = (subdistrictId != null) ? 5 : 4;
+					Log.d("My_tag", String.valueOf(array_size));
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(array_size);
 					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
 					nameValuePairs.add(new BasicNameValuePair("object", "driver"));
 					nameValuePairs.add(new BasicNameValuePair("action", "relocate"));
 					nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
-					if(subdistrictId!=null)
-					nameValuePairs.add(new BasicNameValuePair("subdistrictid", subdistrictId));
+					if (subdistrictId != null)
+						nameValuePairs.add(new BasicNameValuePair("subdistrictid", subdistrictId));
 
-					Document doc = PhpData.postData(SubDistrictActivity.this, nameValuePairs,
-							PhpData.newURL);
+					Document doc = PhpData.postData(SubDistrictActivity.this, nameValuePairs, PhpData.newURL);
 					if (doc != null) {
 
 						Node responseNode = doc.getElementsByTagName("response").item(0);
@@ -141,13 +143,13 @@ public class SubDistrictActivity extends Activity {
 
 						if (responseNode.getTextContent().equalsIgnoreCase("failure"))
 							PhpData.errorFromServer(SubDistrictActivity.this, errorNode);
-						else{
+						else {
 							setResult(RESULT_OK);
 							finish();
 						}
 					}
 				}
-				
+
 				if (item == 1) {
 					Intent intent = new Intent(SubDistrictActivity.this, DistrictListActivity.class);
 					Bundle bundle = new Bundle();

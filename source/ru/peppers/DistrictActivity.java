@@ -36,7 +36,7 @@ import android.widget.SimpleAdapter;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
 
-public class DistrictActivity extends Activity {
+public class DistrictActivity extends BalanceActivity {
     private static final int REQUEST_EXIT = 0;
 
 	@Override

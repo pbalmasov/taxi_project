@@ -30,7 +30,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MyOrderItemActivity extends Activity {
+public class MyOrderItemActivity extends BalanceActivity {
 
     private CountDownTimer timer;
     private ArrayList<String> orderList;

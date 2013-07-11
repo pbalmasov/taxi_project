@@ -31,7 +31,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class FreeOrderItemActivity extends Activity {
+public class FreeOrderItemActivity extends BalanceActivity {
 
 	private Order order;
 

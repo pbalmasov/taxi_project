@@ -18,7 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MessageFromServiceActivity extends Activity {
+public class MessageFromServiceActivity extends BalanceActivity {
     public final static String TITLE = "title";
     public final static String MESSAGE = "message";
 

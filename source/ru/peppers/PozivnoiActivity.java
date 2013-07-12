@@ -37,7 +37,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class PozivnoiActivity extends Activity {
+public class PozivnoiActivity extends BalanceActivity {
 	private static final String URL_APK = "https://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk?raw=true";
 	private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
 	private static final String MY_TAG = "My_tag";
@@ -127,7 +127,7 @@ public class PozivnoiActivity extends Activity {
 				// обновление?
 			}
 		} catch (Exception e) {
-			errorHandler();
+			PhpData.errorHandler(this,e);
 		}
 		editor.commit();
 		if (!update) {
@@ -135,11 +135,7 @@ public class PozivnoiActivity extends Activity {
 		}
 	}
 
-	private void errorHandler() {
-		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-				.setMessage(this.getString(R.string.error_message))
-				.setNeutralButton(this.getString(R.string.close), null).show();
-	}
+
 
 	private void emptyPozivnoiError() {
 		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
@@ -449,7 +445,7 @@ public class PozivnoiActivity extends Activity {
 				try {
 					getMessages(doc);
 				} catch (Exception e) {
-					errorHandler();
+		            PhpData.errorHandler(this,e);
 				}
 			}
 		}

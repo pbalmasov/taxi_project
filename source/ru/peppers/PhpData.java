@@ -64,13 +64,22 @@ final public class PhpData {
             ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
             DefaultHttpClient defaultHttpClient = new DefaultHttpClient(ccm, params);
 
-        	HttpParams httpParams = defaultHttpClient.getParams();
-        	HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
-        	HttpConnectionParams.setSoTimeout(httpParams, 5000);
+            HttpParams httpParams = defaultHttpClient.getParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+            HttpConnectionParams.setSoTimeout(httpParams, 5000);
             return defaultHttpClient;
         } catch (Exception e) {
             return new DefaultHttpClient();
         }
+    }
+
+    static public void errorHandler(Context context, Exception e) {
+        String str = "";
+        if(e!=null)
+            str = e.toString();
+        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                .setMessage(context.getString(R.string.error_message) + " " + str)
+                .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public void errorFromServer(Context context, Node errorNode) {
@@ -113,13 +122,11 @@ final public class PhpData {
 
                 return doc;
 
-            }
-            catch(ConnectTimeoutException e){
+            } catch (ConnectTimeoutException e) {
                 new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
                         .setMessage("Сервер не отвечает. Обратитесь к администратору.")
                         .setNeutralButton(activity.getString(R.string.close), null).show();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 errorHandler(activity);
             }
         } else {
@@ -131,8 +138,6 @@ final public class PhpData {
         return null;
     }
 
-    
-    
     private static void errorHandler(Context context) {
         new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
                 .setMessage(context.getString(R.string.error_message))

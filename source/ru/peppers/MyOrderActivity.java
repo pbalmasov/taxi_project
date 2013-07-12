@@ -34,10 +34,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MyOrderActivity extends BalanceActivity {
+    private static final int REQUEST_EXIT = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+//        if(true){
+//        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
+//        Bundle bundle = new Bundle();
+//        // bundle.putInt("id", id);
+//        intent.putExtras(bundle);
+//        startActivity(intent);
+//        return;
+//        }
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
@@ -89,7 +98,7 @@ public class MyOrderActivity extends BalanceActivity {
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
 			Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
-			
+
             Integer nominalcost = null;
             Integer carClass = 0;
             String addressdeparture = null;
@@ -133,13 +142,13 @@ public class MyOrderActivity extends BalanceActivity {
 
             if (!commentNode.getTextContent().equalsIgnoreCase(""))
                 comment = commentNode.getTextContent();
-            
+
 			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
 				orderId = orderIdNode.getTextContent();
 
 			if (!invitationNode.getTextContent().equalsIgnoreCase(""))
 				invitationtime = format.parse(invitationNode.getTextContent());
-			
+
             orders.add(new MyCostOrder(this, orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,
                     addressarrival, paymenttype,invitationtime, departuretime));
 
@@ -191,5 +200,14 @@ public class MyOrderActivity extends BalanceActivity {
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_EXIT) {
+             if (resultCode == RESULT_OK) {
+                this.finish();
+             }
+         }
     }
 }

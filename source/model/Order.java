@@ -23,7 +23,7 @@ public class Order implements OrderInterface {
 	protected String _comment;
 	protected String _addressarrival;
 	protected String _index;
-	protected Integer _nominalcost;
+	private Integer _nominalcost;
 	protected Date _timerDate;
 	protected Integer quantity;
 	protected String nickname;
@@ -39,7 +39,7 @@ public class Order implements OrderInterface {
 		_comment = orderText;
 		_addressarrival = where;
 		_index = index;
-		_nominalcost = costRide;
+		set_nominalcost(costRide);
 	}
 
 	public String get_index() {
@@ -99,4 +99,12 @@ public class Order implements OrderInterface {
 	public void setRides(Integer rides) {
 		this.quantity = rides;
 	}
+
+    public Integer get_nominalcost() {
+        return _nominalcost;
+    }
+
+    public void set_nominalcost(Integer _nominalcost) {
+        this._nominalcost = _nominalcost;
+    }
 }

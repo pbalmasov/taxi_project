@@ -39,14 +39,14 @@ public class MyOrderActivity extends BalanceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-//        if(true){
-//        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
-//        Bundle bundle = new Bundle();
-//        // bundle.putInt("id", id);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
-//        return;
-//        }
+        if(true){
+        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
+        Bundle bundle = new Bundle();
+        // bundle.putInt("id", id);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        return;
+        }
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
@@ -82,7 +82,7 @@ public class MyOrderActivity extends BalanceActivity {
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
-        ArrayList<Order> orders = new ArrayList<Order>();
+        final ArrayList<Order> orders = new ArrayList<Order>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element item = (Element) nodeList.item(i);
 
@@ -195,7 +195,7 @@ public class MyOrderActivity extends BalanceActivity {
                 Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
                 Bundle bundle = new Bundle();
                 // bundle.putInt("id", id);
-                bundle.putInt("index", position);
+                bundle.putString("index", orders.get(position).get_index());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

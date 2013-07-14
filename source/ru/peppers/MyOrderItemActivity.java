@@ -35,6 +35,7 @@ public class MyOrderItemActivity extends BalanceActivity {
     private CountDownTimer timer;
     private ArrayList<String> orderList;
     private TextView counterView;
+    private Order order;
 
     // TODO:set timer date
     @Override
@@ -44,10 +45,12 @@ public class MyOrderItemActivity extends BalanceActivity {
         Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
         int index = bundle.getInt("index");
-        if(index==0)
+        if (index == 0) {
             priceDialog();
+            return;
+        }
 
-        Order order = TaxiApplication.getDriver().getOrder(index);
+        order = TaxiApplication.getDriver().getOrder(index);
 
         orderList = order.toArrayList();
 
@@ -300,7 +303,7 @@ public class MyOrderItemActivity extends BalanceActivity {
         Button btn = (Button) view.findViewById(R.id.button1);
         EditText input = (EditText) view.findViewById(R.id.editText1);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        btn.setOnClickListener(onSavePrice(input));
+        btn.setOnClickListener(onSavePrice());
 
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
         alert.setView(view);
@@ -308,29 +311,45 @@ public class MyOrderItemActivity extends BalanceActivity {
         alert.show();
     }
 
-    private Button.OnClickListener onSavePrice(final EditText input) {
+    private Button.OnClickListener onSavePrice() {
         return new Button.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                EditText input = (EditText) v.findViewById(R.id.editText1);
+                RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
+                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+                String state = "1";
+                if (checkedRadioButtonId == R.id.radio0) {
+                    state = "1";
+                } else if (checkedRadioButtonId == R.id.radio1) {
+                    state = "0";
+                }
+
                 if (input.getText().length() != 0) {
                     String value = input.getText().toString();
                     Bundle bundle = getIntent().getExtras();
-                    int id = bundle.getInt("id");
-                    int index = bundle.getInt("index");
+                    String index = bundle.getString("index");
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-                    nameValuePairs.add(new BasicNameValuePair("action", "savecost"));
-                    nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
-                    nameValuePairs.add(new BasicNameValuePair("index", String.valueOf(index)));
-                    nameValuePairs.add(new BasicNameValuePair("value", value));
+                    nameValuePairs.add(new BasicNameValuePair("action", "close"));
+                    nameValuePairs.add(new BasicNameValuePair("mode", "my"));
+                    nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                    nameValuePairs.add(new BasicNameValuePair("object", "order"));
+                    nameValuePairs.add(new BasicNameValuePair("orderid", index));
+                    nameValuePairs
+                            .add(new BasicNameValuePair("cost", String.valueOf(order.get_nominalcost())));
+                    nameValuePairs.add(new BasicNameValuePair("cashless", value));
+                    nameValuePairs.add(new BasicNameValuePair("state", state));
 
-                    Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
+                    Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs, PhpData.newURL);
                     if (doc != null) {
-                        Node errorNode = doc.getElementsByTagName("error").item(0);
+                        Node responseNode = doc.getElementsByTagName("response").item(0);
+                        Node errorNode = doc.getElementsByTagName("message").item(0);
 
-                        if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                            errorHandler();
+                        if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                            PhpData.errorFromServer(MyOrderItemActivity.this, errorNode);
                         else {
+
                             new AlertDialog.Builder(MyOrderItemActivity.this)
                                     .setTitle(MyOrderItemActivity.this.getString(R.string.error_title))
                                     .setMessage(MyOrderItemActivity.this.getString(R.string.order_closed))
@@ -339,7 +358,8 @@ public class MyOrderItemActivity extends BalanceActivity {
 
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    timer.cancel();
+                                                    if (timer != null)
+                                                        timer.cancel();
                                                     setResult(RESULT_OK);
                                                     finish();
                                                 }

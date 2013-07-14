@@ -38,8 +38,8 @@ public class CostOrder extends Order {
 			pred = getTimeString(_registrationtime) + ", ";
 
 		String over = "";
-		if (_nominalcost != null)
-			over = ", " + _nominalcost + " " + _context.getString(R.string.currency);
+		if (get_nominalcost() != null)
+			over = ", " + get_nominalcost() + " " + _context.getString(R.string.currency);
 		return pred + _addressdeparture + over;
 	}
 
@@ -56,8 +56,8 @@ public class CostOrder extends Order {
 
 		array.add(_context.getString(R.string.car_class) + " " + getCarClass());
 		array.add(_context.getString(R.string.cost_type) + " " + getPayment());
-		if (_nominalcost != null)
-			array.add(_context.getString(R.string.cost_ride) + " " + _nominalcost + " "
+		if (get_nominalcost() != null)
+			array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " "
 					+ _context.getString(R.string.currency));
 		if (_comment != null)
 			array.add(_context.getString(R.string.description) + " " + _comment);

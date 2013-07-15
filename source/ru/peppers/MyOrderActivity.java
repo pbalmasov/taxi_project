@@ -9,25 +9,17 @@ import java.util.List;
 import model.Driver;
 import model.Order;
 import myorders.MyCostOrder;
-import myorders.MyNoCostOrder;
-import myorders.MyPreliminaryOrder;
-
-import orders.CostOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,14 +31,6 @@ public class MyOrderActivity extends BalanceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-//        if(true){
-//        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
-//        Bundle bundle = new Bundle();
-//        // bundle.putInt("id", id);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
-//        return;
-//        }
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
@@ -65,20 +49,13 @@ public class MyOrderActivity extends BalanceActivity {
                 try {
                     initMainList(doc);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d("My_tag", e.toString());
-                    errorHandler();
+                    PhpData.errorHandler(this,e);
                 }
             }
         }
 
     }
 
-    private void errorHandler() {
-        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-                .setMessage(this.getString(R.string.error_message))
-                .setNeutralButton(this.getString(R.string.close), null).show();
-    }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");

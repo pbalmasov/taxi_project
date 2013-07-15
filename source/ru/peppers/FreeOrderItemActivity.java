@@ -146,9 +146,7 @@ public class FreeOrderItemActivity extends BalanceActivity {
 									finish();
 									//TODO:заканчивать парент активити
 								} catch (Exception e) {
-									e.printStackTrace();
-									Log.d("My_tag", e.toString());
-									errorHandler();
+									PhpData.errorHandler(FreeOrderItemActivity.this,e);
 								}
 							}
 						}
@@ -157,11 +155,5 @@ public class FreeOrderItemActivity extends BalanceActivity {
 				alert.show();
 			}
 		});
-	}
-
-	private void errorHandler() {
-		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-				.setMessage(this.getString(R.string.error_message))
-				.setNeutralButton(this.getString(R.string.close), null).show();
 	}
 }

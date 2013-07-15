@@ -12,24 +12,18 @@ import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -40,18 +34,12 @@ public class MyOrderItemActivity extends BalanceActivity {
 	private TextView counterView;
 	private Order order;
 
-	// TODO:set timer date
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.myorder);
 		Bundle bundle = getIntent().getExtras();
-		// int id = bundle.getInt("id");
 		int index = bundle.getInt("index");
-		// if (index == 0) {
-		// priceDialog();
-		// return;
-		// }
 
 		order = TaxiApplication.getDriver().getOrder(index);
 
@@ -67,16 +55,11 @@ public class MyOrderItemActivity extends BalanceActivity {
 			tv.append("\n");
 		}
 
-		// arrayAdapter = new ArrayAdapter<String>(this,
-		// android.R.layout.simple_list_item_1, orderList);
 
 		if (order.getTimerDate() != null) {
 			timerInit(order);
 		}
 
-		// ListView lv = (ListView) findViewById(R.id.listView1);
-
-		// lv.setAdapter(arrayAdapter);
 
 		Button button = (Button) findViewById(R.id.button1);
 		button.setText(this.getString(R.string.choose_action));
@@ -119,7 +102,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 						Node errorNode = doc.getElementsByTagName("error").item(0);
 
 						if (Integer.parseInt(errorNode.getTextContent()) == 1)
-							errorHandler();
+							PhpData.errorHandler(MyOrderItemActivity.this,null);
 						else {
 							new AlertDialog.Builder(MyOrderItemActivity.this)
 									.setTitle(MyOrderItemActivity.this.getString(R.string.Ok))
@@ -151,7 +134,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 			Node errorNode = doc.getElementsByTagName("error").item(0);
 
 			if (Integer.parseInt(errorNode.getTextContent()) == 1)
-				errorHandler();
+				PhpData.errorHandler(this,null);
 			else {
 				new AlertDialog.Builder(MyOrderItemActivity.this).setTitle(this.getString(R.string.Ok))
 						.setMessage(this.getString(R.string.invite_sended))
@@ -160,11 +143,6 @@ public class MyOrderItemActivity extends BalanceActivity {
 		}
 	}
 
-	private void errorHandler() {
-		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-				.setMessage(this.getString(R.string.error_message))
-				.setNeutralButton(this.getString(R.string.close), null).show();
-	}
 
 	private void timeDialog() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
@@ -190,7 +168,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 				if (doc != null) {
 					Node errorNode = doc.getElementsByTagName("error").item(0);
 					if (Integer.parseInt(errorNode.getTextContent()) == 1)
-						errorHandler();
+						PhpData.errorHandler(MyOrderItemActivity.this,null);
 					else {
 
 						final Order order = TaxiApplication.getDriver().getOrder(index);
@@ -285,7 +263,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 				if (doc != null) {
 					Node errorNode = doc.getElementsByTagName("error").item(0);
 					if (Integer.parseInt(errorNode.getTextContent()) == 1)
-						errorHandler();
+						PhpData.errorHandler(MyOrderItemActivity.this,null);
 					else {
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(new Date());

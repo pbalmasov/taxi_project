@@ -70,17 +70,11 @@ public class DistrictActivity extends BalanceActivity {
                 try {
                     initMainList(doc);
                 } catch (Exception e) {
-                    errorHandler();
+                    PhpData.errorHandler(this,e);
                 }
             }
         }
 	}
-
-	private void errorHandler() {
-        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-                .setMessage(this.getString(R.string.error_message))
-                .setNeutralButton(this.getString(R.string.close), null).show();
-    }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
@@ -216,7 +210,7 @@ public class DistrictActivity extends BalanceActivity {
         // }
         // });
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

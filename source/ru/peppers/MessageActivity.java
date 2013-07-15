@@ -36,8 +36,7 @@ public class MessageActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
 
-        Document doc = PhpData.postData(this, nameValuePairs,
-                PhpData.newURL);
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
         if (doc != null) {
             // Node errorNode = doc.getElementsByTagName("error").item(0);
             //
@@ -49,17 +48,10 @@ public class MessageActivity extends BalanceActivity {
             try {
                 initMainList(doc);
             } catch (Exception e) {
-                errorHandler();
+                PhpData.errorHandler(this, e);
             }
-            // }
         }
 
-    }
-
-    private void errorHandler() {
-        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-                .setMessage(this.getString(R.string.error_message))
-                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
@@ -89,31 +81,31 @@ public class MessageActivity extends BalanceActivity {
         // Collections.sort(readed);
         // all.addAll(readed);
 
-//        TextView tv = (TextView) findViewById(R.id.textView1);
-//
-//        tv.setMovementMethod(new ScrollingMovementMethod());
-//        
-//		int arraySize = all.size();
-//		for (int i = 0; i < arraySize; i++) {
-//			tv.append(all.get(i).toString());
-//			tv.append("\n");
-//			tv.append("\n");
-//		}
-        
-       ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1,
-                all){ 
-                    public boolean areAllItemsEnabled() 
-                    { 
-                            return false; 
-                    } 
-                    public boolean isEnabled(int position) 
-                    { 
-                            return false; 
-                    } 
-            }; ;
+        // TextView tv = (TextView) findViewById(R.id.textView1);
+        //
+        // tv.setMovementMethod(new ScrollingMovementMethod());
+        //
+        // int arraySize = all.size();
+        // for (int i = 0; i < arraySize; i++) {
+        // tv.append(all.get(i).toString());
+        // tv.append("\n");
+        // tv.append("\n");
+        // }
 
-         //final Driver driver = TaxiApplication.getDriver();
-       //  driver.setMessages(all);
+        ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1,
+                all) {
+            public boolean areAllItemsEnabled() {
+                return false;
+            }
+
+            public boolean isEnabled(int position) {
+                return false;
+            }
+        };
+        ;
+
+        // final Driver driver = TaxiApplication.getDriver();
+        // driver.setMessages(all);
 
         ListView lv = (ListView) findViewById(R.id.listView1);
 

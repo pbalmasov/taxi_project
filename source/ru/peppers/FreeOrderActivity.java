@@ -8,28 +8,18 @@ import java.util.List;
 
 import model.Driver;
 import model.Order;
-import model.SubDistrict;
-import myorders.MyCostOrder;
 import orders.CostOrder;
-import orders.NoCostOrder;
-import orders.PreliminaryOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -153,12 +143,12 @@ public class FreeOrderActivity extends BalanceActivity {
 
 			if (!commentNode.getTextContent().equalsIgnoreCase(""))
 				comment = commentNode.getTextContent();
-			
+
 			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
 				orderId = orderIdNode.getTextContent();
-			
 
-			
+
+
 			orders.add(new CostOrder(this,orderId, nominalcost,  addressdeparture, carClass, comment,
 					addressarrival, paymenttype, departuretime));
 

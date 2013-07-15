@@ -69,7 +69,7 @@ public class DistrictListItemActivity extends BalanceActivity {
                         if (doc != null) {
                             Node errorNode = doc.getElementsByTagName("error").item(0);
                             if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                                errorHandler();
+                                PhpData.errorHandler(DistrictListItemActivity.this,null);
                             else {
                                 Driver driver = TaxiApplication.getDriver();
                                 if (driver.getOrders() != null)
@@ -107,11 +107,5 @@ public class DistrictListItemActivity extends BalanceActivity {
             }
 
         });
-    }
-
-    private void errorHandler() {
-        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-                .setMessage(this.getString(R.string.error_message))
-                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 }

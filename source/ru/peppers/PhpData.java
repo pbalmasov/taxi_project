@@ -1,7 +1,6 @@
 package ru.peppers;
 
 import java.io.StringReader;
-import java.net.SocketException;
 import java.security.KeyStore;
 import java.util.List;
 

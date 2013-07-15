@@ -55,16 +55,10 @@ public class SubDistrictActivity extends BalanceActivity {
 				try {
 					initMainList(doc);
 				} catch (Exception e) {
-					errorHandler();
+					PhpData.errorHandler(this,e);
 				}
 			}
 		}
-	}
-
-	private void errorHandler() {
-		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-				.setMessage(this.getString(R.string.error_message))
-				.setNeutralButton(this.getString(R.string.close), null).show();
 	}
 
 	private void initMainList(Document doc) throws DOMException, ParseException {
@@ -115,6 +109,7 @@ public class SubDistrictActivity extends BalanceActivity {
 
 	}
 
+
 	private OnClickListener onContextMenuItemListener(final String subdistrictId) {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item) {
@@ -122,16 +117,16 @@ public class SubDistrictActivity extends BalanceActivity {
 				if (item == 0) {
 
 					// TODO:send request
-					int array_size = (subdistrictId != null) ? 5 : 4;
+					int array_size = (subdistrictId != null) ? 6 : 5;
 					Log.d("My_tag", String.valueOf(array_size));
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(array_size);
 					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
 					nameValuePairs.add(new BasicNameValuePair("object", "driver"));
-					nameValuePairs.add(new BasicNameValuePair("action", "relocate"));
+					nameValuePairs.add(new BasicNameValuePair("action", "set"));
+                    nameValuePairs.add(new BasicNameValuePair("mode", "location"));
 					nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
 					if (subdistrictId != null)
 						nameValuePairs.add(new BasicNameValuePair("subdistrictid", subdistrictId));
-
 					Document doc = PhpData.postData(SubDistrictActivity.this, nameValuePairs, PhpData.newURL);
 					if (doc != null) {
 

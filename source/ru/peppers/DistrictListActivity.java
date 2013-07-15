@@ -43,12 +43,10 @@ public class DistrictListActivity extends Activity {
         String districtid = bundle.getString("districtid");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-        nameValuePairs.add(new BasicNameValuePair("action", "districtlist"));
-        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "district"));
         nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
-
         Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
         if (doc != null) {
 

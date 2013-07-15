@@ -74,6 +74,8 @@ final public class PhpData {
     }
 
     static public void errorHandler(Context context, Exception e) {
+        e.printStackTrace();
+        Log.d("My_tag", e.toString());
         String str = "";
         if(e!=null)
             str = e.toString();

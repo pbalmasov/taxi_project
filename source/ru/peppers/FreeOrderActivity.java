@@ -162,12 +162,12 @@ public class FreeOrderActivity extends BalanceActivity {
 
 			if (!commentNode.getTextContent().equalsIgnoreCase(""))
 				comment = commentNode.getTextContent();
-			
+
 			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
 				orderId = orderIdNode.getTextContent();
-			
 
-			
+
+
 			orders.add(new CostOrder(this,orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,
 					addressarrival, paymenttype, departuretime));
 
@@ -182,7 +182,7 @@ public class FreeOrderActivity extends BalanceActivity {
 		}
 
 		Driver driver = TaxiApplication.getDriver();
-		driver.setFreeOrders(orders);
+		driver.set_districtOrders(orders);
 		// driver = new Driver(status, carClass, ordersCount, district,
 		// subdistrict);
 

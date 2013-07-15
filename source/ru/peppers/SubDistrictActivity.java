@@ -150,11 +150,13 @@ public class SubDistrictActivity extends BalanceActivity {
 				if (item == 1) {
 					Intent intent = new Intent(SubDistrictActivity.this, DistrictListActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString("group", subdistrictId);
-					bundle.putString("child", subdistrictId);
+					bundle.putString("districtid", districtid);
 					intent.putExtras(bundle);
 					startActivity(intent);
+                    setResult(RESULT_OK);
+                    finish();
 				}
+
 				dialog.dismiss();
 
 			}

@@ -1,6 +1,7 @@
 package ru.peppers;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
@@ -9,9 +10,13 @@ public class BalanceActivity extends Activity {
 
 	public TextView title;
 	private TextView balance;
+	protected static final String PREFS_NAME = "MyNamePrefs1";
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		int isLightTheme = settings.getInt("theme", 0);
+		if(isLightTheme!=0)
 	    setTheme(android.R.style.Theme_Light);
         super.onCreate(savedInstanceState);
 

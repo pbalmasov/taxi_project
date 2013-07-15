@@ -1,7 +1,9 @@
 package ru.peppers;
 
+import model.Driver;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +17,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class SettingsActivity extends BalanceActivity {
 	private EditText passwordEditText;
@@ -28,7 +33,7 @@ public class SettingsActivity extends BalanceActivity {
 		// int id = bundle.getInt("id");
 
 		final CheckBox box = (CheckBox) findViewById(R.id.checkBox3);
-		SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
+		final SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
 		boolean checked = settings.getBoolean("isPassword", false);
 		box.setChecked(checked);
 		box.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
@@ -41,6 +46,24 @@ public class SettingsActivity extends BalanceActivity {
 			}
 
 		});
+		
+		RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
+		((RadioButton)radioGroup.getChildAt(settings.getInt("theme", 0))).setChecked(true);
+        radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(RadioGroup radioGroup, int arg1) {
+				int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+		    	SharedPreferences.Editor editor = settings.edit();
+		        if (checkedRadioButtonId == R.id.radio0) {
+					editor.putInt("theme", 0);
+		        } else if (checkedRadioButtonId == R.id.radio1) {
+					editor.putInt("theme", 1);
+		        }
+				editor.commit();
+			}});
+		
+		
 
 		passwordEditText = (EditText) findViewById(R.id.editText1);
 		passwordEditText.setText(settings.getString("passwordApp", ""));
@@ -110,6 +133,21 @@ public class SettingsActivity extends BalanceActivity {
 		});
 
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// Handle the back button
+		if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+			Intent output = new Intent();
+			output.putExtra("refresh", true);
+			setResult(RESULT_OK,output);
+			return super.onKeyDown(keyCode, event);
+		} else {
+			return super.onKeyDown(keyCode, event);
+		}
+
+	}
+	
 
 	private void saveIsPassword(boolean isChecked) {
 		SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);

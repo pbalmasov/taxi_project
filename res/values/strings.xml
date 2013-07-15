@@ -86,5 +86,7 @@
     <string name="description">Примечание:</string>
     <string name="free">Свободен</string>
     <string name="unavailiable">Занят</string>
+    <string name="light">Светлая*</string>
+    <string name="dark">Темная*</string>
     
 </resources>

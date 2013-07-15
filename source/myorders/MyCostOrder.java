@@ -20,16 +20,14 @@ import android.content.Context;
  */
 public class MyCostOrder extends Order {
 
-	private Date _registrationtime;
 	private Date _invitationtime;
 	private Date _departuretime;
 
-	public MyCostOrder(Context context, String index, Integer nominalcost, Date registrationtime,
+	public MyCostOrder(Context context, String index, Integer nominalcost, 
 			String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
 			Date invitationtime, Date departuretime) {
 		super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
 		// TODO:wrong index
-		_registrationtime = registrationtime;
 		_invitationtime = invitationtime;
 		_departuretime = departuretime;
 	}
@@ -38,8 +36,8 @@ public class MyCostOrder extends Order {
 		String pred = "";
 		if (_departuretime != null)
 			pred = getTimeString(_departuretime) + ", ";
-		else
-			pred = getTimeString(_registrationtime) + ", ";
+//		else
+//			pred = getTimeString(_registrationtime) + ", ";
 
 		String over = "";
 		if (get_nominalcost() != null)
@@ -51,8 +49,8 @@ public class MyCostOrder extends Order {
 	public ArrayList<String> toArrayList() {
 		ArrayList<String> array = new ArrayList<String>();
 		array.addAll(getAbonentArray());
-		if (_registrationtime != null)
-			array.add(_context.getString(R.string.accepted) + " " + getTimeString(_registrationtime));
+//		if (_registrationtime != null)
+//			array.add(_context.getString(R.string.accepted) + " " + getTimeString(_registrationtime));
 		if (_departuretime != null)
 		array.add(_context.getString(R.string.date) + " " + getTimeString(_departuretime));
 		if (_invitationtime != null)
@@ -75,7 +73,7 @@ public class MyCostOrder extends Order {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		if(DateUtils.isToday(date))
 			return "Сегодня "+dateFormat.format(date);
-		if(DateUtils.isAfterDay(date, new Date()))
+		if(DateUtils.isWithinDaysFuture(date,1))
 			return "Завтра "+dateFormat.format(date);
 		return new SimpleDateFormat("MM-dd HH:mm").format(date);
 	}

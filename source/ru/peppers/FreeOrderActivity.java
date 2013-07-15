@@ -58,9 +58,7 @@ public class FreeOrderActivity extends BalanceActivity {
 				try {
 					initMainList(doc);
 				} catch (Exception e) {
-					e.printStackTrace();
-					Log.d("My_tag", e.toString());
-					errorHandler();
+					PhpData.errorHandler(this,e);
 				}
 			}
 		}
@@ -81,12 +79,6 @@ public class FreeOrderActivity extends BalanceActivity {
 		 * bundle.putInt("id", id); // intent.putExtras(bundle);
 		 * startActivity(intent); } }).show();
 		 */
-	}
-
-	private void errorHandler() {
-		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-				.setMessage(this.getString(R.string.error_message))
-				.setNeutralButton(this.getString(R.string.close), null).show();
 	}
 
 	private void initMainList(Document doc) throws DOMException, ParseException {
@@ -116,7 +108,6 @@ public class FreeOrderActivity extends BalanceActivity {
 			Node quantityNode = item.getElementsByTagName("quantity").item(0);
 			Node commentNode = item.getElementsByTagName("comment").item(0);
 			Node nicknameNode = item.getElementsByTagName("nickname").item(0);
-			Node registrationtimeNode = item.getElementsByTagName("registrationtime").item(0);
 			Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
 			Node orderIdNode = item.getElementsByTagName("orderid").item(0);
 
@@ -128,7 +119,7 @@ public class FreeOrderActivity extends BalanceActivity {
 			Integer quantity = null;
 			String comment = null;
 			String nickname = null;
-			Date registrationtime = null;
+//			Date registrationtime = null;
 			String addressarrival = null;
 			String orderId = null;
 
@@ -145,8 +136,8 @@ public class FreeOrderActivity extends BalanceActivity {
 			if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
 				nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
 
-			if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
-				registrationtime = format.parse(registrationtimeNode.getTextContent());
+//			if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
+//				registrationtime = format.parse(registrationtimeNode.getTextContent());
 
 			if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
 				addressdeparture = addressdepartureNode.getTextContent();
@@ -162,13 +153,13 @@ public class FreeOrderActivity extends BalanceActivity {
 
 			if (!commentNode.getTextContent().equalsIgnoreCase(""))
 				comment = commentNode.getTextContent();
-
+			
 			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
 				orderId = orderIdNode.getTextContent();
+			
 
-
-
-			orders.add(new CostOrder(this,orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,
+			
+			orders.add(new CostOrder(this,orderId, nominalcost,  addressdeparture, carClass, comment,
 					addressarrival, paymenttype, departuretime));
 
 			if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
@@ -182,7 +173,7 @@ public class FreeOrderActivity extends BalanceActivity {
 		}
 
 		Driver driver = TaxiApplication.getDriver();
-		driver.set_districtOrders(orders);
+		driver.setFreeOrders(orders);
 		// driver = new Driver(status, carClass, ordersCount, district,
 		// subdistrict);
 

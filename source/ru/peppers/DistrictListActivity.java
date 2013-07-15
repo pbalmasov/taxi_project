@@ -94,7 +94,6 @@ public class DistrictListActivity extends Activity {
             Node quantityNode = item.getElementsByTagName("quantity").item(0);
             Node commentNode = item.getElementsByTagName("comment").item(0);
             Node nicknameNode = item.getElementsByTagName("nickname").item(0);
-            Node registrationtimeNode = item.getElementsByTagName("registrationtime").item(0);
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
 
@@ -106,7 +105,6 @@ public class DistrictListActivity extends Activity {
             Integer quantity = null;
             String comment = null;
             String nickname = null;
-            Date registrationtime = null;
             String addressarrival = null;
             String orderId = null;
 
@@ -122,9 +120,6 @@ public class DistrictListActivity extends Activity {
 
             if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
                 nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
-
-            if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
-                registrationtime = format.parse(registrationtimeNode.getTextContent());
 
             if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
                 addressdeparture = addressdepartureNode.getTextContent();
@@ -144,7 +139,7 @@ public class DistrictListActivity extends Activity {
             if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
                 orderId = orderIdNode.getTextContent();
 
-            orders.add(new CostOrder(this, orderId, nominalcost, registrationtime, addressdeparture,
+            orders.add(new CostOrder(this, orderId, nominalcost, addressdeparture,
                     carClass, comment, addressarrival, paymenttype, departuretime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {

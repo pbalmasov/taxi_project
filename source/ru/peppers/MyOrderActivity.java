@@ -39,14 +39,14 @@ public class MyOrderActivity extends BalanceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        if(true){
-        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
-        Bundle bundle = new Bundle();
-        // bundle.putInt("id", id);
-        intent.putExtras(bundle);
-        startActivity(intent);
-        return;
-        }
+//        if(true){
+//        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
+//        Bundle bundle = new Bundle();
+//        // bundle.putInt("id", id);
+//        intent.putExtras(bundle);
+//        startActivity(intent);
+//        return;
+//        }
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
@@ -94,7 +94,6 @@ public class MyOrderActivity extends BalanceActivity {
             Node quantityNode = item.getElementsByTagName("quantity").item(0);
             Node commentNode = item.getElementsByTagName("comment").item(0);
             Node nicknameNode = item.getElementsByTagName("nickname").item(0);
-            Node registrationtimeNode = item.getElementsByTagName("registrationtime").item(0);
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
 			Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
@@ -107,7 +106,6 @@ public class MyOrderActivity extends BalanceActivity {
             Integer quantity = null;
             String comment = null;
             String nickname = null;
-            Date registrationtime = null;
             String addressarrival = null;
             String orderId = null;
 			Date invitationtime = null;
@@ -124,9 +122,6 @@ public class MyOrderActivity extends BalanceActivity {
 
             if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
                 nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
-
-            if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
-                registrationtime = format.parse(registrationtimeNode.getTextContent());
 
             if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
                 addressdeparture = addressdepartureNode.getTextContent();
@@ -149,7 +144,7 @@ public class MyOrderActivity extends BalanceActivity {
 			if (!invitationNode.getTextContent().equalsIgnoreCase(""))
 				invitationtime = format.parse(invitationNode.getTextContent());
 
-            orders.add(new MyCostOrder(this, orderId, nominalcost, registrationtime, addressdeparture, carClass, comment,
+            orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
                     addressarrival, paymenttype,invitationtime, departuretime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
@@ -195,7 +190,7 @@ public class MyOrderActivity extends BalanceActivity {
                 Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
                 Bundle bundle = new Bundle();
                 // bundle.putInt("id", id);
-                bundle.putString("index", orders.get(position).get_index());
+                bundle.putInt("index", position);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

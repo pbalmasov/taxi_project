@@ -50,8 +50,8 @@
 
         </EditText>
     </LinearLayout>
-    
-    
+
+
     <RadioGroup
         android:id="@+id/radioGroup1"
         android:layout_width="match_parent"

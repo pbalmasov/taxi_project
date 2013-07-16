@@ -40,6 +40,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 	private TextView counterView;
 	private Order order;
 	private Dialog dialog;
+    private Bundle bundle;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -304,8 +305,8 @@ public class MyOrderItemActivity extends BalanceActivity {
 		LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.layout1);
 		if (order.get_paymenttype() == 1)
 			ll.setVisibility(View.VISIBLE);
-		
-		
+
+
 		final CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkBox1);
 		cb.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
 
@@ -318,19 +319,20 @@ public class MyOrderItemActivity extends BalanceActivity {
 					startActivityForResult(intent,REQUEST_EXIT);
 				}
 				else{
-					cb.setText(MyOrderItemActivity.this.getText(R.string.end_point));					
+				    bundle = null;
+					cb.setText(MyOrderItemActivity.this.getText(R.string.end_point));
 				}
 			}
-			
+
 		});
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (requestCode == REQUEST_EXIT) {
 			if (resultCode == RESULT_OK) {
-				Bundle bundle = data.getExtras();
+				bundle = data.getExtras();
 				CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkBox1);
 				String district = bundle.getString("districtname");
 				String subdistrict = bundle.getString("subdistrictname");
@@ -341,11 +343,8 @@ public class MyOrderItemActivity extends BalanceActivity {
 						rayonString += ", " + subdistrict;
 				}
 				cb.setText("Район: "+rayonString);
-				Log.d("My_tag",bundle.getString("districtname"));
-				Log.d("My_tag",bundle.getString("subdistrict"));
-				Log.d("My_tag",bundle.getString("subdistrictname"));
 			}
-		} 
+		}
 	}
 
 	private Button.OnClickListener onSavePrice(final Dialog dialog) {
@@ -365,8 +364,8 @@ public class MyOrderItemActivity extends BalanceActivity {
 
 				if (input.getText().length() != 0) {
 					String value = input.getText().toString();
-					String orderCost = "1";
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(8);
+					String orderCost = "0";
+					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(9);
 					nameValuePairs.add(new BasicNameValuePair("action", "close"));
 					nameValuePairs.add(new BasicNameValuePair("mode", "my"));
 					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
@@ -377,7 +376,10 @@ public class MyOrderItemActivity extends BalanceActivity {
 					nameValuePairs.add(new BasicNameValuePair("cost", orderCost));
 					nameValuePairs.add(new BasicNameValuePair("cashless", value));
 					nameValuePairs.add(new BasicNameValuePair("state", state));
-
+					if(bundle!=null){
+	                    nameValuePairs.add(new BasicNameValuePair("districtid", bundle.getString("district")));
+                        nameValuePairs.add(new BasicNameValuePair("subdistrictid", bundle.getString("subdistrict")));
+					}
 					Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs, PhpData.newURL);
 					if (doc != null) {
 						Node responseNode = doc.getElementsByTagName("response").item(0);

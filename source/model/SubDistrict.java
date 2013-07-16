@@ -20,7 +20,7 @@ public class SubDistrict {
     }
 
     public String toString(){
-        return "     - "+_subDistrictName+"("+_drivers+")";
+        return _subDistrictName+" "+_drivers;
     }
 
     /**

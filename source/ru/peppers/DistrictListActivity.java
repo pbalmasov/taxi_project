@@ -26,7 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class DistrictListActivity extends Activity {
+public class DistrictListActivity extends BalanceActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

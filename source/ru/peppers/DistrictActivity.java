@@ -102,6 +102,7 @@ public class DistrictActivity extends BalanceActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("districtid", districts.get(arg2).getDistrictId());
                 bundle.putString("districtname", districts.get(arg2).getDistrictName());
+                bundle.putInt("districtdrivers", districts.get(arg2).getDrivers());
                 intent.putExtras(bundle);
                 startActivityForResult(intent,REQUEST_EXIT);
 

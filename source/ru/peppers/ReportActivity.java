@@ -172,13 +172,13 @@ public class ReportActivity extends BalanceActivity {
 			public void onClick(DialogInterface dialog, int item) {
 				Driver driver = TaxiApplication.getDriver();
 
-				if (item == 2 && driver.getOrdersCount() != 0) {
-					new AlertDialog.Builder(ReportActivity.this).setTitle("Заказы")
-							.setMessage("К сожалению у вас есть не закрытые заказы.").setNeutralButton("Закрыть", null)
-							.show();
-					dialog.dismiss();
-					return;
-				}
+//				if (item == 2 && driver.getOrdersCount() != 0) {
+//					new AlertDialog.Builder(ReportActivity.this).setTitle("Заказы")
+//							.setMessage("К сожалению у вас есть не закрытые заказы.").setNeutralButton("Закрыть", null)
+//							.show();
+//					dialog.dismiss();
+//					return;
+//				}
 
 				if (item != driver.getStatus()) {
 

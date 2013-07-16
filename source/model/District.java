@@ -26,7 +26,7 @@ public class District {
 		_subdistrics = subdistrict;
 	}
 	public String toString(){
-		return "- "+_districtName+"("+_drivers+"/"+_orders+")";
+		return _districtName+" "+_orders+"/"+_drivers;
 	}
 	/**
 	 * @return the _drivers

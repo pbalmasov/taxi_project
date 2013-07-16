@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -75,7 +76,6 @@ public class MainListActivity extends BalanceActivity {
 	}
 
 	private void parseMainList(Document doc) {
-		int ordersCount = Integer.valueOf(doc.getElementsByTagName("ordercount").item(0).getTextContent());
 		// int carClass =
 		// Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
 		int status = 2;
@@ -97,7 +97,6 @@ public class MainListActivity extends BalanceActivity {
 		Driver driver = TaxiApplication.getDriver();
 		driver.setStatus(status);
 		driver.setClassAuto(classid - 1);
-		driver.setOrdersCount(ordersCount);
 		driver.setDistrict(district);
 		driver.setSubdistrict(subdistrict);
 		driver.setBalance(balance);
@@ -109,7 +108,10 @@ public class MainListActivity extends BalanceActivity {
 		final Driver driver = TaxiApplication.getDriver();
 		if (driver != null) {
 			itemsList = new ArrayList<Map<String, String>>();
-			itemsList.add(createItem("item", this.getString(R.string.my_orders)));// + ": " + driver.getOrdersCount()));
+			itemsList.add(createItem("item", this.getString(R.string.my_orders)));// +
+																					// ": "
+																					// +
+																					// driver.getOrdersCount()));
 			itemsList.add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));
 			itemsList.add(createItem("item", this.getString(R.string.free_orders)));
 			if (driver.getStatus() != 1) {
@@ -181,21 +183,14 @@ public class MainListActivity extends BalanceActivity {
 					}
 					if (position == 4) {
 						intent = new Intent(MainListActivity.this, SettingsActivity.class);
-		                startActivityForResult(intent,REQUEST_EXIT);
+						startActivityForResult(intent, REQUEST_EXIT);
 					}
 					if (position == 5) {
 						intent = new Intent(MainListActivity.this, MessageActivity.class);
 						startActivity(intent);
 					}
 					if (position == 6) {
-						Driver driver = TaxiApplication.getDriver();
-						if (driver.getOrdersCount() != 0) {
-							exitDialog();
-						} else {
-							Intent service = new Intent(MainListActivity.this, PhpService.class);
-							stopService(service);
-							finish();
-						}
+						quitPost();
 					}
 				}
 
@@ -213,6 +208,8 @@ public class MainListActivity extends BalanceActivity {
 					finish();
 					startActivity(intent);
 				} else {
+					// TODO когда? и зачем
+					Log.d("My_tag", "VIHOD NEPONYATNO ZACHEM");
 					Intent intent = new Intent(MainListActivity.this, PhpService.class);
 					stopService(intent);
 					this.finish();
@@ -221,37 +218,31 @@ public class MainListActivity extends BalanceActivity {
 		}
 	}
 
-	private void exitDialog() {
-		new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
-				.setMessage(this.getString(R.string.sorry_exit))
-				.setPositiveButton(this.getString(R.string.exit_action), onExitClickListener())
-				.setNegativeButton(this.getString(R.string.cancel), null).show();
-	}
+//	private void exitDialog() {
+//		new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
+//				.setMessage(this.getString(R.string.sorry_exit))
+//				.setPositiveButton(this.getString(R.string.exit_action), onExitClickListener())
+//				.setNegativeButton(this.getString(R.string.cancel), null).show();
+//	}
 
-	private OnClickListener onExitClickListener() {
-		return new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				quitPost();
-			}
-
-		};
-	}
+//	private OnClickListener onExitClickListener() {
+//		return new DialogInterface.OnClickListener() {
+//
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				quitPost();
+//			}
+//
+//		};
+//	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// Handle the back button
 		if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
 			// Ask the user if they want to quit
-			Driver driver = TaxiApplication.getDriver();
-			if (driver != null)
-				if (driver.getOrdersCount() != 0) {
-					exitDialog();
-					return true;
-				} else
-					quitPost();
-			return super.onKeyDown(keyCode, event);
+
+			return true;
 		} else {
 			return super.onKeyDown(keyCode, event);
 		}

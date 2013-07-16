@@ -9,26 +9,19 @@ import java.util.List;
 
 import model.Driver;
 import model.Order;
-import orders.CostOrder;
-import orders.NoCostOrder;
-import orders.PreliminaryOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class FreeOrderItemActivity extends BalanceActivity {

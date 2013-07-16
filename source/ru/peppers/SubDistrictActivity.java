@@ -28,6 +28,7 @@ import android.widget.ListView;
 
 public class SubDistrictActivity extends BalanceActivity {
 	private String districtid;
+	private int districtdrivers;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class SubDistrictActivity extends BalanceActivity {
 		Bundle bundle = getIntent().getExtras();
 		this.title.setText(bundle.getString("districtname"));
 		districtid = bundle.getString("districtid");
+		districtdrivers = bundle.getInt("districtdrivers");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
@@ -64,11 +66,10 @@ public class SubDistrictActivity extends BalanceActivity {
 	private void initMainList(Document doc) throws DOMException, ParseException {
 		NodeList nodeList = doc.getElementsByTagName("item");
 		final ArrayList<SubDistrict> subDistricts = new ArrayList<SubDistrict>();
-		subDistricts.add(new SubDistrict(0, this.getString(R.string.all_drivers), null));
+		subDistricts.add(new SubDistrict(districtdrivers, this.getString(R.string.all_drivers), null));
 		for (int i = 0; i < nodeList.getLength(); i++) {
 
 			Element item = (Element) nodeList.item(i);
-			;
 
 			Node titleNode = item.getElementsByTagName("title").item(0);
 			Node vehicleNode = item.getElementsByTagName("vehiclecount").item(0);

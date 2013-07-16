@@ -28,7 +28,6 @@ public class Driver {
 	private ArrayList<Order> _districtOrders;
 	private String balance;
 	//
-	private int ordersCount;
 	private int totalOrders;
 
 	private String district;
@@ -37,11 +36,10 @@ public class Driver {
 
 	private Activity _context;
 
-	public Driver(Activity context, int status, int carClass, int ordersCount, String district, String subdistrict) {
+	public Driver(Activity context, int status, int carClass, String district, String subdistrict) {
 		this._context = context;
 		this._status = status;
 		this._carClass = carClass;
-		this.ordersCount = ordersCount;
 		this.district = district;
 		this.subdistrict = subdistrict;
 	}
@@ -217,20 +215,6 @@ public class Driver {
 		this.totalOrders = totalOrders;
 	}
 
-	/**
-	 * @return the ordersCount
-	 */
-	public int getOrdersCount() {
-		return ordersCount;
-	}
-
-	/**
-	 * @param ordersCount
-	 *            the ordersCount to set
-	 */
-	public void setOrdersCount(int ordersCount) {
-		this.ordersCount = ordersCount;
-	}
 
 	/**
 	 * @return the district

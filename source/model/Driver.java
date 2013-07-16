@@ -49,7 +49,7 @@ public class Driver {
 		if (district != "") {
 			rayonString = district;
 			if (subdistrict != "")
-				rayonString += "," + subdistrict;
+				rayonString += ", " + subdistrict;
 		} else
 			rayonString = _context.getString(R.string.no_region);
 		return rayonString;

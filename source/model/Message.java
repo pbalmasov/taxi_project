@@ -31,7 +31,7 @@ public class Message implements Comparable<Message> {
 
 
     public String toString() {
-        return new SimpleDateFormat("yyyy-MM-dd").format(getDate()) + " " + getText();
+        return new SimpleDateFormat("dd.MM.yyyy").format(getDate()) + "\n" + getText();
     }
 
     @Override

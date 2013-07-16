@@ -15,24 +15,31 @@ import org.w3c.dom.Node;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class MyOrderItemActivity extends BalanceActivity {
 
+	protected static final int REQUEST_EXIT = 0;
 	private CountDownTimer timer;
 	private ArrayList<String> orderList;
 	private TextView counterView;
 	private Order order;
+	private Dialog dialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,11 +62,9 @@ public class MyOrderItemActivity extends BalanceActivity {
 			tv.append("\n");
 		}
 
-
 		if (order.getTimerDate() != null) {
 			timerInit(order);
 		}
-
 
 		Button button = (Button) findViewById(R.id.button1);
 		button.setText(this.getString(R.string.choose_action));
@@ -102,7 +107,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 						Node errorNode = doc.getElementsByTagName("error").item(0);
 
 						if (Integer.parseInt(errorNode.getTextContent()) == 1)
-							PhpData.errorHandler(MyOrderItemActivity.this,null);
+							PhpData.errorHandler(MyOrderItemActivity.this, null);
 						else {
 							new AlertDialog.Builder(MyOrderItemActivity.this)
 									.setTitle(MyOrderItemActivity.this.getString(R.string.Ok))
@@ -134,7 +139,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 			Node errorNode = doc.getElementsByTagName("error").item(0);
 
 			if (Integer.parseInt(errorNode.getTextContent()) == 1)
-				PhpData.errorHandler(this,null);
+				PhpData.errorHandler(this, null);
 			else {
 				new AlertDialog.Builder(MyOrderItemActivity.this).setTitle(this.getString(R.string.Ok))
 						.setMessage(this.getString(R.string.invite_sended))
@@ -142,7 +147,6 @@ public class MyOrderItemActivity extends BalanceActivity {
 			}
 		}
 	}
-
 
 	private void timeDialog() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
@@ -168,7 +172,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 				if (doc != null) {
 					Node errorNode = doc.getElementsByTagName("error").item(0);
 					if (Integer.parseInt(errorNode.getTextContent()) == 1)
-						PhpData.errorHandler(MyOrderItemActivity.this,null);
+						PhpData.errorHandler(MyOrderItemActivity.this, null);
 					else {
 
 						final Order order = TaxiApplication.getDriver().getOrder(index);
@@ -263,7 +267,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 				if (doc != null) {
 					Node errorNode = doc.getElementsByTagName("error").item(0);
 					if (Integer.parseInt(errorNode.getTextContent()) == 1)
-						PhpData.errorHandler(MyOrderItemActivity.this,null);
+						PhpData.errorHandler(MyOrderItemActivity.this, null);
 					else {
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(new Date());
@@ -282,7 +286,6 @@ public class MyOrderItemActivity extends BalanceActivity {
 
 		// View view = getLayoutInflater().inflate(R.layout.custom_dialog,
 		// null);
-		Dialog dialog;
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		int isLightTheme = settings.getInt("theme", 0);
 		if (isLightTheme != 0)
@@ -297,6 +300,52 @@ public class MyOrderItemActivity extends BalanceActivity {
 		EditText input = (EditText) dialog.findViewById(R.id.editText1);
 		input.setInputType(InputType.TYPE_CLASS_NUMBER);
 		btn.setOnClickListener(onSavePrice(dialog));
+
+		LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.layout1);
+		if (order.get_paymenttype() == 1)
+			ll.setVisibility(View.VISIBLE);
+		
+		
+		final CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkBox1);
+		cb.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				if(!arg1)
+				{
+					Intent intent = new Intent(MyOrderItemActivity.this, DistrictActivity.class);
+					intent.putExtra("close", true);
+					startActivityForResult(intent,REQUEST_EXIT);
+				}
+				else{
+					cb.setText(MyOrderItemActivity.this.getText(R.string.end_point));					
+				}
+			}
+			
+		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == REQUEST_EXIT) {
+			if (resultCode == RESULT_OK) {
+				Bundle bundle = data.getExtras();
+				CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkBox1);
+				String district = bundle.getString("districtname");
+				String subdistrict = bundle.getString("subdistrictname");
+				String rayonString = "";
+				if (district != "") {
+					rayonString = district;
+					if (subdistrict != "")
+						rayonString += ", " + subdistrict;
+				}
+				cb.setText("Район: "+rayonString);
+				Log.d("My_tag",bundle.getString("districtname"));
+				Log.d("My_tag",bundle.getString("subdistrict"));
+				Log.d("My_tag",bundle.getString("subdistrictname"));
+			}
+		} 
 	}
 
 	private Button.OnClickListener onSavePrice(final Dialog dialog) {

@@ -203,16 +203,12 @@ public class MainListActivity extends BalanceActivity {
 
 		if (requestCode == REQUEST_EXIT) {
 			if (resultCode == RESULT_OK) {
-				if (data.getBooleanExtra("refresh", false)) {
+				if (data!=null) {
 					Intent intent = getIntent();
 					finish();
 					startActivity(intent);
 				} else {
-					// TODO когда? и зачем
-					Log.d("My_tag", "VIHOD NEPONYATNO ZACHEM");
-					Intent intent = new Intent(MainListActivity.this, PhpService.class);
-					stopService(intent);
-					this.finish();
+					quitPost();
 				}
 			}
 		}

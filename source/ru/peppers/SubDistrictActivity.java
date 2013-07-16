@@ -29,12 +29,14 @@ import android.widget.ListView;
 public class SubDistrictActivity extends BalanceActivity {
 	private String districtid;
 	private int districtdrivers;
+	private boolean close;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
 		Bundle bundle = getIntent().getExtras();
+		close = bundle.getBoolean("close");
 		this.title.setText(bundle.getString("districtname"));
 		districtid = bundle.getString("districtid");
 		districtdrivers = bundle.getInt("districtdrivers");
@@ -57,7 +59,7 @@ public class SubDistrictActivity extends BalanceActivity {
 				try {
 					initMainList(doc);
 				} catch (Exception e) {
-					PhpData.errorHandler(this,e);
+					PhpData.errorHandler(this, e);
 				}
 			}
 		}
@@ -96,20 +98,30 @@ public class SubDistrictActivity extends BalanceActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-				final CharSequence[] items = { SubDistrictActivity.this.getString(R.string.free_here),
-						SubDistrictActivity.this.getString(R.string.orders) };
-				AlertDialog.Builder builder = new AlertDialog.Builder(SubDistrictActivity.this);
-				builder.setTitle(SubDistrictActivity.this.getString(R.string.choose_action));
-				builder.setItems(items, onContextMenuItemListener(subDistricts.get(arg2).get_subDistrictId()));
-				AlertDialog alert = builder.create();
-				alert.show();
+				if (close) {
+					Intent intent = new Intent();
+					Bundle bundle = new Bundle();
+					if (subDistricts.get(arg2).get_subDistrictId()!=null) {
+						bundle.putString("subdistrictname", subDistricts.get(arg2).getSubDistrictName());
+						bundle.putString("subdistrict", subDistricts.get(arg2).get_subDistrictId());
+					}
+					intent.putExtras(bundle);
+					setResult(RESULT_OK, intent);
+					finish();
+				} else {
+					final CharSequence[] items = { SubDistrictActivity.this.getString(R.string.free_here),
+							SubDistrictActivity.this.getString(R.string.orders) };
+					AlertDialog.Builder builder = new AlertDialog.Builder(SubDistrictActivity.this);
+					builder.setTitle(SubDistrictActivity.this.getString(R.string.choose_action));
+					builder.setItems(items, onContextMenuItemListener(subDistricts.get(arg2).get_subDistrictId()));
+					AlertDialog alert = builder.create();
+					alert.show();
+				}
 			}
 
 		});
 
 	}
-
 
 	private OnClickListener onContextMenuItemListener(final String subdistrictId) {
 		return new DialogInterface.OnClickListener() {
@@ -124,7 +136,7 @@ public class SubDistrictActivity extends BalanceActivity {
 					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
 					nameValuePairs.add(new BasicNameValuePair("object", "driver"));
 					nameValuePairs.add(new BasicNameValuePair("action", "set"));
-                    nameValuePairs.add(new BasicNameValuePair("mode", "location"));
+					nameValuePairs.add(new BasicNameValuePair("mode", "location"));
 					nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
 					if (subdistrictId != null)
 						nameValuePairs.add(new BasicNameValuePair("subdistrictid", subdistrictId));
@@ -149,8 +161,8 @@ public class SubDistrictActivity extends BalanceActivity {
 					bundle.putString("districtid", districtid);
 					intent.putExtras(bundle);
 					startActivity(intent);
-                    setResult(RESULT_OK);
-                    finish();
+					setResult(RESULT_OK);
+					finish();
 				}
 
 				dialog.dismiss();

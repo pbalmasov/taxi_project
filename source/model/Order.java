@@ -33,7 +33,7 @@ public class Order implements OrderInterface {
 	public Order(Context context, Integer costRide, String adress, Integer carClass, String orderText, String where,
 			Integer paymenttype, String index) {
 		_context = context;
-		_paymenttype = paymenttype;
+		set_paymenttype(paymenttype);
 		_addressdeparture = adress;
 		_carClass = carClass;
 		_comment = orderText;
@@ -56,7 +56,7 @@ public class Order implements OrderInterface {
 		else {
 			Resources res = _context.getResources();
 			String[] payment = res.getStringArray(R.array.class_array);
-			return payment[_paymenttype].toLowerCase();
+			return payment[get_paymenttype()].toLowerCase();
 		}
 	}
 
@@ -73,7 +73,7 @@ public class Order implements OrderInterface {
 	public String getPayment() {
 		Resources res = _context.getResources();
 		String[] payment = res.getStringArray(R.array.payment_array);
-		return payment[_paymenttype];
+		return payment[get_paymenttype()];
 	}
 
 	public Date getTimerDate() {
@@ -107,4 +107,12 @@ public class Order implements OrderInterface {
     public void set_nominalcost(Integer _nominalcost) {
         this._nominalcost = _nominalcost;
     }
+
+	public Integer get_paymenttype() {
+		return _paymenttype;
+	}
+
+	public void set_paymenttype(Integer _paymenttype) {
+		this._paymenttype = _paymenttype;
+	}
 }

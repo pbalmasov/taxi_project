@@ -88,5 +88,7 @@
     <string name="unavailiable">Занят</string>
     <string name="light">Светлая*</string>
     <string name="dark">Темная*</string>
+    <string name="price2">Безнал</string>
+    <string name="end_point">Район: конечная точка</string>
     
 </resources>

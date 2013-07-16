@@ -121,29 +121,14 @@ public class ReportActivity extends BalanceActivity {
 
 		}
 		String balance = doc.getElementsByTagName("balance").item(0).getTextContent();
-		int inorder = Integer.parseInt(doc.getElementsByTagName("inorder").item(0).getTextContent());
-		int indistrict = Integer.parseInt(doc.getElementsByTagName("indistrict").item(0).getTextContent());
-		int inall = Integer.parseInt(doc.getElementsByTagName("inall").item(0).getTextContent());
 		Driver driver = TaxiApplication.getDriver();
 		driver.setBalance(balance);
 		driver.setReports(reports);
-		driver.setInorder(inorder);
-		driver.setInall(inall);
-		driver.setIndistrict(indistrict);
 		initList();
 	}
 
 	public void initList() {
 		final Driver driver = TaxiApplication.getDriver();
-		// номер в очереди в районе и в общей
-		TextView balance = (TextView) findViewById(R.id.textView1);
-		TextView number1 = (TextView) findViewById(R.id.textView2);
-		TextView number2 = (TextView) findViewById(R.id.textView3);
-		TextView number3 = (TextView) findViewById(R.id.textView4);
-		balance.setText("Баланс: " + driver.getBalance() + " р.");
-		number1.setText("В очереди: " + 0);//driver.getInorder());
-		number2.setText("В районе: " + 0);//driver.getIndistrict());
-		number3.setText("В общей: "+ 0);//driver.getInall());
 		itemsList = new ArrayList<String>();
 		itemsList.add("Статус: " + driver.getStatusString());
 		itemsList.add("Класс: " + driver.getClassAutoString());
@@ -157,15 +142,8 @@ public class ReportActivity extends BalanceActivity {
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-				Bundle extras = getIntent().getExtras();
-				// int id = extras.getInt("id");
-				Intent intent;
-				Bundle bundle;
 				if (position == 2) {
-					intent = new Intent(ReportActivity.this, ReportListActivity.class);
-					// bundle = new Bundle();
-					// bundle.putInt("id", id);
-					// intent.putExtras(bundle);
+					Intent intent = new Intent(ReportActivity.this, ReportListActivity.class);
 					startActivity(intent);
 				}
 				if (position == 1) {

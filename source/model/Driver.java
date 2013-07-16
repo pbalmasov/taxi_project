@@ -35,10 +35,6 @@ public class Driver {
 	private String subdistrict;
 	private ArrayList<Order> _reports;
 
-	private int inorder;
-	private int indistrict;
-	private int inall;
-
 	private Activity _context;
 
 	public Driver(Activity context, int status, int carClass, int ordersCount, String district, String subdistrict) {
@@ -289,28 +285,5 @@ public class Driver {
 		this._districtOrders = _districtOrders;
 	}
 
-	public int getInorder() {
-		return inorder;
-	}
-
-	public void setInorder(int inorder) {
-		this.inorder = inorder;
-	}
-
-	public int getIndistrict() {
-		return indistrict;
-	}
-
-	public void setIndistrict(int indistrict) {
-		this.indistrict = indistrict;
-	}
-
-	public int getInall() {
-		return inall;
-	}
-
-	public void setInall(int inall) {
-		this.inall = inall;
-	}
 
 }

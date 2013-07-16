@@ -75,6 +75,6 @@ public class MyCostOrder extends Order {
 			return "Сегодня "+dateFormat.format(date);
 		if(DateUtils.isWithinDaysFuture(date,1))
 			return "Завтра "+dateFormat.format(date);
-		return new SimpleDateFormat("MM-dd HH:mm").format(date);
+		return new SimpleDateFormat("dd.MM HH:mm").format(date);
 	}
 }

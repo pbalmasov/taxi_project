@@ -84,7 +84,7 @@ public class MainListActivity extends BalanceActivity {
 		if (!statusNode.getTextContent().equalsIgnoreCase(""))
 			status = Integer.valueOf(statusNode.getTextContent());
 
-		Node classNode = doc.getElementsByTagName("classid").item(0);
+		Node classNode = doc.getElementsByTagName("currentclassid").item(0);
 		if (!classNode.getTextContent().equalsIgnoreCase(""))
 			classid = Integer.valueOf(classNode.getTextContent());
 
@@ -109,7 +109,7 @@ public class MainListActivity extends BalanceActivity {
 		final Driver driver = TaxiApplication.getDriver();
 		if (driver != null) {
 			itemsList = new ArrayList<Map<String, String>>();
-			itemsList.add(createItem("item", this.getString(R.string.my_orders) + " " + driver.getOrdersCount()));
+			itemsList.add(createItem("item", this.getString(R.string.my_orders)));// + ": " + driver.getOrdersCount()));
 			itemsList.add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));
 			itemsList.add(createItem("item", this.getString(R.string.free_orders)));
 			if (driver.getStatus() != 1) {

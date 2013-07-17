@@ -42,6 +42,7 @@ public class DistrictActivity extends BalanceActivity {
 
 	private void init() {
 		Bundle bundle = getIntent().getExtras();
+		if(bundle != null)
 		close = bundle.getBoolean("close");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);

@@ -112,29 +112,30 @@ public class FreeOrderItemActivity extends BalanceActivity {
 								PhpData.errorFromServer(FreeOrderItemActivity.this, errorNode);
 							else {
 								try {
-									Driver driver = TaxiApplication.getDriver();
-									if (driver.getOrders() != null)
-										driver.getOrders().add(order);
-									else {
-										ArrayList<Order> arrayList = new ArrayList<Order>();
-										arrayList.add(order);
-										driver.setOrders(arrayList);
-									}
-									driver.setStatus(3);
+									//Driver driver = TaxiApplication.getDriver();
+									//if (driver.getOrders() != null)
+									//	driver.getOrders().add(order);
+									//else {
+									//	ArrayList<Order> arrayList = new ArrayList<Order>();
+									//	arrayList.add(order);
+									//	driver.setOrders(arrayList);
+									//}
+									//driver.setStatus(3);
 
-									Intent intent = new Intent(FreeOrderItemActivity.this, MyOrderItemActivity.class);
-									Bundle bundle = new Bundle();
+									Intent intent = new Intent(FreeOrderItemActivity.this, MyOrderActivity.class);
+									//Bundle bundle = new Bundle();
 									// bundle.putInt("id", id);
-									bundle.putInt("index", driver.getOrders().size() - 1);
+									//bundle.putInt("index", driver.getOrders().size() - 1);
 
-									Calendar cal = Calendar.getInstance();
-									cal.setTime(new Date());
-									cal.add(Calendar.MINUTE, Integer.valueOf((String) cs[which]));
+									//Calendar cal = Calendar.getInstance();
+									//cal.setTime(new Date());
+									//cal.add(Calendar.MINUTE, Integer.valueOf((String) cs[which]));
 
-									order.setTimerDate(cal.getTime());
+									//order.setTimerDate(cal.getTime());
 									// set Date and add minutes // in order just
 									// count minutes date-currendate);
-									intent.putExtras(bundle);
+									//intent.putExtras(bundle);
+									setResult(RESULT_OK);
 									startActivity(intent);
 									finish();
 									//TODO:заканчивать парент активити

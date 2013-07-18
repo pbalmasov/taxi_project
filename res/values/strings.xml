@@ -22,7 +22,7 @@
     </string-array>
     <string-array name="payment_array">
         <item>наличные</item>
-        <item>без наличные</item>
+        <item>безнал.</item>
     </string-array>
     <string name="accepted">Заказ принят:</string>
     <string name="date">Время подачи:</string>
@@ -90,5 +90,7 @@
     <string name="dark">Темная*</string>
     <string name="price2">Безнал</string>
     <string name="end_point">Район:</string>
-    
+    <string name="change">Поменять</string>
+    <string name="reset">Сбросить</string>
+
 </resources>

@@ -26,7 +26,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class FreeOrderActivity extends BalanceActivity {
-	@Override
+	protected static final int REQUEST_EXIT = 0;
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
@@ -199,8 +201,17 @@ public class FreeOrderActivity extends BalanceActivity {
 				// bundle.putInt("id", id);
 				bundle.putInt("index", position);
 				intent.putExtras(bundle);
-				startActivity(intent);
+				startActivityForResult(intent,REQUEST_EXIT);
 			}
 		});
 	}
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_EXIT) {
+            if (resultCode == RESULT_OK) {
+                this.finish();
+            }
+        }
+    }
 }

@@ -10,15 +10,15 @@
     <string name="defaultStatus">Предлагать заказы в статусе Перерыв</string>
     <string name="Ok">Ок</string>
     <string-array name="status_array">
-        <item>свободен</item>
-        <item>перерыв</item>
-        <item>недоступен</item>
-        <item>на заказе</item>
+        <item>Свободен</item>
+        <item>Перерыв</item>
+        <item>Нет на линии</item>
+        <item>На заказе</item>
     </string-array>
     <string-array name="class_array">
-        <item>эконом</item>
-        <item>стандарт</item>
-        <item>базовый</item>
+        <item>Эконом</item>
+        <item>Стандарт</item>
+        <item>Базовый</item>
     </string-array>
     <string-array name="payment_array">
         <item>наличные</item>
@@ -89,6 +89,6 @@
     <string name="light">Светлая*</string>
     <string name="dark">Темная*</string>
     <string name="price2">Безнал</string>
-    <string name="end_point">Район: конечная точка</string>
+    <string name="end_point">Район:</string>
     
 </resources>

@@ -21,7 +21,7 @@ public class Order implements OrderInterface {
 	protected String _addressdeparture;
 	protected Integer _carClass;
 	protected String _comment;
-	protected String _addressarrival;
+	private String _addressarrival;
 	protected String _index;
 	private Integer _nominalcost;
 	protected Date _timerDate;
@@ -37,7 +37,7 @@ public class Order implements OrderInterface {
 		_addressdeparture = adress;
 		_carClass = carClass;
 		_comment = orderText;
-		_addressarrival = where;
+		set_addressarrival(where);
 		_index = index;
 		set_nominalcost(costRide);
 	}
@@ -114,5 +114,13 @@ public class Order implements OrderInterface {
 
 	public void set_paymenttype(Integer _paymenttype) {
 		this._paymenttype = _paymenttype;
+	}
+
+	public String get_addressarrival() {
+		return _addressarrival;
+	}
+
+	public void set_addressarrival(String _addressarrival) {
+		this._addressarrival = _addressarrival;
 	}
 }

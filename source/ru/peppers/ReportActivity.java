@@ -3,6 +3,7 @@ package ru.peppers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -132,7 +134,7 @@ public class ReportActivity extends BalanceActivity {
 		itemsList = new ArrayList<String>();
 		itemsList.add("Статус: " + driver.getStatusString());
 		itemsList.add("Класс: " + driver.getClassAutoString());
-		itemsList.add("Отчет: " + 0);//driver.reportsCount());
+		itemsList.add("Отчет: " + 0);// driver.reportsCount());
 
 		ListView lv = (ListView) findViewById(R.id.listView1);
 
@@ -147,18 +149,24 @@ public class ReportActivity extends BalanceActivity {
 					startActivity(intent);
 				}
 				if (position == 1) {
-					final CharSequence[] items = { "Эконом", "Стандарт", "Базовый" };
+					Resources res = ReportActivity.this.getResources();
+					String[] classArray = res.getStringArray(R.array.class_array);
 					AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
 					builder.setTitle("Выбор статуса");
-					builder.setSingleChoiceItems(items, driver.getClassAuto(), onClassContextMenuItemListener(position));
+					builder.setSingleChoiceItems(classArray, driver.getClassAuto(),
+							onClassContextMenuItemListener(position));
 					AlertDialog alert = builder.create();
 					alert.show();
 				}
 				if (position == 0) {
-					final CharSequence[] items = { "Свободен", "Перерыв", "Недоступен" };
+					Resources res = ReportActivity.this.getResources();
+					String[] statusArray = res.getStringArray(R.array.status_array);
+					ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(statusArray));
+					arrayList.remove(arrayList.size()-1);
 					AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
 					builder.setTitle("Выбор статуса");
-					builder.setSingleChoiceItems(items, driver.getStatus(), onStatusContextMenuItemListener(position));
+					builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), driver.getStatus(),
+							onStatusContextMenuItemListener(position));
 					AlertDialog alert = builder.create();
 					alert.show();
 				}
@@ -172,13 +180,15 @@ public class ReportActivity extends BalanceActivity {
 			public void onClick(DialogInterface dialog, int item) {
 				Driver driver = TaxiApplication.getDriver();
 
-//				if (item == 2 && driver.getOrdersCount() != 0) {
-//					new AlertDialog.Builder(ReportActivity.this).setTitle("Заказы")
-//							.setMessage("К сожалению у вас есть не закрытые заказы.").setNeutralButton("Закрыть", null)
-//							.show();
-//					dialog.dismiss();
-//					return;
-//				}
+				// if (item == 2 && driver.getOrdersCount() != 0) {
+				// new
+				// AlertDialog.Builder(ReportActivity.this).setTitle("Заказы")
+				// .setMessage("К сожалению у вас есть не закрытые заказы.").setNeutralButton("Закрыть",
+				// null)
+				// .show();
+				// dialog.dismiss();
+				// return;
+				// }
 
 				if (item != driver.getStatus()) {
 

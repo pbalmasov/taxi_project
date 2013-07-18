@@ -28,7 +28,7 @@ public class MyCostOrder extends Order {
 			Date invitationtime, Date departuretime) {
 		super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
 		// TODO:wrong index
-		_invitationtime = invitationtime;
+		set_invitationtime(invitationtime);
 		_departuretime = departuretime;
 	}
 
@@ -53,11 +53,11 @@ public class MyCostOrder extends Order {
 //			array.add(_context.getString(R.string.accepted) + " " + getTimeString(_registrationtime));
 		if (_departuretime != null)
 		array.add(_context.getString(R.string.date) + " " + getTimeString(_departuretime));
-		if (_invitationtime != null)
-			array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_invitationtime));
+		if (get_invitationtime() != null)
+			array.add(_context.getString(R.string.date_invite) + " " + getTimeString(get_invitationtime()));
 
 		array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
-		array.add(_context.getString(R.string.where) + " " + _addressarrival);
+		array.add(_context.getString(R.string.where) + " " + get_addressarrival());
 
 		array.add(_context.getString(R.string.car_class) + " " + getCarClass());
 		array.add(_context.getString(R.string.cost_type) + " " + getPayment());
@@ -76,5 +76,13 @@ public class MyCostOrder extends Order {
 		if(DateUtils.isWithinDaysFuture(date,1))
 			return "Завтра "+dateFormat.format(date);
 		return new SimpleDateFormat("dd.MM HH:mm").format(date);
+	}
+
+	public Date get_invitationtime() {
+		return _invitationtime;
+	}
+
+	public void set_invitationtime(Date _invitationtime) {
+		this._invitationtime = _invitationtime;
 	}
 }

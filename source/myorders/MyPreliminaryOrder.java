@@ -37,7 +37,7 @@ public class MyPreliminaryOrder extends Order {
         array.add(_context.getString(R.string.preliminary));
         array.add(_context.getString(R.string.date) + " " + getTimeString(_date));
         array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
-        array.add(_context.getString(R.string.where) + " " + _addressarrival);
+        array.add(_context.getString(R.string.where) + " " + get_addressarrival());
         array.add(_context.getString(R.string.car_class) + " " + _carClass);
         array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " "
                 + _context.getString(R.string.currency));

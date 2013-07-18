@@ -161,13 +161,13 @@ public class Driver {
 	public String getStatusString() {
 		Resources res = _context.getResources();
 		String[] status = res.getStringArray(R.array.status_array);
-		return status[_status];
+		return status[_status].toLowerCase();
 	}
 
 	public String getClassAutoString() {
 		Resources res = _context.getResources();
 		String[] carClass = res.getStringArray(R.array.class_array);
-		return carClass[_carClass];
+		return carClass[_carClass].toLowerCase();
 	}
 
 	/**

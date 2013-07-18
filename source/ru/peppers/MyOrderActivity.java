@@ -169,7 +169,7 @@ public class MyOrderActivity extends BalanceActivity {
                 // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
-                startActivity(intent);
+                startActivityForResult(intent,RESULT_OK);
             }
         });
     }

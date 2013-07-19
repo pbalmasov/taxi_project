@@ -91,7 +91,7 @@ final public class PhpData {
 				.show();
 	}
 
-	static public Document postData(Activity activity, List<NameValuePair> nameValuePairs, String url) {
+	static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url) {
 		if (isNetworkAvailable(activity)) {
 
 			// Create a new HttpClient and Post Header

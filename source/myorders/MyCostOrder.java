@@ -43,7 +43,7 @@ public class MyCostOrder extends Order {
 		if (get_nominalcost() != null)
 			over = ", " + get_nominalcost() + " " + _context.getString(R.string.currency);
 
-		return "К " + pred + _addressdeparture + over;
+		return /*"К " +*/ pred + _addressdeparture + over;
 	}
 
 	public ArrayList<String> toArrayList() {

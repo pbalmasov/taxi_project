@@ -62,7 +62,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:checked="true"
             android:text="@string/unavailiable" />
 
         <RadioButton
@@ -70,6 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:checked="true"
             android:text="@string/free" />
     </RadioGroup>
 
@@ -95,6 +95,7 @@
 
         <Button
             android:id="@+id/button3"
+       		android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

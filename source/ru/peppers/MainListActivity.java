@@ -190,7 +190,7 @@ public class MainListActivity extends BalanceActivity {
 						startActivity(intent);
 					}
 					if (position == 6) {
-						quitPost();
+						exitDialog();
 					}
 				}
 
@@ -214,23 +214,23 @@ public class MainListActivity extends BalanceActivity {
 		}
 	}
 
-//	private void exitDialog() {
-//		new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
-//				.setMessage(this.getString(R.string.sorry_exit))
-//				.setPositiveButton(this.getString(R.string.exit_action), onExitClickListener())
-//				.setNegativeButton(this.getString(R.string.cancel), null).show();
-//	}
+	private void exitDialog() {
+		new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
+				.setMessage(this.getString(R.string.sorry_exit))
+				.setPositiveButton("Да", onExitClickListener())
+				.setNegativeButton("Нет", null).show();
+	}
 
-//	private OnClickListener onExitClickListener() {
-//		return new DialogInterface.OnClickListener() {
-//
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				quitPost();
-//			}
-//
-//		};
-//	}
+	private OnClickListener onExitClickListener() {
+		return new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				quitPost();
+			}
+
+		};
+	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

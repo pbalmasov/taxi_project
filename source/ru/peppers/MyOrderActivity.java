@@ -153,7 +153,7 @@ public class MyOrderActivity extends BalanceActivity {
         // itemsList.add(createItem("item", "Настройки"));
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
-
+        lv.setEmptyView(findViewById(R.id.empty));
         ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1,
                 orders);
 

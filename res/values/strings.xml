@@ -58,7 +58,7 @@
     <string name="settings">Настройки</string>
     <string name="exit">Выход</string>
     <string name="exit_action">Выйти</string>
-    <string name="sorry_exit">У вас есть незакрытые заказы. Вы действительно хотите выйти?</string>
+    <string name="sorry_exit">Вы действительно хотите выйти? В случае выхода вы не сможете принимать заказы.</string>
     <string name="cancel">Отменить</string>
     <string name="invite">Пригласить</string>
     <string name="delay">Отложить</string>

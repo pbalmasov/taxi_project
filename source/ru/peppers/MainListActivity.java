@@ -120,6 +120,7 @@ public class MainListActivity extends BalanceActivity {
 			itemsList.add(createItem("item", this.getString(R.string.call_office)));
 			itemsList.add(createItem("item", this.getString(R.string.settings)));
 			itemsList.add(createItem("item", this.getString(R.string.messages)));
+            itemsList.add(createItem("item", "Архив"));
 			itemsList.add(createItem("item", this.getString(R.string.exit)));
 
 			lv = (ListView) findViewById(R.id.mainListView);
@@ -189,7 +190,11 @@ public class MainListActivity extends BalanceActivity {
 						intent = new Intent(MainListActivity.this, MessageActivity.class);
 						startActivity(intent);
 					}
-					if (position == 6) {
+	                if (position == 6) {
+	                    intent = new Intent(MainListActivity.this, ReportListActivity.class);
+	                    startActivity(intent);
+	                }
+					if (position == 7) {
 						exitDialog();
 					}
 				}

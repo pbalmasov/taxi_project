@@ -134,7 +134,6 @@ public class ReportActivity extends BalanceActivity {
 		itemsList = new ArrayList<String>();
 		itemsList.add("Статус: " + driver.getStatusString());
 		itemsList.add("Класс: " + driver.getClassAutoString());
-		itemsList.add("Отчет: " + 0);// driver.reportsCount());
 
 		ListView lv = (ListView) findViewById(R.id.listView1);
 
@@ -144,10 +143,6 @@ public class ReportActivity extends BalanceActivity {
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-				if (position == 2) {
-					Intent intent = new Intent(ReportActivity.this, ReportListActivity.class);
-					startActivity(intent);
-				}
 				if (position == 1) {
 					Resources res = ReportActivity.this.getResources();
 					String[] classArray = res.getStringArray(R.array.class_array);

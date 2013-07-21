@@ -5,23 +5,24 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ReportListItemActivity extends BalanceActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.report);
 
         Bundle bundle = getIntent().getExtras();
-        int id = bundle.getInt("id");
         int index = bundle.getInt("index");
         Order report = TaxiApplication.getDriver().getReport(index);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, report.toArrayList());
+        TextView tv = (TextView) findViewById(R.id.textView1);
 
-        ListView lv = (ListView) findViewById(R.id.mainListView);
-
-        lv.setAdapter(arrayAdapter);
+        int arraySize = report.toArrayList().size();
+        for (int i = 0; i < arraySize; i++) {
+            tv.append(report.toArrayList().get(i));
+            tv.append("\n");
+        }
     }
 }

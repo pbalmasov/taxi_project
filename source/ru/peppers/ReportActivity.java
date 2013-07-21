@@ -43,7 +43,7 @@ public class ReportActivity extends BalanceActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.report);
+		setContentView(R.layout.main);
 		initList();
 		// Bundle bundle = getIntent().getExtras();
 		// // int id = bundle.getInt("id");
@@ -135,7 +135,7 @@ public class ReportActivity extends BalanceActivity {
 		itemsList.add("Статус: " + driver.getStatusString());
 		itemsList.add("Класс: " + driver.getClassAutoString());
 
-		ListView lv = (ListView) findViewById(R.id.listView1);
+		ListView lv = (ListView) findViewById(R.id.mainListView);
 
 		simpleAdpt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemsList);
 

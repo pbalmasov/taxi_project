@@ -53,10 +53,8 @@
         android:id="@+id/emptyView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/lvMain"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="155dp"
-        android:text="Пустой список"
-        android:textSize="36sp" />
+        android:layout_gravity="center"
+        android:text="Заказы отсутствуют"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

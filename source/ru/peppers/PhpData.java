@@ -130,7 +130,7 @@ final public class PhpData {
 						.setMessage("Сервер не отвечает. Обратитесь к администратору.")
 						.setNeutralButton(activity.getString(R.string.close), null).show();
 			} catch (Exception e) {
-				errorHandler(activity);
+			    errorHandler(activity,e);
 			}
 		} else {
 			new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))

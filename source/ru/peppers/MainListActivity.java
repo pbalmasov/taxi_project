@@ -165,22 +165,22 @@ public class MainListActivity extends BalanceActivity {
 					if (driver.getStatus() != 1)
 						position--;
 					if (position == 3) {
-						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-						nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
-						// nameValuePairs.add(new BasicNameValuePair("id",
-						// String.valueOf(id)));
-
-						Document doc = PhpData.postData(MainListActivity.this, nameValuePairs);
-						if (doc != null) {
-							Node errorNode = doc.getElementsByTagName("error").item(0);
-
-							if (Integer.parseInt(errorNode.getTextContent()) == 1)
-								// TODO:fix
-								PhpData.errorHandler(MainListActivity.this, null);
-							else {
-								PhpData.errorHandler(MainListActivity.this, null);
-							}
-						}
+//                      // TODO:fix
+//						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//						nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
+//						// nameValuePairs.add(new BasicNameValuePair("id",
+//						// String.valueOf(id)));
+//
+//						Document doc = PhpData.postData(MainListActivity.this, nameValuePairs);
+//						if (doc != null) {
+//							Node errorNode = doc.getElementsByTagName("error").item(0);
+//
+//							if (Integer.parseInt(errorNode.getTextContent()) == 1)
+//								PhpData.errorHandler(MainListActivity.this, null);
+//							else {
+//								PhpData.errorHandler(MainListActivity.this, null);
+//							}
+//						}
 					}
 					if (position == 4) {
 						intent = new Intent(MainListActivity.this, SettingsActivity.class);

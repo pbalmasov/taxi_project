@@ -24,13 +24,13 @@ public class CostOrder extends Order {
                      String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
                      Date departuretime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
-        _departuretime = departuretime;
+        set_departuretime(departuretime);
     }
 
     public String toString() {
         String pred = "";
-        if (_departuretime != null)
-            pred = "П " + getTimeString(_departuretime) + ", ";
+        if (get_departuretime() != null)
+            pred = "П " + getTimeString(get_departuretime()) + ", ";
 
         String over = "";
         if (get_nominalcost() != null)
@@ -43,8 +43,8 @@ public class CostOrder extends Order {
         array.addAll(getAbonentArray());
 
         String departureTimeValue = "не указано";
-        if (_departuretime != null)
-            departureTimeValue = getTimeString(_departuretime);
+        if (get_departuretime() != null)
+            departureTimeValue = getTimeString(get_departuretime());
         array.add(_context.getString(R.string.date) + " " + departureTimeValue);
 
         array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
@@ -72,5 +72,13 @@ public class CostOrder extends Order {
         if (DateUtils.isWithinDaysFuture(date, 1))
             return "Завтра " + dateFormat.format(date);
         return new SimpleDateFormat("dd.MM HH:mm").format(date);
+    }
+
+    public Date get_departuretime() {
+        return _departuretime;
+    }
+
+    public void set_departuretime(Date _departuretime) {
+        this._departuretime = _departuretime;
     }
 }

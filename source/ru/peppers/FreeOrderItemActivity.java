@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import model.Order;
+import orders.CostOrder;
 
 public class FreeOrderItemActivity extends BalanceActivity {
 
-    private Order order;
+    private CostOrder order;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class FreeOrderItemActivity extends BalanceActivity {
                 // date, adress, carClass, text, where);
             }
         } else
-            order = TaxiApplication.getDriver().getFreeOrders().get(index);
+            order = (CostOrder) TaxiApplication.getDriver().getFreeOrders().get(index);
 
         TextView tv = (TextView) findViewById(R.id.textView1);
 
@@ -83,48 +83,57 @@ public class FreeOrderItemActivity extends BalanceActivity {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(FreeOrderItemActivity.this);
-                alert.setTitle(FreeOrderItemActivity.this.getString(R.string.time));
-                final CharSequence cs[];
+                if (order.get_departuretime() != null)
+                    acceptOrder(null);
+                else {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(FreeOrderItemActivity.this);
+                    alert.setTitle(FreeOrderItemActivity.this.getString(R.string.time));
+                    final CharSequence cs[];
 
-                cs = new String[]{"3", "5", "7", "10", "15", "20", "25", "30", "35"};
+                    cs = new String[]{"3", "5", "7", "10", "15", "20", "25", "30", "35"};
 
-                alert.setItems(cs, new OnClickListener() {
+                    alert.setItems(cs, new OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-                        nameValuePairs.add(new BasicNameValuePair("action", "accept"));
-                        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-                        nameValuePairs.add(new BasicNameValuePair("object", "order"));
-                        nameValuePairs.add(new BasicNameValuePair("orderid", String.valueOf(order.get_index())));
-                        nameValuePairs.add(new BasicNameValuePair("minutes", (String) cs[which]));
-
-                        Document doc = PhpData.postData(FreeOrderItemActivity.this, nameValuePairs, PhpData.newURL);
-                        if (doc != null) {
-                            Node responseNode = doc.getElementsByTagName("response").item(0);
-                            Node errorNode = doc.getElementsByTagName("message").item(0);
-
-                            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-                                PhpData.errorFromServer(FreeOrderItemActivity.this, errorNode);
-                            else {
-                                try {
-
-                                    Intent intent = new Intent(FreeOrderItemActivity.this, MyOrderActivity.class);
-                                    setResult(RESULT_OK);
-                                    startActivity(intent);
-                                    finish();
-                                    //TODO:заканчивать парент активити
-                                } catch (Exception e) {
-                                    PhpData.errorHandler(FreeOrderItemActivity.this, e);
-                                }
-                            }
+                            acceptOrder((String) cs[which]);
                         }
-                    }
-                });
-                alert.show();
+                    });
+                    alert.show();
+                }
             }
         });
+    }
+
+    private void acceptOrder(String c) {
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "accept"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
+        nameValuePairs.add(new BasicNameValuePair("orderid", String.valueOf(order.get_index())));
+        if (c != null)
+            nameValuePairs.add(new BasicNameValuePair("minutes", c));
+
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+        if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
+            else {
+                try {
+
+                    Intent intent = new Intent(this, MyOrderActivity.class);
+                    setResult(RESULT_OK);
+                    startActivity(intent);
+                    finish();
+                    //TODO:заканчивать парент активити
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        }
     }
 }

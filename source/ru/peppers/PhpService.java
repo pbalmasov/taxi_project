@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -67,7 +66,7 @@ public class PhpService extends Service {
 
     }
 
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
         // Notification notif = new Notification(R.drawable.ic_launcher,
         // "Text in status bar",
         // System.currentTimeMillis());
@@ -78,27 +77,30 @@ public class PhpService extends Service {
         // notif.flags |= Notification.FLAG_AUTO_CANCEL;
         // startForeground(2, notif);
 
-        // Timer myTimer = new Timer(); // Создаем таймер
-        // final Handler uiHandler = new Handler();
-        // myTimer.schedule(new TimerTask() { // Определяем задачу
-        // @Override
-        // public void run() {
-        // uiHandler.post(new Runnable() {
-        // @Override
-        // public void run() {
-        // }
-        //
-        // });
-        // };
-        // }, 0L, 60L * 1000);
+//        final Timer myTimer = new Timer(); // Создаем таймер
+//        final Handler uiHandler = new Handler();
+//
+//        final TimerTask timerTask = new TimerTask() { // Определяем задачу
+//            @Override
+//            public void run() {
+//                uiHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.d("My_tag","1111");
+//                        myTimer.cancel();
+//                    }
+//                });
+//            }
+//        };
+//
+//        myTimer.schedule(timerTask, 0L, 1000*(new Random()).nextInt(10));
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                nm.cancelAll();
-            }
-        }, 10000);
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {;nm.cancelAll();
+//            }
+//        }, 1000*(new Random()).nextInt(10));
 
         if (checkConnection()) {
             //	getMessages();

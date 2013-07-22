@@ -3,102 +3,102 @@
  */
 package model;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import java.util.ArrayList;
 import java.util.Date;
 
 import ru.peppers.R;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
-
 /**
- * 
  * @author papas
  */
 public class Order implements OrderInterface {
 
-	protected String _addressdeparture;
-	protected Integer _carClass;
-	protected String _comment;
-	private String _addressarrival;
-	protected String _index;
-	private Integer _nominalcost;
-	protected Date _timerDate;
-	protected Integer quantity;
-	protected String nickname;
-	private Integer _paymenttype;
-	protected Context _context;
+    protected String _addressdeparture;
+    protected Integer _carClass;
+    protected String _comment;
+    private String _addressarrival;
+    protected String _index;
+    private Integer _nominalcost;
+    protected Date _timerDate;
+    protected Integer quantity;
+    protected String nickname;
+    private Integer _paymenttype;
+    protected Context _context;
 
-	public Order(Context context, Integer costRide, String adress, Integer carClass, String orderText, String where,
-			Integer paymenttype, String index) {
-		_context = context;
-		set_paymenttype(paymenttype);
-		_addressdeparture = adress;
-		_carClass = carClass;
-		_comment = orderText;
-		set_addressarrival(where);
-		_index = index;
-		set_nominalcost(costRide);
-	}
+    public Order(Context context, Integer costRide, String adress, Integer carClass, String orderText, String where,
+                 Integer paymenttype, String index) {
+        _context = context;
+        set_paymenttype(paymenttype);
+        _addressdeparture = adress;
+        _carClass = carClass;
+        _comment = orderText;
+        set_addressarrival(where);
+        _index = index;
+        set_nominalcost(costRide);
+    }
 
-	public String get_index() {
-		return _index;
-	}
+    public String get_index() {
+        return _index;
+    }
 
-	public void setTimerDate(Date date) {
-		_timerDate = date;
-	}
+    public void setTimerDate(Date date) {
+        _timerDate = date;
+    }
 
-	public String getCarClass() {
-		if (_carClass == 0)
-			return _context.getString(R.string.dont_care);
-		else {
-			Resources res = _context.getResources();
-			String[] payment = res.getStringArray(R.array.class_array);
-			return payment[get_paymenttype()].toLowerCase();
-		}
-	}
+    public String getCarClass() {
+        if (_carClass == 0)
+            return _context.getString(R.string.dont_care);
+        else {
+            Resources res = _context.getResources();
+            String[] payment = res.getStringArray(R.array.class_array);
+            return payment[get_paymenttype()].toLowerCase();
+        }
+    }
 
-	public ArrayList<String> getAbonentArray(){
+    public ArrayList<String> getAbonentArray() {
         ArrayList<String> array = new ArrayList<String>();
-        if (nickname != null) {
+        if (nickname == null)
+            nickname = "не указано";
+        String quantityValue = "не указано";
+        if (quantity != null)
+            quantityValue = String.valueOf(quantity);
         array.add(_context.getString(R.string.abonent) + " " + nickname);
-        if(quantity != null)
-        array.add(_context.getString(R.string.rides) + " " + quantity);
-    	}
-		return array;
-	}
-	
-	public String getPayment() {
-		Resources res = _context.getResources();
-		String[] payment = res.getStringArray(R.array.payment_array);
-		return payment[get_paymenttype()];
-	}
+        array.add(_context.getString(R.string.rides) + " " + quantityValue);
+        return array;
+    }
 
-	public Date getTimerDate() {
-		return _timerDate;
-	}
+    public String getPayment() {
+        Resources res = _context.getResources();
+        String[] payment = res.getStringArray(R.array.payment_array);
+        return payment[get_paymenttype()];
+    }
 
-	public ArrayList<String> toArrayList() {
-		return null;
-	}
+    public Date getTimerDate() {
+        return _timerDate;
+    }
 
-	public String getAbonent() {
-		return nickname;
-	}
+    public ArrayList<String> toArrayList() {
+        return null;
+    }
 
-	public void setAbonent(String abonent) {
-		this.nickname = abonent;
-	}
+    public String getAbonent() {
+        return nickname;
+    }
 
-	public Integer getRides() {
-		return quantity;
-	}
+    public void setAbonent(String abonent) {
+        this.nickname = abonent;
+    }
 
-	public void setRides(Integer rides) {
-		this.quantity = rides;
-	}
+    public Integer getRides() {
+        return quantity;
+    }
+
+    public void setRides(Integer rides) {
+        this.quantity = rides;
+    }
 
     public Integer get_nominalcost() {
         return _nominalcost;
@@ -108,19 +108,19 @@ public class Order implements OrderInterface {
         this._nominalcost = _nominalcost;
     }
 
-	public Integer get_paymenttype() {
-		return _paymenttype;
-	}
+    public Integer get_paymenttype() {
+        return _paymenttype;
+    }
 
-	public void set_paymenttype(Integer _paymenttype) {
-		this._paymenttype = _paymenttype;
-	}
+    public void set_paymenttype(Integer _paymenttype) {
+        this._paymenttype = _paymenttype;
+    }
 
-	public String get_addressarrival() {
-		return _addressarrival;
-	}
+    public String get_addressarrival() {
+        return _addressarrival;
+    }
 
-	public void set_addressarrival(String _addressarrival) {
-		this._addressarrival = _addressarrival;
-	}
+    public void set_addressarrival(String _addressarrival) {
+        this._addressarrival = _addressarrival;
+    }
 }

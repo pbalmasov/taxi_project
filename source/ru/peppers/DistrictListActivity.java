@@ -1,5 +1,20 @@
 package ru.peppers;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,37 +25,23 @@ import model.Driver;
 import model.Order;
 import orders.CostOrder;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
 public class DistrictListActivity extends BalanceActivity {
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+    public static final int REQUEST_CLOSE = 1;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+        setContentView(R.layout.emptylist);
 
-		Bundle bundle = getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
 		String districtid = bundle.getString("districtid");
-
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-		nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
 		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-		nameValuePairs.add(new BasicNameValuePair("object", "district"));
-		nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
+        nameValuePairs.add(new BasicNameValuePair("mode", "available"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
+        nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
 		Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
 		if (doc != null) {
 
@@ -63,20 +64,20 @@ public class DistrictListActivity extends BalanceActivity {
 		NodeList nodeList = doc.getElementsByTagName("item");
 		ArrayList<Order> orders = new ArrayList<Order>();
 		for (int i = 0; i < nodeList.getLength(); i++) {
-			// nominalcost - ðåêîìåíäóåìàÿ ñòîèìîñòü çàêàçà
-			// class - êëàññ àâòîìîáëÿ (0 - âñå ðàâíî, 1 - Ýêîíîì, 2 - Ñòàíäàðò,
-			// 3 - Áàçîâûé)
-			// addressdeparture - àäðåñ ïîäà÷è àâòîìîáèëÿ
-			// departuretime - âðåìÿ ïîäà÷è(åñëè åñòü)
-			// paymenttype - ôîðìà îïëàòû (0 - íàëè÷íûå, 1 - áåçíàë)
-			// invitationtime - âðåìÿ ïðèãëàøåíèÿ (åñëè ïðèãëàñèëè)
-			// quantity - êîëè÷åñòâî çàêàçîâ îò ýòîãî êëèåíòà
-			// comment - ïðèìå÷àíèå
-			// nickname - íèê àáîíåíòà (åñëè åñòü)
-			// registrationtime - âðåìÿ ðåãèñòðàöèè çàêàçà
-			// addressarrival - êóäà ïîåäóò
+            // nominalcost - Ñ€ÐµÐºÐ¾Ð¼ÐµÐ½Ð´ÑƒÐµÐ¼Ð°Ñ ÑÑ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ Ð·Ð°ÐºÐ°Ð·Ð°
+            // class - ÐºÐ»Ð°ÑÑ Ð°Ð²Ñ‚Ð¾Ð¼Ð¾Ð±Ð»Ñ (0 - Ð²ÑÐµ Ñ€Ð°Ð²Ð½Ð¾, 1 - Ð­ÐºÐ¾Ð½Ð¾Ð¼, 2 - Ð¡Ñ‚Ð°Ð½Ð´Ð°Ñ€Ñ‚,
+            // 3 - Ð‘Ð°Ð·Ð¾Ð²Ñ‹Ð¹)
+            // addressdeparture - Ð°Ð´Ñ€ÐµÑ Ð¿Ð¾Ð´Ð°Ñ‡Ð¸ Ð°Ð²Ñ‚Ð¾Ð¼Ð¾Ð±Ð¸Ð»Ñ
+            // departuretime - Ð²Ñ€ÐµÐ¼Ñ Ð¿Ð¾Ð´Ð°Ñ‡Ð¸(ÐµÑÐ»Ð¸ ÐµÑÑ‚ÑŒ)
+            // paymenttype - Ñ„Ð¾Ñ€Ð¼Ð° Ð¾Ð¿Ð»Ð°Ñ‚Ñ‹ (0 - Ð½Ð°Ð»Ð¸Ñ‡Ð½Ñ‹Ðµ, 1 - Ð±ÐµÐ·Ð½Ð°Ð»)
+            // invitationtime - Ð²Ñ€ÐµÐ¼Ñ Ð¿Ñ€Ð¸Ð³Ð»Ð°ÑˆÐµÐ½Ð¸Ñ (ÐµÑÐ»Ð¸ Ð¿Ñ€Ð¸Ð³Ð»Ð°ÑÐ¸Ð»Ð¸)
+            // quantity - ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð·Ð°ÐºÐ°Ð·Ð¾Ð² Ð¾Ñ‚ ÑÑ‚Ð¾Ð³Ð¾ ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð°
+            // comment - Ð¿Ñ€Ð¸Ð¼ÐµÑ‡Ð°Ð½Ð¸Ðµ
+            // nickname - Ð½Ð¸Ðº Ð°Ð±Ð¾Ð½ÐµÐ½Ñ‚Ð° (ÐµÑÐ»Ð¸ ÐµÑÑ‚ÑŒ)
+            // registrationtime - Ð²Ñ€ÐµÐ¼Ñ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ð¸ Ð·Ð°ÐºÐ°Ð·Ð°
+            // addressarrival - ÐºÑƒÐ´Ð° Ð¿Ð¾ÐµÐ´ÑƒÑ‚
 
-			Element item = (Element) nodeList.item(i);
+            Element item = (Element) nodeList.item(i);
 
 			Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
 			Node classNode = item.getElementsByTagName("classid").item(0);
@@ -140,23 +141,34 @@ public class DistrictListActivity extends BalanceActivity {
 		}
 
 		Driver driver = TaxiApplication.getDriver();
-		driver.setFreeOrders(orders);
+        driver.set_districtOrders(orders);
 
-		ListView lv = (ListView) findViewById(R.id.mainListView);
-
-		ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
+        ListView lv = (ListView) findViewById(R.id.mainListView);
+        lv.setEmptyView(findViewById(R.id.empty));
+        ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
 
 		lv.setAdapter(arrayAdapter);
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-				Intent intent = new Intent(DistrictListActivity.this, FreeOrderItemActivity.class);
-				Bundle bundle = new Bundle();
+                Intent intent = new Intent(DistrictListActivity.this, DistrictListItemActivity.class);
+                Bundle bundle = new Bundle();
 				bundle.putInt("index", position);
 				intent.putExtras(bundle);
-				startActivity(intent);
-			}
+                startActivityForResult(intent, REQUEST_CLOSE);
+            }
 		});
 	}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_CLOSE) {
+            if (resultCode == RESULT_OK) {
+                this.setResult(RESULT_OK);
+                this.finish();
+            }
+        }
+    }
 
 }

@@ -1,14 +1,12 @@
 package ru.peppers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import model.Driver;
-import model.Order;
-import orders.CostOrder;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,13 +16,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import model.Driver;
+import model.Order;
+import orders.ReportCostOrder;
 
 public class ReportListActivity extends BalanceActivity {
 
@@ -122,31 +122,33 @@ public class ReportListActivity extends BalanceActivity {
             Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
             Node classNode = item.getElementsByTagName("classid").item(0);
             Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
-            Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
+            Node orderdateNode = item.getElementsByTagName("orderdate").item(0);
             Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
             Node quantityNode = item.getElementsByTagName("quantity").item(0);
             Node commentNode = item.getElementsByTagName("comment").item(0);
             Node nicknameNode = item.getElementsByTagName("nickname").item(0);
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
+            Node resultNode = item.getElementsByTagName("result").item(0);
             // Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
 
             Integer nominalcost = null;
             Integer carClass = 0;
             String addressdeparture = null;
-            Date departuretime = null;
+            Date orderdate = null;
             Integer paymenttype = null;
             Integer quantity = null;
             String comment = null;
             String nickname = null;
             String addressarrival = null;
             String orderId = null;
+            String result = null;
             // Date invitationtime = null;
 
             // if(departuretime==null)
-            // //TODO:не предварительный
+            // //TODO:РЅРµ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№
             // else
-            // //TODO:предварительный
+            // //TODO:РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
 
@@ -165,8 +167,8 @@ public class ReportListActivity extends BalanceActivity {
             if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
                 paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
 
-            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
-                departuretime = format.parse(departuretimeNode.getTextContent());
+            if (!orderdateNode.getTextContent().equalsIgnoreCase(""))
+                orderdate = format.parse(orderdateNode.getTextContent());
 
             if (!commentNode.getTextContent().equalsIgnoreCase(""))
                 comment = commentNode.getTextContent();
@@ -174,11 +176,14 @@ public class ReportListActivity extends BalanceActivity {
             if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
                 orderId = orderIdNode.getTextContent();
 
+            if (!resultNode.getTextContent().equalsIgnoreCase(""))
+                result = resultNode.getTextContent();
+
             // if (!invitationNode.getTextContent().equalsIgnoreCase(""))
             // invitationtime = format.parse(invitationNode.getTextContent());
 
-            orders.add(new CostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, departuretime));
+            orders.add(new ReportCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
+                    addressarrival, paymenttype, orderdate, result));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();
@@ -196,16 +201,16 @@ public class ReportListActivity extends BalanceActivity {
         // driver = new Driver(status, carClass, ordersCount, district, subdistrict);
 
         // itemsList = new ArrayList<Map<String, String>>();
-        // itemsList.add(createItem("item", "Мои закакзы: " + driver.getOrdersCount()));
-        // itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
-        // itemsList.add(createItem("item", "Свободные заказы"));
+        // itemsList.add(createItem("item", "РњРѕРё Р·Р°РєР°РєР·С‹: " + driver.getOrdersCount()));
+        // itemsList.add(createItem("item", "РЎС‚Р°С‚СѓСЃ: " + driver.getStatusString()));
+        // itemsList.add(createItem("item", "РЎРІРѕР±РѕРґРЅС‹Рµ Р·Р°РєР°Р·С‹"));
         // if (driver.getStatus() != 1)
         // itemsList
-        // .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
-        // itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
-        // itemsList.add(createItem("item", "Отчет"));
-        // itemsList.add(createItem("item", "Звонок из офиса"));
-        // itemsList.add(createItem("item", "Настройки"));
+        // .add(createItem("item", "Р Р°Р№РѕРЅ: " + driver.getDistrict() + "," + driver.getSubdistrict()));
+        // itemsList.add(createItem("item", "РљР»Р°СЃСЃ: " + driver.getClassAutoString()));
+        // itemsList.add(createItem("item", "РћС‚С‡РµС‚"));
+        // itemsList.add(createItem("item", "Р—РІРѕРЅРѕРє РёР· РѕС„РёСЃР°"));
+        // itemsList.add(createItem("item", "РќР°СЃС‚СЂРѕР№РєРё"));
 
         arrayAdapter.notifyDataSetChanged();
 

@@ -9,28 +9,30 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import model.DateUtils;
 import model.Order;
 import ru.peppers.R;
 
 /**
  * @author papas
  */
-public class CostOrder extends Order {
+public class ReportCostOrder extends Order {
 
-    private Date _departuretime;
+    private Date _orderDate;
+    private String _result;
 
-    public CostOrder(Context context, String index, Integer nominalcost,
-                     String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
-                     Date departuretime) {
+    public ReportCostOrder(Context context, String index, Integer nominalcost,
+                           String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
+                           Date orderDate, String result) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
-        _departuretime = departuretime;
+        _orderDate = orderDate;
+        _result = result;
+
     }
 
     public String toString() {
         String pred = "";
-        if (_departuretime != null)
-            pred = "П " + getTimeString(_departuretime) + ", ";
+        if (_orderDate != null)
+            pred = "П " + getTimeString(_orderDate) + ", ";
 
         String over = "";
         if (get_nominalcost() != null)
@@ -43,8 +45,8 @@ public class CostOrder extends Order {
         array.addAll(getAbonentArray());
 
         String departureTimeValue = "не указано";
-        if (_departuretime != null)
-            departureTimeValue = getTimeString(_departuretime);
+        if (_orderDate != null)
+            departureTimeValue = getTimeString(_orderDate);
         array.add(_context.getString(R.string.date) + " " + departureTimeValue);
 
         array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
@@ -53,11 +55,14 @@ public class CostOrder extends Order {
         array.add(_context.getString(R.string.car_class) + " " + getCarClass());
         array.add(_context.getString(R.string.cost_type) + " " + getPayment());
 
+        array.add("Результат:" + " " + _result);
+
         String costValue = "не указано";
         if (get_nominalcost() != null)
             costValue = String.valueOf(get_nominalcost()) + " " + _context.getString(R.string.currency);
 
         array.add(_context.getString(R.string.cost_ride) + " " + costValue);
+
 
         if (_comment == null)
             _comment = "не указано";
@@ -66,11 +71,6 @@ public class CostOrder extends Order {
     }
 
     private String getTimeString(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        if (DateUtils.isToday(date))
-            return "Сегодня " + dateFormat.format(date);
-        if (DateUtils.isWithinDaysFuture(date, 1))
-            return "Завтра " + dateFormat.format(date);
-        return new SimpleDateFormat("dd.MM HH:mm").format(date);
+        return new SimpleDateFormat("dd.MM").format(date);
     }
 }

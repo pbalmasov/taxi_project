@@ -1,14 +1,8 @@
 package ru.peppers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import model.Driver;
-import model.Message;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -17,13 +11,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import model.Message;
 
 public class MessageActivity extends BalanceActivity {
     @Override
@@ -41,9 +35,9 @@ public class MessageActivity extends BalanceActivity {
             // Node errorNode = doc.getElementsByTagName("error").item(0);
             //
             // if (Integer.parseInt(errorNode.getTextContent()) == 1)
-            // new AlertDialog.Builder(this).setTitle("Ошибка")
-            // .setMessage("Ошибка на сервере. Перезапустите приложение.")
-            // .setNeutralButton("Закрыть", null).show();
+            // new AlertDialog.Builder(this).setTitle("РћС€РёР±РєР°")
+            // .setMessage("РћС€РёР±РєР° РЅР° СЃРµСЂРІРµСЂРµ. РџРµСЂРµР·Р°РїСѓСЃС‚РёС‚Рµ РїСЂРёР»РѕР¶РµРЅРёРµ.")
+            // .setNeutralButton("Р—Р°РєСЂС‹С‚СЊ", null).show();
             // else {
             try {
                 initMainList(doc);

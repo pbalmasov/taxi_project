@@ -1,26 +1,5 @@
 package ru.peppers;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import model.Driver;
-import model.Message;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -37,516 +16,537 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import model.Driver;
+import model.Message;
+
 public class PozivnoiActivity extends BalanceActivity {
-	private static final String URL_APK = "https://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk?raw=true";
-	private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
-	private static final String MY_TAG = "My_tag";
-	protected static final String PREFS_NAME = "MyNamePrefs1";
+    private static final String URL_APK = "https://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk?raw=true";
+    private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
+    private static final String MY_TAG = "My_tag";
+    protected static final String PREFS_NAME = "MyNamePrefs1";
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		boolean update = false;
-		TaxiApplication.setDriver(new Driver(this, 0, 0, "", ""));
-		Log.d("My_tag", "INIT DRIVER");
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        boolean update = false;
+        TaxiApplication.setDriver(new Driver(this, 0, 0, "", ""));
+        Log.d("My_tag", "INIT DRIVER");
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 
-		SharedPreferences.Editor editor = settings.edit();
-		try {
-			if (settings.getInt("version", 0) != 0) // если не начальная версия
-				if (settings.getInt("version", 0) != this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode) { // если
-					// сохраненная
-					// версия
-					// не
-					// совпадает
-					// с
-					// версией
-					// приложения
-					// обновление
-					editor.putInt("version",
-							this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode);
-					// если обновились стоит ли проверять еще раз на обновление?
-				} else {
-					// последняя версия
-					Log.d("My_tag", "Newest version");
-					// List<NameValuePair> nameValuePairs = new
-					// ArrayList<NameValuePair>(
-					// 1);
-					// nameValuePairs.add(new BasicNameValuePair("action",
-					// "getversion"));
-					// Document doc = PhpData.postData(PozivnoiActivity.this,
-					// nameValuePairs);
-					// if (doc != null) {
-					try {
-						// проверяем версию на сервереate a URL for the desired
-						// page
-						URL url = new URL(URL_MANIFEST);
+        SharedPreferences.Editor editor = settings.edit();
+        try {
+            if (settings.getInt("version", 0) != 0) // РµСЃР»Рё РЅРµ РЅР°С‡Р°Р»СЊРЅР°СЏ РІРµСЂСЃРёСЏ
+                if (settings.getInt("version", 0) != this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode) { // РµСЃР»Рё
+                    // СЃРѕС…СЂР°РЅРµРЅРЅР°СЏ
+                    // РІРµСЂСЃРёСЏ
+                    // РЅРµ
+                    // СЃРѕРІРїР°РґР°РµС‚
+                    // СЃ
+                    // РІРµСЂСЃРёРµР№
+                    // РїСЂРёР»РѕР¶РµРЅРёСЏ
+                    // РѕР±РЅРѕРІР»РµРЅРёРµ
+                    editor.putInt("version",
+                            this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode);
+                    // РµСЃР»Рё РѕР±РЅРѕРІРёР»РёСЃСЊ СЃС‚РѕРёС‚ Р»Рё РїСЂРѕРІРµСЂСЏС‚СЊ РµС‰Рµ СЂР°Р· РЅР° РѕР±РЅРѕРІР»РµРЅРёРµ?
+                } else {
+                    // РїРѕСЃР»РµРґРЅСЏСЏ РІРµСЂСЃРёСЏ
+                    Log.d("My_tag", "Newest version");
+                    // List<NameValuePair> nameValuePairs = new
+                    // ArrayList<NameValuePair>(
+                    // 1);
+                    // nameValuePairs.add(new BasicNameValuePair("action",
+                    // "getversion"));
+                    // Document doc = PhpData.postData(PozivnoiActivity.this,
+                    // nameValuePairs);
+                    // if (doc != null) {
+                    try {
+                        // РїСЂРѕРІРµСЂСЏРµРј РІРµСЂСЃРёСЋ РЅР° СЃРµСЂРІРµСЂРµate a URL for the desired
+                        // page
+                        URL url = new URL(URL_MANIFEST);
 
-						// Read all the text returned by the server
-						BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-						String str;
-						while ((str = in.readLine()) != null) {
-							if (str.contains("versionCode"))
-								break;
-						}
-						in.close();
-						// doc.getDocumentElement().normalize();
-						// NamedNodeMap idNode =
-						// doc.getElementsByTagName("manifest").item(0).getAttributes();
-						// Log.d("My_tag", idNode.toString());
-						// Log.d("My_tag",
-						// doc.getElementsByTagName("manifest").item(0).getAttributes()
-						// .getNamedItem("android:versionCode").getTextContent());
-						// int new_version =
-						// Integer.valueOf(doc.getElementsByTagName("manifest").item(0).getAttributes()
-						// .getNamedItem("android:versionCode").getTextContent());
-						// Log.d("My_tag", String.valueOf(new_version));
-						int index = Integer.valueOf(str.substring(str.length() - 3, str.length() - 1));
-						Log.d("My_tag", String.valueOf(index));
-						if (settings.getInt("version", 0) < index) {
-							update = true;
-							// предлагаем перейти на сайт
-							initUpdateDialog(index);
-							// ничего не сохраняем потому что после обновления
-							// оно само сохранится
-						}
-					} catch (Exception e) {
-						Log.d("My_tag", e.toString());
-						// new
-						// AlertDialog.Builder(PozivnoiActivity.this).setTitle("Ошибка")
-						// .setMessage(e.toString()).setNeutralButton("Закрыть",
-						// null).show();
-					}
-				}
-			else {
-				// начальная версия
-				Log.d("My_tag", "First version");
-				editor.putInt("version", this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode);
-				// если начальная версия стоит ли проверять еще раз на
-				// обновление?
-			}
-		} catch (Exception e) {
-			PhpData.errorHandler(this,e);
-		}
-		editor.commit();
-		if (!update) {
-			init(settings);
-		}
-	}
+                        // Read all the text returned by the server
+                        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                        String str;
+                        while ((str = in.readLine()) != null) {
+                            if (str.contains("versionCode"))
+                                break;
+                        }
+                        in.close();
+                        // doc.getDocumentElement().normalize();
+                        // NamedNodeMap idNode =
+                        // doc.getElementsByTagName("manifest").item(0).getAttributes();
+                        // Log.d("My_tag", idNode.toString());
+                        // Log.d("My_tag",
+                        // doc.getElementsByTagName("manifest").item(0).getAttributes()
+                        // .getNamedItem("android:versionCode").getTextContent());
+                        // int new_version =
+                        // Integer.valueOf(doc.getElementsByTagName("manifest").item(0).getAttributes()
+                        // .getNamedItem("android:versionCode").getTextContent());
+                        // Log.d("My_tag", String.valueOf(new_version));
+                        int index = Integer.valueOf(str.substring(str.length() - 3, str.length() - 1));
+                        Log.d("My_tag", String.valueOf(index));
+                        if (settings.getInt("version", 0) < index) {
+                            update = true;
+                            // РїСЂРµРґР»Р°РіР°РµРј РїРµСЂРµР№С‚Рё РЅР° СЃР°Р№С‚
+                            initUpdateDialog(index);
+                            // РЅРёС‡РµРіРѕ РЅРµ СЃРѕС…СЂР°РЅСЏРµРј РїРѕС‚РѕРјСѓ С‡С‚Рѕ РїРѕСЃР»Рµ РѕР±РЅРѕРІР»РµРЅРёСЏ
+                            // РѕРЅРѕ СЃР°РјРѕ СЃРѕС…СЂР°РЅРёС‚СЃСЏ
+                        }
+                    } catch (Exception e) {
+                        Log.d("My_tag", e.toString());
+                        // new
+                        // AlertDialog.Builder(PozivnoiActivity.this).setTitle("РћС€РёР±РєР°")
+                        // .setMessage(e.toString()).setNeutralButton("Р—Р°РєСЂС‹С‚СЊ",
+                        // null).show();
+                    }
+                }
+            else {
+                // РЅР°С‡Р°Р»СЊРЅР°СЏ РІРµСЂСЃРёСЏ
+                Log.d("My_tag", "First version");
+                editor.putInt("version", this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode);
+                // РµСЃР»Рё РЅР°С‡Р°Р»СЊРЅР°СЏ РІРµСЂСЃРёСЏ СЃС‚РѕРёС‚ Р»Рё РїСЂРѕРІРµСЂСЏС‚СЊ РµС‰Рµ СЂР°Р· РЅР°
+                // РѕР±РЅРѕРІР»РµРЅРёРµ?
+            }
+        } catch (Exception e) {
+            PhpData.errorHandler(this, e);
+        }
+        editor.commit();
+        if (!update) {
+            init(settings);
+        }
+    }
 
 
+    private void emptyPozivnoiError() {
+        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+                .setMessage(this.getString(R.string.empty_pozivnoi))
+                .setNeutralButton(this.getString(R.string.close), null).show();
+    }
 
-	private void emptyPozivnoiError() {
-		new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-				.setMessage(this.getString(R.string.empty_pozivnoi))
-				.setNeutralButton(this.getString(R.string.close), null).show();
-	}
+    private void init(SharedPreferences settings) {
+        String pozivnoi = settings.getString("pozivnoidata", "");
+        boolean isFirstTime = settings.getBoolean("isFirstTime", false);
+        if (!isFirstTime) {
+            initRegistration(pozivnoi);
+            return;
+        }
 
-	private void init(SharedPreferences settings) {
-		String pozivnoi = settings.getString("pozivnoidata", "");
-		boolean isFirstTime = settings.getBoolean("isFirstTime", false);
-		if (!isFirstTime) {
-			initRegistration(pozivnoi);
-			return;
-		}
+        if (pozivnoi == "") {
+            setContentView(R.layout.login);
+            EditText pozivnoiEditText = (EditText) findViewById(R.id.pozivnoiEditText);
 
-		if (pozivnoi == "") {
-			setContentView(R.layout.login);
-			EditText pozivnoiEditText = (EditText) findViewById(R.id.pozivnoiEditText);
+            InputFilter filter = new InputFilter() {
+                public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                    for (int i = start; i < end; i++) {
+                        if (!Character.isDigit(source.charAt(i))) {
+                            return "";
+                        }
+                    }
+                    return null;
+                }
+            };
+            pozivnoiEditText.setFilters(new InputFilter[]{filter});
 
-			InputFilter filter = new InputFilter() {
-				public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-					for (int i = start; i < end; i++) {
-						if (!Character.isDigit(source.charAt(i))) {
-							return "";
-						}
-					}
-					return null;
-				}
-			};
-			pozivnoiEditText.setFilters(new InputFilter[] { filter });
+            pozivnoiEditText.setOnKeyListener(new EditText.OnKeyListener() {
 
-			pozivnoiEditText.setOnKeyListener(new EditText.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-				@Override
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    EditText pozivnoiEditText = (EditText) v;
 
-					EditText pozivnoiEditText = (EditText) v;
+                    if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE
+                            || event.getAction() == KeyEvent.ACTION_DOWN
+                            && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 
-					if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE
-							|| event.getAction() == KeyEvent.ACTION_DOWN
-							&& event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        if (!event.isShiftPressed() && pozivnoiEditText.getText().toString().length() != 0)
+                            return loginWithPozivnoi(pozivnoiEditText.getText().toString());
+                        else
+                            emptyPozivnoiError();
 
-						if (!event.isShiftPressed() && pozivnoiEditText.getText().toString().length() != 0)
-							return loginWithPozivnoi(pozivnoiEditText.getText().toString());
-						else
-							emptyPozivnoiError();
+                    }
+                    return false; // pass on to other listeners.
+                }
 
-					}
-					return false; // pass on to other listeners.
-				}
+            });
 
-			});
+            Button passwordButton = (Button) findViewById(R.id.pozivnoiButton);
+            passwordButton.setOnClickListener(new Button.OnClickListener() {
 
-			Button passwordButton = (Button) findViewById(R.id.pozivnoiButton);
-			passwordButton.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EditText pozivnoiEditText = (EditText) findViewById(R.id.pozivnoiEditText);
+                    if (pozivnoiEditText.getText().toString().length() != 0)
+                        loginWithPozivnoi(pozivnoiEditText.getText().toString());
+                    else
+                        emptyPozivnoiError();
+                }
 
-				@Override
-				public void onClick(View v) {
-					EditText pozivnoiEditText = (EditText) findViewById(R.id.pozivnoiEditText);
-					if (pozivnoiEditText.getText().toString().length() != 0)
-						loginWithPozivnoi(pozivnoiEditText.getText().toString());
-					else
-						emptyPozivnoiError();
-				}
+            });
+        } else {
+            loginWithPozivnoi(pozivnoi);
+        }
+    }
 
-			});
-		} else {
-			loginWithPozivnoi(pozivnoi);
-		}
-	}
+    private void initRegistration(String pozivnoi) {
 
-	private void initRegistration(String pozivnoi) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(this.getString(R.string.registration));
+        builder.setMessage(this.getString(R.string.registration_message));
+        builder.setCancelable(false);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(this.getString(R.string.registration));
-		builder.setMessage(this.getString(R.string.registration_message));
-		builder.setCancelable(false);
+        final EditText input = new EditText(this);
+        input.setText(pozivnoi);
 
-		final EditText input = new EditText(this);
-		input.setText(pozivnoi);
+        InputFilter filter = new InputFilter() {
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!Character.isDigit(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
+        input.setFilters(new InputFilter[]{filter});
 
-		InputFilter filter = new InputFilter() {
-			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-				for (int i = start; i < end; i++) {
-					if (!Character.isDigit(source.charAt(i))) {
-						return "";
-					}
-				}
-				return null;
-			}
-		};
-		input.setFilters(new InputFilter[] { filter });
+        input.setOnKeyListener(new EditText.OnKeyListener() {
 
-		input.setOnKeyListener(new EditText.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
+                EditText input = (EditText) v;
 
-				EditText input = (EditText) v;
+                if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE
+                        || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 
-				if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE
-						|| event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    if (!event.isShiftPressed() && input.getText().toString().length() != 0) {
+                        getRequest(input.getText().toString());
+                        return true;
+                    } else
+                        emptyPozivnoiError();
 
-					if (!event.isShiftPressed() && input.getText().toString().length() != 0) {
-						getRequest(input.getText().toString());
-						return true;
-					} else
-						emptyPozivnoiError();
+                }
+                return false; // pass on to other listeners.
+            }
 
-				}
-				return false; // pass on to other listeners.
-			}
+        });
 
-		});
+        builder.setView(input);
+        builder.setPositiveButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                String pozivnoi = input.getText().toString();
+                getRequest(pozivnoi);
+            }
 
-		builder.setView(input);
-		builder.setPositiveButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.dismiss();
-				String pozivnoi = input.getText().toString();
-				getRequest(pozivnoi);
-			}
+        });
+        builder.setNegativeButton(this.getString(R.string.exit), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
 
-		});
-		builder.setNegativeButton(this.getString(R.string.exit), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				finish();
-			}
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
 
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
+    }
 
-	}
+    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static Random rnd = new Random();
 
-	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	static Random rnd = new Random();
+    String randomString(int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
+    }
 
-	String randomString(int len) {
-		StringBuilder sb = new StringBuilder(len);
-		for (int i = 0; i < len; i++)
-			sb.append(AB.charAt(rnd.nextInt(AB.length())));
-		return sb.toString();
-	}
+    private void getRequest(String pozivnoi) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String symbols = randomString(24);
 
-	private void getRequest(String pozivnoi) {
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		String symbols = randomString(24);
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "app"));
+        nameValuePairs.add(new BasicNameValuePair("action", "authrequest"));
+        nameValuePairs.add(new BasicNameValuePair("devserial", symbols));
+        nameValuePairs.add(new BasicNameValuePair("drvnumber", pozivnoi));
+        // TODO: СЃРѕС…СЂР°РЅРёС‚СЊ С‚РѕРєРµРЅ
+        Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
+        if (doc != null) {
 
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-		nameValuePairs.add(new BasicNameValuePair("object", "app"));
-		nameValuePairs.add(new BasicNameValuePair("action", "authrequest"));
-		nameValuePairs.add(new BasicNameValuePair("devserial", symbols));
-		nameValuePairs.add(new BasicNameValuePair("drvnumber", pozivnoi));
-		// TODO: сохранить токен
-		Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
-		if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-			Node responseNode = doc.getElementsByTagName("response").item(0);
-			Node errorNode = doc.getElementsByTagName("message").item(0);
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                new AlertDialog.Builder(PozivnoiActivity.this).setTitle(this.getString(R.string.error_title))
+                        .setMessage(errorNode.getTextContent())
+                        .setNeutralButton(this.getString(R.string.close), new OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                initRegistration("");
+                            }
+                        }).show();
+            else {
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean("isFirstTime", true);
+                editor.putString("pozivnoidata", pozivnoi);
+                editor.putString("password", doc.getElementsByTagName("password").item(0).getTextContent());
+                editor.putString("login", doc.getElementsByTagName("login").item(0).getTextContent());
+                editor.commit();
 
-			if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-				new AlertDialog.Builder(PozivnoiActivity.this).setTitle(this.getString(R.string.error_title))
-						.setMessage(errorNode.getTextContent())
-						.setNeutralButton(this.getString(R.string.close), new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								initRegistration("");
-							}
-						}).show();
-			else {
-				SharedPreferences.Editor editor = settings.edit();
-				editor.putBoolean("isFirstTime", true);
-				editor.putString("pozivnoidata", pozivnoi);
-				editor.putString("password", doc.getElementsByTagName("password").item(0).getTextContent());
-				editor.putString("login", doc.getElementsByTagName("login").item(0).getTextContent());
-				editor.commit();
+                // init(settings);
+                initCallDialog();
+            }
+        }
+    }
 
-				// init(settings);
-				initCallDialog();
-			}
-		}
-	}
+    private void initCallDialog() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Р РµРіРёСЃС‚СЂР°С†РёСЏ");
+        builder.setMessage("Р—Р°РїСЂРѕСЃ РЅР° СЂРµРіРёСЃС‚СЂР°С†РёСЋ РѕС‚РїСЂР°РІР»РµРЅ. РџРѕР·РІРѕРЅРёС‚Рµ РІ РґРёСЃРїРµС‚С‡РµСЂСЃРєСѓСЋ СЃР»СѓР¶Р±Сѓ." + settings.getString("login", "РЅРµС‚Сѓ Р»РѕРіРёРЅР°"));
+        builder.setCancelable(false);
+        builder.setPositiveButton("РџРѕР·РІРѕРЅРёС‚СЊ", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:740000"));
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("РЎРјРµРЅРёС‚СЊ РїРѕР·С‹РІРЅРѕР№", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                initRegistration("");
+            }
+        });
+        builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
 
-	private void initCallDialog() {
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Регистрация");
-		builder.setMessage("Запрос на регистрацию отправлен. Позвоните в диспетчерскую службу."+settings.getString("login", "нету логина"));
-		builder.setCancelable(false);
-		builder.setPositiveButton("Позвонить", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.dismiss();
-				Intent intent = new Intent(Intent.ACTION_CALL);
-				intent.setData(Uri.parse("tel:740000"));
-				startActivity(intent);
-				finish();
-			}
-		});
-		builder.setNegativeButton("Сменить позывной", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.dismiss();
-				initRegistration("");
-			}
-		});
-		builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    finish();
+                }
+                return true;
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
-			@Override
-			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					dialog.dismiss();
-					finish();
-				}
-				return true;
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
+    private void initUpdateDialog(int number) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(this.getString(R.string.update));
+        builder.setMessage(this.getString(R.string.update_message) + " РќРѕРІР°СЏ РІРµСЂСЃРёСЏ РЅРѕРјРµСЂ - " + number);
+        builder.setCancelable(false);
+        builder.setPositiveButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_APK)));
+                // Intent intent = new Intent(Intent.ACTION_VIEW,
+                // Uri.parse(URL_APK));
+                // startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton(this.getString(R.string.update_delay), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                init(settings);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
-	private void initUpdateDialog(int number) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(this.getString(R.string.update));
-		builder.setMessage(this.getString(R.string.update_message) + " Новая версия номер - " + number);
-		builder.setCancelable(false);
-		builder.setPositiveButton(this.getString(R.string.Ok), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.dismiss();
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_APK)));
-				// Intent intent = new Intent(Intent.ACTION_VIEW,
-				// Uri.parse(URL_APK));
-				// startActivity(intent);
-				finish();
-			}
-		});
-		builder.setNegativeButton(this.getString(R.string.update_delay), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-				init(settings);
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
+    private boolean loginWithPozivnoi(String pozivnoi) {
+        {
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+            nameValuePairs.add(new BasicNameValuePair("action", "login"));
+            nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+            nameValuePairs.add(new BasicNameValuePair("object", "session"));
+            nameValuePairs.add(new BasicNameValuePair("login", settings.getString("login", "")));
+            Log.d("My_tag", settings.getString("login", ""));
+            Log.d("My_tag", settings.getString("password", ""));
+            nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
 
-	private boolean loginWithPozivnoi(String pozivnoi) {
-		{
-			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-			nameValuePairs.add(new BasicNameValuePair("action", "login"));
-			nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-			nameValuePairs.add(new BasicNameValuePair("object", "session"));
-			nameValuePairs.add(new BasicNameValuePair("login", settings.getString("login", "")));
-			Log.d("My_tag", settings.getString("login", ""));
-			Log.d("My_tag", settings.getString("password", ""));
-			nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
+            Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
+            if (doc != null) {
+                Node responseNode = doc.getElementsByTagName("response").item(0);
+                Node errorNode = doc.getElementsByTagName("message").item(0);
 
-			Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
-			if (doc != null) {
-				Node responseNode = doc.getElementsByTagName("response").item(0);
-				Node errorNode = doc.getElementsByTagName("message").item(0);
+                if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                    new AlertDialog.Builder(PozivnoiActivity.this)
+                            .setTitle(PozivnoiActivity.this.getString(R.string.error_title))
+                            .setMessage(errorNode.getTextContent())
+                            .setNeutralButton(PozivnoiActivity.this.getString(R.string.close), new OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    initRegistration("");
+                                }
+                            }).show();
+                else {
+                    // save pozivnoi if all ok
 
-				if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-					new AlertDialog.Builder(PozivnoiActivity.this)
-							.setTitle(PozivnoiActivity.this.getString(R.string.error_title))
-							.setMessage(errorNode.getTextContent())
-							.setNeutralButton(PozivnoiActivity.this.getString(R.string.close), new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface arg0, int arg1) {
-									initRegistration("");
-								}
-							}).show();
-				else {
-					// save pozivnoi if all ok
+                    // SharedPreferences.Editor editor = settings.edit();
+                    // editor.putString("pozivnoidata", pozivnoi);
+                    // editor.commit();
 
-					// SharedPreferences.Editor editor = settings.edit();
-					// editor.putString("pozivnoidata", pozivnoi);
-					// editor.commit();
+                    PhpData.sessionid = doc.getElementsByTagName("sessionid").item(0).getTextContent();
+                    Log.d("My_tag", doc.getElementsByTagName("sessionid").item(0).getTextContent());
+                    initMessages(doc);
+                }
+            }
 
-					PhpData.sessionid = doc.getElementsByTagName("sessionid").item(0).getTextContent();
-					Log.d("My_tag", doc.getElementsByTagName("sessionid").item(0).getTextContent());
-					initMessages(doc);
-				}
-			}
+            return true;
+        }
+    }
 
-			return true;
-		}
-	}
+    private void initMessages(Document doc) {
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "message"));
 
-	private void initMessages(Document doc) {
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-		nameValuePairs.add(new BasicNameValuePair("action", "list"));
-		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-		nameValuePairs.add(new BasicNameValuePair("object", "message"));
+        doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
+        if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-		doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
-		if (doc != null) {
-			Node responseNode = doc.getElementsByTagName("response").item(0);
-			Node errorNode = doc.getElementsByTagName("message").item(0);
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                new AlertDialog.Builder(PozivnoiActivity.this).setTitle(this.getString(R.string.error_title))
+                        .setMessage(errorNode.getTextContent()).setNeutralButton(this.getString(R.string.close), null)
+                        .show();
+            else {
+                try {
+                    getMessages(doc);
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        }
+    }
 
-			if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-				new AlertDialog.Builder(PozivnoiActivity.this).setTitle(this.getString(R.string.error_title))
-						.setMessage(errorNode.getTextContent()).setNeutralButton(this.getString(R.string.close), null)
-						.show();
-			else {
-				try {
-					getMessages(doc);
-				} catch (Exception e) {
-		            PhpData.errorHandler(this,e);
-				}
-			}
-		}
-	}
+    private void getMessages(Document doc) throws ParseException {
+        NodeList nodeList = doc.getElementsByTagName("item");
+        final ArrayList<Message> unreaded = new ArrayList<Message>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
 
-	private void getMessages(Document doc) throws ParseException {
-		NodeList nodeList = doc.getElementsByTagName("item");
-		final ArrayList<Message> unreaded = new ArrayList<Message>();
-		for (int i = 0; i < nodeList.getLength(); i++) {
+            Element item = (Element) nodeList.item(i);
+            boolean isRead = true;
+            if (item.getElementsByTagName("readdate").item(0) == null)
+                isRead = false;
+            int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
+            String text = item.getElementsByTagName("message").item(0).getTextContent();
 
-			Element item = (Element) nodeList.item(i);
-			boolean isRead = true;
-			if (item.getElementsByTagName("readdate").item(0) == null)
-				isRead = false;
-			int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
-			Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
-			String text = item.getElementsByTagName("message").item(0).getTextContent();
+            Message message = new Message(text, date, isRead, index);
+            if (!isRead) {
+                unreaded.add(message);
+            }
+        }
+        if (unreaded.size() == 0) {
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 
-			Message message = new Message(text, date, isRead, index);
-			if (!isRead) {
-				unreaded.add(message);
-			}
-		}
-		if (unreaded.size() == 0) {
-			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            Intent intent;
+            boolean isPassword = settings.getBoolean("isPassword", false);
+            if (!isPassword)
+                intent = new Intent(PozivnoiActivity.this, MainListActivity.class);
+            else
+                intent = new Intent(PozivnoiActivity.this, PasswordActivity.class);
 
-			Intent intent;
-			boolean isPassword = settings.getBoolean("isPassword", false);
-			if (!isPassword)
-				intent = new Intent(PozivnoiActivity.this, MainListActivity.class);
-			else
-				intent = new Intent(PozivnoiActivity.this, PasswordActivity.class);
+            startActivity(intent);
+            startService(new Intent(this, PhpService.class));
+            finish();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(PozivnoiActivity.this);
+            builder.setTitle(unreaded.get(0).getDate().toGMTString());
+            builder.setMessage(unreaded.get(0).getText());
+            builder.setNeutralButton(this.getString(R.string.Ok), onMessageClick(unreaded));
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
 
-			startActivity(intent);
-			startService(new Intent(this, PhpService.class));
-			finish();
-		} else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(PozivnoiActivity.this);
-			builder.setTitle(unreaded.get(0).getDate().toGMTString());
-			builder.setMessage(unreaded.get(0).getText());
-			builder.setNeutralButton(this.getString(R.string.Ok), onMessageClick(unreaded));
-			AlertDialog alert = builder.create();
-			alert.show();
-		}
-	}
+    private OnClickListener onMessageClick(final ArrayList<Message> unreaded) {
+        return new OnClickListener() {
 
-	private OnClickListener onMessageClick(final ArrayList<Message> unreaded) {
-		return new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+                nameValuePairs.add(new BasicNameValuePair("action", "markread"));
+                nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                nameValuePairs.add(new BasicNameValuePair("object", "message"));
+                nameValuePairs.add(new BasicNameValuePair("messageid", String.valueOf(unreaded.get(0).get_index())));
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-				nameValuePairs.add(new BasicNameValuePair("action", "markread"));
-				nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-				nameValuePairs.add(new BasicNameValuePair("object", "message"));
-				nameValuePairs.add(new BasicNameValuePair("messageid", String.valueOf(unreaded.get(0).get_index())));
+                Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
+                if (doc != null) {
+                    Node responseNode = doc.getElementsByTagName("response").item(0);
+                    Node errorNode = doc.getElementsByTagName("message").item(0);
 
-				Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
-				if (doc != null) {
-					Node responseNode = doc.getElementsByTagName("response").item(0);
-					Node errorNode = doc.getElementsByTagName("message").item(0);
-
-					if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-						new AlertDialog.Builder(PozivnoiActivity.this)
-								.setTitle(PozivnoiActivity.this.getString(R.string.error_title))
-								.setMessage(errorNode.getTextContent())
-								.setNeutralButton(PozivnoiActivity.this.getString(R.string.close), null).show();
-					else {
-						unreaded.remove(0);
-						if (unreaded.size() != 0) {
-							AlertDialog.Builder builder = new AlertDialog.Builder(PozivnoiActivity.this);
-							builder.setTitle(unreaded.get(0).getDate().toGMTString());
-							builder.setMessage(unreaded.get(0).getText());
-							builder.setNeutralButton(PozivnoiActivity.this.getString(R.string.Ok),
-									onMessageClick(unreaded));
-							AlertDialog alert = builder.create();
-							alert.show();
-						} else {
-							SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-							// if password type password then check password
-							// then
-							// loginWithPozivnoi
-							Intent intent;
-							boolean isPassword = settings.getBoolean("isPassword", false);
-							if (!isPassword)
-								intent = new Intent(PozivnoiActivity.this, MainListActivity.class);
-							else
-								intent = new Intent(PozivnoiActivity.this, PasswordActivity.class);
-							// Bundle bundle = new Bundle();
-							// bundle.putInt("id", index);
-							// intent.putExtras(bundle);
-							// TaxiApplication.setDriverId(index);
-							startActivity(intent);
-							startService(new Intent(PozivnoiActivity.this, PhpService.class));
-							finish();
-						}
-					}
-				}
-			}
-		};
-	}
+                    if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                        new AlertDialog.Builder(PozivnoiActivity.this)
+                                .setTitle(PozivnoiActivity.this.getString(R.string.error_title))
+                                .setMessage(errorNode.getTextContent())
+                                .setNeutralButton(PozivnoiActivity.this.getString(R.string.close), null).show();
+                    else {
+                        unreaded.remove(0);
+                        if (unreaded.size() != 0) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PozivnoiActivity.this);
+                            builder.setTitle(unreaded.get(0).getDate().toGMTString());
+                            builder.setMessage(unreaded.get(0).getText());
+                            builder.setNeutralButton(PozivnoiActivity.this.getString(R.string.Ok),
+                                    onMessageClick(unreaded));
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        } else {
+                            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                            // if password type password then check password
+                            // then
+                            // loginWithPozivnoi
+                            Intent intent;
+                            boolean isPassword = settings.getBoolean("isPassword", false);
+                            if (!isPassword)
+                                intent = new Intent(PozivnoiActivity.this, MainListActivity.class);
+                            else
+                                intent = new Intent(PozivnoiActivity.this, PasswordActivity.class);
+                            // Bundle bundle = new Bundle();
+                            // bundle.putInt("id", index);
+                            // intent.putExtras(bundle);
+                            // TaxiApplication.setDriverId(index);
+                            startActivity(intent);
+                            startService(new Intent(PozivnoiActivity.this, PhpService.class));
+                            finish();
+                        }
+                    }
+                }
+            }
+        };
+    }
 }

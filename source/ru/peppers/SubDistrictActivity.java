@@ -1,10 +1,15 @@
 package ru.peppers;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import model.SubDistrict;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -14,21 +19,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.SubDistrict;
 
 public class SubDistrictActivity extends BalanceActivity {
-	private String districtid;
-	private int districtdrivers;
+    public static final int REQUEST_CLOSE = 1;
+    private String districtid;
+    private int districtdrivers;
 	private boolean close;
 
 	@Override
@@ -160,9 +160,8 @@ public class SubDistrictActivity extends BalanceActivity {
 					Bundle bundle = new Bundle();
 					bundle.putString("districtid", districtid);
 					intent.putExtras(bundle);
-					startActivity(intent);
-					setResult(RESULT_OK);
-					finish();
+                    startActivityForResult(intent, REQUEST_CLOSE);
+                    finish();
 				}
 
 				dialog.dismiss();
@@ -170,4 +169,15 @@ public class SubDistrictActivity extends BalanceActivity {
 			}
 		};
 	}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_CLOSE) {
+            if (resultCode == RESULT_OK) {
+                this.setResult(RESULT_OK);
+                this.finish();
+            }
+        }
+    }
 }

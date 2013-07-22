@@ -1,5 +1,20 @@
 package ru.peppers;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,23 +25,9 @@ import model.Driver;
 import model.Order;
 import myorders.MyCostOrder;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
 public class MyOrderActivity extends BalanceActivity {
     private static final int REQUEST_EXIT = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,7 @@ public class MyOrderActivity extends BalanceActivity {
                 try {
                     initMainList(doc);
                 } catch (Exception e) {
-                    PhpData.errorHandler(this,e);
+                    PhpData.errorHandler(this, e);
                 }
             }
         }
@@ -73,7 +74,7 @@ public class MyOrderActivity extends BalanceActivity {
             Node nicknameNode = item.getElementsByTagName("nickname").item(0);
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
-			Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
+            Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
 
             Integer nominalcost = null;
             Integer carClass = 0;
@@ -85,12 +86,12 @@ public class MyOrderActivity extends BalanceActivity {
             String nickname = null;
             String addressarrival = null;
             String orderId = null;
-			Date invitationtime = null;
+            Date invitationtime = null;
 
             // if(departuretime==null)
-            // //TODO:не предварительный
+            // //TODO:РЅРµ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№
             // else
-            // //TODO:предварительный
+            // //TODO:РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
 
@@ -115,14 +116,14 @@ public class MyOrderActivity extends BalanceActivity {
             if (!commentNode.getTextContent().equalsIgnoreCase(""))
                 comment = commentNode.getTextContent();
 
-			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
-				orderId = orderIdNode.getTextContent();
+            if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
+                orderId = orderIdNode.getTextContent();
 
-			if (!invitationNode.getTextContent().equalsIgnoreCase(""))
-				invitationtime = format.parse(invitationNode.getTextContent());
+            if (!invitationNode.getTextContent().equalsIgnoreCase(""))
+                invitationtime = format.parse(invitationNode.getTextContent());
 
             orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype,invitationtime, departuretime));
+                    addressarrival, paymenttype, invitationtime, departuretime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();
@@ -141,16 +142,16 @@ public class MyOrderActivity extends BalanceActivity {
         // driver = new Driver(status, carClass, ordersCount, district, subdistrict);
 
         // itemsList = new ArrayList<Map<String, String>>();
-        // itemsList.add(createItem("item", "Мои закакзы: " + driver.getOrdersCount()));
-        // itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
-        // itemsList.add(createItem("item", "Свободные заказы"));
+        // itemsList.add(createItem("item", "РњРѕРё Р·Р°РєР°РєР·С‹: " + driver.getOrdersCount()));
+        // itemsList.add(createItem("item", "РЎС‚Р°С‚СѓСЃ: " + driver.getStatusString()));
+        // itemsList.add(createItem("item", "РЎРІРѕР±РѕРґРЅС‹Рµ Р·Р°РєР°Р·С‹"));
         // if (driver.getStatus() != 1)
         // itemsList
-        // .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
-        // itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
-        // itemsList.add(createItem("item", "Отчет"));
-        // itemsList.add(createItem("item", "Звонок из офиса"));
-        // itemsList.add(createItem("item", "Настройки"));
+        // .add(createItem("item", "Р Р°Р№РѕРЅ: " + driver.getDistrict() + "," + driver.getSubdistrict()));
+        // itemsList.add(createItem("item", "РљР»Р°СЃСЃ: " + driver.getClassAutoString()));
+        // itemsList.add(createItem("item", "РћС‚С‡РµС‚"));
+        // itemsList.add(createItem("item", "Р—РІРѕРЅРѕРє РёР· РѕС„РёСЃР°"));
+        // itemsList.add(createItem("item", "РќР°СЃС‚СЂРѕР№РєРё"));
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
         lv.setEmptyView(findViewById(R.id.empty));
@@ -169,17 +170,18 @@ public class MyOrderActivity extends BalanceActivity {
                 // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
-                startActivityForResult(intent,REQUEST_EXIT);
+                startActivityForResult(intent, REQUEST_EXIT);
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_EXIT) {
-             if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 this.finish();
-             }
-         }
+            }
+        }
     }
 }

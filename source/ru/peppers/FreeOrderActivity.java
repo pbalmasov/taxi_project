@@ -1,5 +1,20 @@
 package ru.peppers;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,52 +25,37 @@ import model.Driver;
 import model.Order;
 import orders.CostOrder;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
 public class FreeOrderActivity extends BalanceActivity {
-	protected static final int REQUEST_EXIT = 0;
+    protected static final int REQUEST_EXIT = 0;
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-		nameValuePairs.add(new BasicNameValuePair("action", "list"));
-		nameValuePairs.add(new BasicNameValuePair("mode", "available"));
-		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-		nameValuePairs.add(new BasicNameValuePair("object", "order"));
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "available"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
 
-		Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
-		if (doc != null) {
-			Node responseNode = doc.getElementsByTagName("response").item(0);
-			Node errorNode = doc.getElementsByTagName("message").item(0);
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+        if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-			if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-				PhpData.errorFromServer(this, errorNode);
-			else {
-				try {
-					initMainList(doc);
-				} catch (Exception e) {
-					PhpData.errorHandler(this,e);
-				}
-			}
-		}
-		// TODO:нету заказов
-		/*
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
+            else {
+                try {
+                    initMainList(doc);
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        }
+        // TODO:РЅРµС‚Сѓ Р·Р°РєР°Р·РѕРІ
+        /*
 		 * new
 		 * AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
 		 * setMessage(this.getString(R.string.noOrders))
@@ -71,141 +71,141 @@ public class FreeOrderActivity extends BalanceActivity {
 		 * bundle.putInt("id", id); // intent.putExtras(bundle);
 		 * startActivity(intent); } }).show();
 		 */
-	}
+    }
 
-	private void initMainList(Document doc) throws DOMException, ParseException {
-		NodeList nodeList = doc.getElementsByTagName("item");
-		ArrayList<Order> orders = new ArrayList<Order>();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			// nominalcost - рекомендуемая стоимость заказа
-			// class - класс автомобля (0 - все равно, 1 - Эконом, 2 - Стандарт,
-			// 3 - Базовый)
-			// addressdeparture - адрес подачи автомобиля
-			// departuretime - время подачи(если есть)
-			// paymenttype - форма оплаты (0 - наличные, 1 - безнал)
-			// invitationtime - время приглашения (если пригласили)
-			// quantity - количество заказов от этого клиента
-			// comment - примечание
-			// nickname - ник абонента (если есть)
-			// registrationtime - время регистрации заказа
-			// addressarrival - куда поедут
+    private void initMainList(Document doc) throws DOMException, ParseException {
+        NodeList nodeList = doc.getElementsByTagName("item");
+        ArrayList<Order> orders = new ArrayList<Order>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            // nominalcost - СЂРµРєРѕРјРµРЅРґСѓРµРјР°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ Р·Р°РєР°Р·Р°
+            // class - РєР»Р°СЃСЃ Р°РІС‚РѕРјРѕР±Р»СЏ (0 - РІСЃРµ СЂР°РІРЅРѕ, 1 - Р­РєРѕРЅРѕРј, 2 - РЎС‚Р°РЅРґР°СЂС‚,
+            // 3 - Р‘Р°Р·РѕРІС‹Р№)
+            // addressdeparture - Р°РґСЂРµСЃ РїРѕРґР°С‡Рё Р°РІС‚РѕРјРѕР±РёР»СЏ
+            // departuretime - РІСЂРµРјСЏ РїРѕРґР°С‡Рё(РµСЃР»Рё РµСЃС‚СЊ)
+            // paymenttype - С„РѕСЂРјР° РѕРїР»Р°С‚С‹ (0 - РЅР°Р»РёС‡РЅС‹Рµ, 1 - Р±РµР·РЅР°Р»)
+            // invitationtime - РІСЂРµРјСЏ РїСЂРёРіР»Р°С€РµРЅРёСЏ (РµСЃР»Рё РїСЂРёРіР»Р°СЃРёР»Рё)
+            // quantity - РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ РѕС‚ СЌС‚РѕРіРѕ РєР»РёРµРЅС‚Р°
+            // comment - РїСЂРёРјРµС‡Р°РЅРёРµ
+            // nickname - РЅРёРє Р°Р±РѕРЅРµРЅС‚Р° (РµСЃР»Рё РµСЃС‚СЊ)
+            // registrationtime - РІСЂРµРјСЏ СЂРµРіРёСЃС‚СЂР°С†РёРё Р·Р°РєР°Р·Р°
+            // addressarrival - РєСѓРґР° РїРѕРµРґСѓС‚
 
-			Element item = (Element) nodeList.item(i);
+            Element item = (Element) nodeList.item(i);
 
-			Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
-			Node classNode = item.getElementsByTagName("classid").item(0);
-			Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
-			Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
-			Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
-			Node quantityNode = item.getElementsByTagName("quantity").item(0);
-			Node commentNode = item.getElementsByTagName("comment").item(0);
-			Node nicknameNode = item.getElementsByTagName("nickname").item(0);
-			Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
-			Node orderIdNode = item.getElementsByTagName("orderid").item(0);
+            Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
+            Node classNode = item.getElementsByTagName("classid").item(0);
+            Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
+            Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
+            Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
+            Node quantityNode = item.getElementsByTagName("quantity").item(0);
+            Node commentNode = item.getElementsByTagName("comment").item(0);
+            Node nicknameNode = item.getElementsByTagName("nickname").item(0);
+            Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
+            Node orderIdNode = item.getElementsByTagName("orderid").item(0);
 
-			Integer nominalcost = null;
-			Integer carClass = 0;
-			String addressdeparture = null;
-			Date departuretime = null;
-			Integer paymenttype = null;
-			Integer quantity = null;
-			String comment = null;
-			String nickname = null;
+            Integer nominalcost = null;
+            Integer carClass = 0;
+            String addressdeparture = null;
+            Date departuretime = null;
+            Integer paymenttype = null;
+            Integer quantity = null;
+            String comment = null;
+            String nickname = null;
 //			Date registrationtime = null;
-			String addressarrival = null;
-			String orderId = null;
+            String addressarrival = null;
+            String orderId = null;
 
-			// if(departuretime==null)
-			// //TODO:не предварительный
-			// else
-			// //TODO:предварительный
+            // if(departuretime==null)
+            // //TODO:РЅРµ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№
+            // else
+            // //TODO:РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Р№
 
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
 
-			if (!classNode.getTextContent().equalsIgnoreCase(""))
-				carClass = Integer.valueOf(classNode.getTextContent());
+            if (!classNode.getTextContent().equalsIgnoreCase(""))
+                carClass = Integer.valueOf(classNode.getTextContent());
 
-			if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
-				nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
+            if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
+                nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
 
 //			if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
 //				registrationtime = format.parse(registrationtimeNode.getTextContent());
 
-			if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
-				addressdeparture = addressdepartureNode.getTextContent();
+            if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
+                addressdeparture = addressdepartureNode.getTextContent();
 
-			if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
-				addressarrival = addressarrivalNode.getTextContent();
+            if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
+                addressarrival = addressarrivalNode.getTextContent();
 
-			if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
-				paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
+            if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
+                paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
 
-			if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
-				departuretime = format.parse(departuretimeNode.getTextContent());
+            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
+                departuretime = format.parse(departuretimeNode.getTextContent());
 
-			if (!commentNode.getTextContent().equalsIgnoreCase(""))
-				comment = commentNode.getTextContent();
+            if (!commentNode.getTextContent().equalsIgnoreCase(""))
+                comment = commentNode.getTextContent();
 
-			if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
-				orderId = orderIdNode.getTextContent();
+            if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
+                orderId = orderIdNode.getTextContent();
 
 
+            orders.add(new CostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
+                    addressarrival, paymenttype, departuretime));
 
-			orders.add(new CostOrder(this,orderId, nominalcost,  addressdeparture, carClass, comment,
-					addressarrival, paymenttype, departuretime));
+            if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
+                nickname = nicknameNode.getTextContent();
 
-			if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
-				nickname = nicknameNode.getTextContent();
+                if (!quantityNode.getTextContent().equalsIgnoreCase(""))
+                    quantity = Integer.parseInt(quantityNode.getTextContent());
+                orders.get(i).setAbonent(nickname);
+                orders.get(i).setRides(quantity);
+            }
+        }
 
-				if (!quantityNode.getTextContent().equalsIgnoreCase(""))
-					quantity = Integer.parseInt(quantityNode.getTextContent());
-				orders.get(i).setAbonent(nickname);
-				orders.get(i).setRides(quantity);
-			}
-		}
+        Driver driver = TaxiApplication.getDriver();
+        driver.setFreeOrders(orders);
+        // driver = new Driver(status, carClass, ordersCount, district,
+        // subdistrict);
 
-		Driver driver = TaxiApplication.getDriver();
-		driver.setFreeOrders(orders);
-		// driver = new Driver(status, carClass, ordersCount, district,
-		// subdistrict);
+        // itemsList = new ArrayList<Map<String, String>>();
+        // itemsList.add(createItem("item", "РњРѕРё Р·Р°РєР°РєР·С‹: " +
+        // driver.getOrdersCount()));
+        // itemsList.add(createItem("item", "РЎС‚Р°С‚СѓСЃ: " +
+        // driver.getStatusString()));
+        // itemsList.add(createItem("item", "РЎРІРѕР±РѕРґРЅС‹Рµ Р·Р°РєР°Р·С‹"));
+        // if (driver.getStatus() != 1)
+        // itemsList
+        // .add(createItem("item", "Р Р°Р№РѕРЅ: " + driver.getDistrict() + "," +
+        // driver.getSubdistrict()));
+        // itemsList.add(createItem("item", "РљР»Р°СЃСЃ: " +
+        // driver.getClassAutoString()));
+        // itemsList.add(createItem("item", "РћС‚С‡РµС‚"));
+        // itemsList.add(createItem("item", "Р—РІРѕРЅРѕРє РёР· РѕС„РёСЃР°"));
+        // itemsList.add(createItem("item", "РќР°СЃС‚СЂРѕР№РєРё"));
 
-		// itemsList = new ArrayList<Map<String, String>>();
-		// itemsList.add(createItem("item", "Мои закакзы: " +
-		// driver.getOrdersCount()));
-		// itemsList.add(createItem("item", "Статус: " +
-		// driver.getStatusString()));
-		// itemsList.add(createItem("item", "Свободные заказы"));
-		// if (driver.getStatus() != 1)
-		// itemsList
-		// .add(createItem("item", "Район: " + driver.getDistrict() + "," +
-		// driver.getSubdistrict()));
-		// itemsList.add(createItem("item", "Класс: " +
-		// driver.getClassAutoString()));
-		// itemsList.add(createItem("item", "Отчет"));
-		// itemsList.add(createItem("item", "Звонок из офиса"));
-		// itemsList.add(createItem("item", "Настройки"));
+        ListView lv = (ListView) findViewById(R.id.mainListView);
 
-		ListView lv = (ListView) findViewById(R.id.mainListView);
+        ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
 
-		ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
+        lv.setAdapter(arrayAdapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-		lv.setAdapter(arrayAdapter);
-		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
+                // Bundle extras = getIntent().getExtras();
+                // int id = extras.getInt("id");
 
-			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-				// Bundle extras = getIntent().getExtras();
-				// int id = extras.getInt("id");
+                Intent intent = new Intent(FreeOrderActivity.this, FreeOrderItemActivity.class);
+                Bundle bundle = new Bundle();
+                // bundle.putInt("id", id);
+                bundle.putInt("index", position);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_EXIT);
+            }
+        });
+    }
 
-				Intent intent = new Intent(FreeOrderActivity.this, FreeOrderItemActivity.class);
-				Bundle bundle = new Bundle();
-				// bundle.putInt("id", id);
-				bundle.putInt("index", position);
-				intent.putExtras(bundle);
-				startActivityForResult(intent,REQUEST_EXIT);
-			}
-		});
-	}
-	@Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_EXIT) {

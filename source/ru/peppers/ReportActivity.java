@@ -1,18 +1,15 @@
 package ru.peppers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import model.Driver;
-import model.Order;
-import orders.CostOrder;
-import orders.NoCostOrder;
-import orders.PreliminaryOrder;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -22,19 +19,15 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import model.Driver;
+import model.Order;
 
 public class ReportActivity extends BalanceActivity {
 	private ArrayAdapter<String> simpleAdpt;
@@ -58,24 +51,24 @@ public class ReportActivity extends BalanceActivity {
 		// Node errorNode = doc.getElementsByTagName("error").item(0);
 		//
 		// if (Integer.parseInt(errorNode.getTextContent()) == 1)
-		// new AlertDialog.Builder(this).setTitle("Ошибка")
-		// .setMessage("Ошибка на сервере. Перезапустите приложение.").setNeutralButton("Закрыть",
-		// null)
+        // new AlertDialog.Builder(this).setTitle("РћС€РёР±РєР°")
+        // .setMessage("РћС€РёР±РєР° РЅР° СЃРµСЂРІРµСЂРµ. РџРµСЂРµР·Р°РїСѓСЃС‚РёС‚Рµ РїСЂРёР»РѕР¶РµРЅРёРµ.").setNeutralButton("Р—Р°РєСЂС‹С‚СЊ",
+        // null)
 		// .show();
 		// else {
 		// try {
 		// initMainList(doc);
 		// } catch (DOMException e) {
 		// e.printStackTrace();
-		// new AlertDialog.Builder(this).setTitle("Ошибка")
-		// .setMessage("Ошибка на сервере. Перезапустите приложение.")
-		// .setNeutralButton("Закрыть", null).show();
-		// } catch (ParseException e) {
+        // new AlertDialog.Builder(this).setTitle("РћС€РёР±РєР°")
+        // .setMessage("РћС€РёР±РєР° РЅР° СЃРµСЂРІРµСЂРµ. РџРµСЂРµР·Р°РїСѓСЃС‚РёС‚Рµ РїСЂРёР»РѕР¶РµРЅРёРµ.")
+        // .setNeutralButton("Р—Р°РєСЂС‹С‚СЊ", null).show();
+        // } catch (ParseException e) {
 		// e.printStackTrace();
-		// new AlertDialog.Builder(this).setTitle("Ошибка")
-		// .setMessage("Ошибка на сервере. Перезапустите приложение.")
-		// .setNeutralButton("Закрыть", null).show();
-		// }
+        // new AlertDialog.Builder(this).setTitle("РћС€РёР±РєР°")
+        // .setMessage("РћС€РёР±РєР° РЅР° СЃРµСЂРІРµСЂРµ. РџРµСЂРµР·Р°РїСѓСЃС‚РёС‚Рµ РїСЂРёР»РѕР¶РµРЅРёРµ.")
+        // .setNeutralButton("Р—Р°РєСЂС‹С‚СЊ", null).show();
+        // }
 		// }
 		// } else {
 		// initList();
@@ -132,10 +125,10 @@ public class ReportActivity extends BalanceActivity {
 	public void initList() {
 		final Driver driver = TaxiApplication.getDriver();
 		itemsList = new ArrayList<String>();
-		itemsList.add("Статус: " + driver.getStatusString());
-		itemsList.add("Класс: " + driver.getClassAutoString());
+        itemsList.add("РЎС‚Р°С‚СѓСЃ: " + driver.getStatusString());
+        itemsList.add("РљР»Р°СЃСЃ: " + driver.getClassAutoString());
 
-		ListView lv = (ListView) findViewById(R.id.mainListView);
+        ListView lv = (ListView) findViewById(R.id.mainListView);
 
 		simpleAdpt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemsList);
 
@@ -147,8 +140,8 @@ public class ReportActivity extends BalanceActivity {
 					Resources res = ReportActivity.this.getResources();
 					String[] classArray = res.getStringArray(R.array.class_array);
 					AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
-					builder.setTitle("Выбор статуса");
-					builder.setSingleChoiceItems(classArray, driver.getClassAuto(),
+                    builder.setTitle("Р’С‹Р±РѕСЂ СЃС‚Р°С‚СѓСЃР°");
+                    builder.setSingleChoiceItems(classArray, driver.getClassAuto(),
 							onClassContextMenuItemListener(position));
 					AlertDialog alert = builder.create();
 					alert.show();
@@ -159,8 +152,8 @@ public class ReportActivity extends BalanceActivity {
 					ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(statusArray));
 					arrayList.remove(arrayList.size()-1);
 					AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
-					builder.setTitle("Выбор статуса");
-					builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), driver.getStatus(),
+                    builder.setTitle("Р’С‹Р±РѕСЂ СЃС‚Р°С‚СѓСЃР°");
+                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), driver.getStatus(),
 							onStatusContextMenuItemListener(position));
 					AlertDialog alert = builder.create();
 					alert.show();
@@ -177,9 +170,9 @@ public class ReportActivity extends BalanceActivity {
 
 				// if (item == 2 && driver.getOrdersCount() != 0) {
 				// new
-				// AlertDialog.Builder(ReportActivity.this).setTitle("Заказы")
-				// .setMessage("К сожалению у вас есть не закрытые заказы.").setNeutralButton("Закрыть",
-				// null)
+                // AlertDialog.Builder(ReportActivity.this).setTitle("Р—Р°РєР°Р·С‹")
+                // .setMessage("Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ Сѓ РІР°СЃ РµСЃС‚СЊ РЅРµ Р·Р°РєСЂС‹С‚С‹Рµ Р·Р°РєР°Р·С‹.").setNeutralButton("Р—Р°РєСЂС‹С‚СЊ",
+                // null)
 				// .show();
 				// dialog.dismiss();
 				// return;
@@ -205,10 +198,10 @@ public class ReportActivity extends BalanceActivity {
 							PhpData.errorFromServer(ReportActivity.this, errorNode);
 						else {
 							driver.setStatus(item);
-							itemsList.set(position, "Статус: " + driver.getStatusString());
-							simpleAdpt.notifyDataSetChanged();
-							// предлагаем поменять район
-							if (item == 0 && driver.getDistrict() == "") {
+                            itemsList.set(position, "РЎС‚Р°С‚СѓСЃ: " + driver.getStatusString());
+                            simpleAdpt.notifyDataSetChanged();
+                            // РїСЂРµРґР»Р°РіР°РµРј РїРѕРјРµРЅСЏС‚СЊ СЂР°Р№РѕРЅ
+                            if (item == 0 && driver.getDistrict() == "") {
 								Intent intent = new Intent(ReportActivity.this, DistrictActivity.class);
 								startActivity(intent);
 								finish();
@@ -244,8 +237,8 @@ public class ReportActivity extends BalanceActivity {
 							PhpData.errorFromServer(ReportActivity.this, errorNode);
 						else {
 							driver.setClassAuto(item);
-							itemsList.set(position, "Класс: " + driver.getClassAutoString());
-							simpleAdpt.notifyDataSetChanged();
+                            itemsList.set(position, "РљР»Р°СЃСЃ: " + driver.getClassAutoString());
+                            simpleAdpt.notifyDataSetChanged();
 						}
 					}
 				}

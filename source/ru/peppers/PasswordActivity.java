@@ -1,6 +1,5 @@
-package ru.peppers;
+п»їpackage ru.peppers;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +14,7 @@ import android.widget.EditText;
 public class PasswordActivity extends BalanceActivity {
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password);
 
@@ -86,8 +85,8 @@ public class PasswordActivity extends BalanceActivity {
     }
 
     private void onErrorPassword() {
-        new AlertDialog.Builder(PasswordActivity.this).setTitle("Ошибка")
-                .setMessage("Неправильный пароль. Повторите попытку").setNeutralButton("Закрыть", null)
+        new AlertDialog.Builder(PasswordActivity.this).setTitle("РћС€РёР±РєР°")
+                .setMessage("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ РїР°СЂРѕР»СЊ. РџРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ").setNeutralButton("Р—Р°РєСЂС‹С‚СЊ", null)
                 .show();
     }
 }

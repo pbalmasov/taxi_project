@@ -1,4 +1,4 @@
-﻿package ru.peppers;
+package ru.peppers;
 
 import android.app.AlertDialog;
 import android.content.Intent;

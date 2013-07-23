@@ -79,7 +79,7 @@ public class MainListActivity extends BalanceActivity {
     private void parseMainList(Document doc) {
         // int carClass =
         // Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
-        int status = 2;
+        int status = 3;
         int classid = 1;
         Node statusNode = doc.getElementsByTagName("status").item(1);
         if (!statusNode.getTextContent().equalsIgnoreCase(""))

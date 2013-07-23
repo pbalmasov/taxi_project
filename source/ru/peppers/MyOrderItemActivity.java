@@ -66,6 +66,7 @@ public class MyOrderItemActivity extends BalanceActivity {
             timerInit(order);
         }
 
+
         Button button = (Button) findViewById(R.id.button1);
         button.setText(this.getString(R.string.choose_action));
         button.setOnClickListener(new Button.OnClickListener() {
@@ -140,7 +141,7 @@ public class MyOrderItemActivity extends BalanceActivity {
     private void inviteDialog() {
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-        nameValuePairs.add(new BasicNameValuePair("action", "reinvite"));
+        nameValuePairs.add(new BasicNameValuePair("action", "invite"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "client"));
         nameValuePairs
@@ -230,7 +231,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 
     private void initActionDialog() {
         final CharSequence[] items = {
-                (order.get_invitationtime() != null) ? this
+                (order.get_invitationtime() == null) ? this
                         .getString(R.string.invite) : "Поторопить",
                 this.getString(R.string.delay), this.getString(R.string.close),
                 this.getString(R.string.call_office)};

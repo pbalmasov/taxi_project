@@ -2,6 +2,7 @@ package ru.peppers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Driver;
 import model.Order;
@@ -27,12 +30,56 @@ import orders.CostOrder;
 
 public class FreeOrderActivity extends BalanceActivity {
     protected static final int REQUEST_EXIT = 0;
+    private ArrayList<Order> orders = new ArrayList<Order>();
+    private Timer myTimer;
+    private ArrayAdapter<Order> arrayAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        ListView lv = (ListView) findViewById(R.id.mainListView);
+
+        arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
+
+        lv.setAdapter(arrayAdapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
+                // Bundle extras = getIntent().getExtras();
+                // int id = extras.getInt("id");
+
+                Intent intent = new Intent(FreeOrderActivity.this, FreeOrderItemActivity.class);
+                Bundle bundle = new Bundle();
+                // bundle.putInt("id", id);
+                bundle.putInt("index", position);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_EXIT);
+            }
+        });
+
+        getOrders();
+        // TODO:нету заказов
+        /*
+		 * new
+		 * AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
+		 * setMessage(this.getString(R.string.noOrders))
+		 * .setNeutralButton(this.getString(R.string.close), new
+		 * OnClickListener() {
+		 *
+		 * @Override public void onClick(DialogInterface dialog, int which) { //
+		 * Bundle extras = getIntent().getExtras(); // int id =
+		 * extras.getInt("id");
+		 *
+		 * Intent intent = new Intent(FreeOrderActivity.this,
+		 * MainListActivity.class); // Bundle bundle = new Bundle(); //
+		 * bundle.putInt("id", id); // intent.putExtras(bundle);
+		 * startActivity(intent); } }).show();
+		 */
+    }
+
+    private void getOrders() {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
         nameValuePairs.add(new BasicNameValuePair("mode", "available"));
@@ -54,28 +101,11 @@ public class FreeOrderActivity extends BalanceActivity {
                 }
             }
         }
-        // TODO:нету заказов
-        /*
-		 * new
-		 * AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
-		 * setMessage(this.getString(R.string.noOrders))
-		 * .setNeutralButton(this.getString(R.string.close), new
-		 * OnClickListener() {
-		 *
-		 * @Override public void onClick(DialogInterface dialog, int which) { //
-		 * Bundle extras = getIntent().getExtras(); // int id =
-		 * extras.getInt("id");
-		 *
-		 * Intent intent = new Intent(FreeOrderActivity.this,
-		 * MainListActivity.class); // Bundle bundle = new Bundle(); //
-		 * bundle.putInt("id", id); // intent.putExtras(bundle);
-		 * startActivity(intent); } }).show();
-		 */
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
-        ArrayList<Order> orders = new ArrayList<Order>();
+        orders.clear();
         for (int i = 0; i < nodeList.getLength(); i++) {
             // nominalcost - рекомендуемая стоимость заказа
             // class - класс автомобля (0 - все равно, 1 - Эконом, 2 - Стандарт,
@@ -165,6 +195,7 @@ public class FreeOrderActivity extends BalanceActivity {
 
         Driver driver = TaxiApplication.getDriver();
         driver.setFreeOrders(orders);
+        arrayAdapter.notifyDataSetChanged();
         // driver = new Driver(status, carClass, ordersCount, district,
         // subdistrict);
 
@@ -184,25 +215,26 @@ public class FreeOrderActivity extends BalanceActivity {
         // itemsList.add(createItem("item", "Звонок из офиса"));
         // itemsList.add(createItem("item", "Настройки"));
 
-        ListView lv = (ListView) findViewById(R.id.mainListView);
+        if (myTimer == null) {
+            myTimer = new Timer();
+            final Handler uiHandler = new Handler();
 
-        ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
+            TimerTask timerTask = new TimerTask() { // Определяем задачу
+                @Override
+                public void run() {
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getOrders();
+                        }
+                    });
+                }
+            };
 
-        lv.setAdapter(arrayAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            myTimer.schedule(timerTask, 0L, 1000 * 60);
+        }
 
-            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                // Bundle extras = getIntent().getExtras();
-                // int id = extras.getInt("id");
 
-                Intent intent = new Intent(FreeOrderActivity.this, FreeOrderItemActivity.class);
-                Bundle bundle = new Bundle();
-                // bundle.putInt("id", id);
-                bundle.putInt("index", position);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_EXIT);
-            }
-        });
     }
 
     @Override

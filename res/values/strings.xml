@@ -11,9 +11,9 @@
     <string name="Ok">Ок</string>
     <string-array name="status_array">
         <item>Свободен</item>
+        <item>На заказе</item>
         <item>Перерыв</item>
         <item>Нет на линии</item>
-        <item>На заказе</item>
     </string-array>
     <string-array name="class_array">
         <item>Эконом</item>
@@ -81,7 +81,7 @@
     <string name="update">Обновление</string>
     <string name="update_message">Вышло обновление скачать?</string>
     <string name="update_delay">Позже</string>
-    <string name="dont_care">Все равно</string>
+    <string name="dont_care">Стандарт</string>
     <string name="newPozivnoi">Новый позывной</string>
     <string name="description">Примечание:</string>
     <string name="free">Свободен</string>

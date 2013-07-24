@@ -146,7 +146,7 @@ public class MainListActivity extends BalanceActivity {
                                 intent = new Intent(MainListActivity.this, ReportActivity.class);
                                 startActivity(intent);
                             } else {
-                                intent = new Intent(MainListActivity.this, MyOrderActivity.class);
+                                intent = new Intent(MainListActivity.this, DistrictActivity.class);
                                 startActivity(intent);
                             }
                             break;

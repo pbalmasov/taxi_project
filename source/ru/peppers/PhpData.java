@@ -32,6 +32,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import java.io.StringReader;
+import java.net.SocketTimeoutException;
 import java.security.KeyStore;
 import java.util.List;
 
@@ -129,6 +130,8 @@ final public class PhpData {
                 new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
                         .setMessage("Сервер не отвечает. Обратитесь к администратору.")
                         .setNeutralButton(activity.getString(R.string.close), null).show();
+            } catch (SocketTimeoutException e) {
+                return null;
             } catch (Exception e) {
                 errorHandler(activity, e);
             }

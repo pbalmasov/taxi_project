@@ -3,7 +3,6 @@ package ru.peppers;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -150,11 +149,15 @@ public class ReportActivity extends BalanceActivity {
 					Resources res = ReportActivity.this.getResources();
 					String[] statusArray = res.getStringArray(R.array.status_array);
 					ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(statusArray));
-					arrayList.remove(arrayList.size()-1);
-					AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
+                    arrayList.remove(arrayList.size() - 3);
+                    ArrayList<Integer> arrayList1 = new ArrayList<Integer>();
+                    arrayList1.add(0, 0);
+                    arrayList1.add(1, 2);
+                    arrayList1.add(2, 3);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
                     builder.setTitle("Выбор статуса");
-                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), driver.getStatus(),
-							onStatusContextMenuItemListener(position));
+                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), arrayList1.indexOf(driver.getStatus()),
+                            onStatusContextMenuItemListener(position));
 					AlertDialog alert = builder.create();
 					alert.show();
 				}
@@ -178,13 +181,14 @@ public class ReportActivity extends BalanceActivity {
 				// return;
 				// }
 
-				if (item != driver.getStatus()) {
-
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-					nameValuePairs.add(new BasicNameValuePair("action", "accept"));
-					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-					nameValuePairs.add(new BasicNameValuePair("object", "order"));
-					// nameValuePairs.add(new BasicNameValuePair("orderid",
+                int[] statusArray = {0, 2, 3};
+                if (statusArray[item] != driver.getStatus()) {
+                    String[] sendArray = {"online", "leaveforabreak", "quit"};
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+                    nameValuePairs.add(new BasicNameValuePair("action", sendArray[item]));
+                    nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                    nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+                    // nameValuePairs.add(new BasicNameValuePair("orderid",
 					// String.valueOf(order.get_index())));
 					// nameValuePairs.add(new BasicNameValuePair("minutes",
 					// (String) cs[which]));
@@ -197,17 +201,17 @@ public class ReportActivity extends BalanceActivity {
 						if (responseNode.getTextContent().equalsIgnoreCase("failure"))
 							PhpData.errorFromServer(ReportActivity.this, errorNode);
 						else {
-							driver.setStatus(item);
+                            driver.setStatus(statusArray[item]);
                             itemsList.set(position, "Статус: " + driver.getStatusString());
                             simpleAdpt.notifyDataSetChanged();
                             // предлагаем поменять район
-                            if (item == 0 && driver.getDistrict() == "") {
-								Intent intent = new Intent(ReportActivity.this, DistrictActivity.class);
-								startActivity(intent);
-								finish();
-								return;
-							}
-						}
+//                            if (item == 0 && driver.getDistrict() == "") {
+//								Intent intent = new Intent(ReportActivity.this, DistrictActivity.class);
+//								startActivity(intent);
+//								finish();
+//								return;
+//							}
+                        }
 					}
 				}
 				dialog.dismiss();

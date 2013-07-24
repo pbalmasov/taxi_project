@@ -3,6 +3,7 @@ package ru.peppers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,8 +32,10 @@ import orders.CostOrder;
 public class FreeOrderActivity extends BalanceActivity {
     protected static final int REQUEST_EXIT = 0;
     private ArrayList<Order> orders = new ArrayList<Order>();
-    private Timer myTimer;
+    private Timer myTimer = new Timer();
     private ArrayAdapter<Order> arrayAdapter;
+    private Integer refreshperiod = null;
+    private boolean start = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class FreeOrderActivity extends BalanceActivity {
         getOrders();
         // TODO:нету заказов
         /*
-		 * new
+         * new
 		 * AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
 		 * setMessage(this.getString(R.string.noOrders))
 		 * .setNeutralButton(this.getString(R.string.close), new
@@ -214,9 +217,31 @@ public class FreeOrderActivity extends BalanceActivity {
         // itemsList.add(createItem("item", "Отчет"));
         // itemsList.add(createItem("item", "Звонок из офиса"));
         // itemsList.add(createItem("item", "Настройки"));
+        Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
+        Integer newrefreshperiod = null;
+        if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
+            newrefreshperiod = Integer.valueOf(refreshperiodNode.getTextContent());
 
-        if (myTimer == null) {
-            myTimer = new Timer();
+
+        boolean update = false;
+
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
+
+        if (newrefreshperiod != null) {
+            if (refreshperiod != newrefreshperiod) {
+                refreshperiod = newrefreshperiod;
+                update = true;
+            }
+        }
+
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
+
+        if (update && refreshperiod != null) {
+            if (start) {
+                myTimer.cancel();
+                start = true;
+                Log.d("My_tag", "cancel timer");
+            }
             final Handler uiHandler = new Handler();
 
             TimerTask timerTask = new TimerTask() { // Определяем задачу
@@ -231,7 +256,7 @@ public class FreeOrderActivity extends BalanceActivity {
                 }
             };
 
-            myTimer.schedule(timerTask, 0L, 1000 * 60);
+            myTimer.schedule(timerTask, 0L, 1000 * refreshperiod);
         }
 
 

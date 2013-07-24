@@ -60,13 +60,10 @@ public class Order implements OrderInterface {
 
     public ArrayList<String> getAbonentArray() {
         ArrayList<String> array = new ArrayList<String>();
-        if (nickname == null)
-            nickname = "не указано";
-        String quantityValue = "не указано";
+        if (nickname != null)
+            array.add(_context.getString(R.string.abonent) + " " + nickname);
         if (quantity != null)
-            quantityValue = String.valueOf(quantity);
-        array.add(_context.getString(R.string.abonent) + " " + nickname);
-        array.add(_context.getString(R.string.rides) + " " + quantityValue);
+            array.add(_context.getString(R.string.rides) + " " + quantity);
         return array;
     }
 

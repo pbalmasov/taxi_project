@@ -42,10 +42,8 @@ public class CostOrder extends Order {
         ArrayList<String> array = new ArrayList<String>();
         array.addAll(getAbonentArray());
 
-        String departureTimeValue = "не указано";
         if (get_departuretime() != null)
-            departureTimeValue = getTimeString(get_departuretime());
-        array.add(_context.getString(R.string.date) + " " + departureTimeValue);
+            array.add(_context.getString(R.string.date) + " " + getTimeString(get_departuretime()));
 
         array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
         array.add(_context.getString(R.string.where) + " " + get_addressarrival());
@@ -53,15 +51,11 @@ public class CostOrder extends Order {
         array.add(_context.getString(R.string.car_class) + " " + getCarClass());
         array.add(_context.getString(R.string.cost_type) + " " + getPayment());
 
-        String costValue = "не указано";
         if (get_nominalcost() != null)
-            costValue = String.valueOf(get_nominalcost()) + " " + _context.getString(R.string.currency);
+            array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " " + _context.getString(R.string.currency));
 
-        array.add(_context.getString(R.string.cost_ride) + " " + costValue);
-
-        if (_comment == null)
-            _comment = "не указано";
-        array.add(_context.getString(R.string.description) + " " + _comment);
+        if (_comment != null)
+            array.add(_context.getString(R.string.description) + " " + _comment);
         return array;
     }
 

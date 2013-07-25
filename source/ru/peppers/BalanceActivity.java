@@ -13,6 +13,8 @@ public class BalanceActivity extends Activity {
     private TextView balance;
     protected static final String PREFS_NAME = "MyNamePrefs1";
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);

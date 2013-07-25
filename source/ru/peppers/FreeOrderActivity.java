@@ -47,6 +47,7 @@ public class FreeOrderActivity extends BalanceActivity {
         arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
 
         lv.setAdapter(arrayAdapter);
+        lv.setEmptyView(findViewById(R.id.empty));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
@@ -256,10 +257,16 @@ public class FreeOrderActivity extends BalanceActivity {
                 }
             };
 
-            myTimer.schedule(timerTask, 0L, 1000 * refreshperiod);
+            myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
         }
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        myTimer.cancel();
     }
 
     @Override

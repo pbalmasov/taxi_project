@@ -2,6 +2,8 @@ package ru.peppers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Driver;
 import model.Order;
@@ -27,12 +31,39 @@ import myorders.MyCostOrder;
 
 public class MyOrderActivity extends BalanceActivity {
     private static final int REQUEST_EXIT = 0;
+    private ArrayList<Order> orders = new ArrayList<Order>();
+    private Timer myTimer = new Timer();
+    private ArrayAdapter<Order> arrayAdapter;
+    private Integer refreshperiod = null;
+    private boolean start = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emptylist);
 
+        ListView lv = (ListView) findViewById(R.id.mainListView);
+
+        arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1, orders);
+
+        lv.setAdapter(arrayAdapter);
+        lv.setEmptyView(findViewById(R.id.empty));
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
+                Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
+                Bundle bundle = new Bundle();
+                // bundle.putInt("id", id);
+                bundle.putInt("index", position);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_EXIT);
+            }
+        });
+
+        getOrders();
+    }
+
+    private void getOrders() {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
         nameValuePairs.add(new BasicNameValuePair("mode", "my"));
@@ -54,13 +85,18 @@ public class MyOrderActivity extends BalanceActivity {
                 }
             }
         }
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        myTimer.cancel();
     }
 
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
-        final ArrayList<Order> orders = new ArrayList<Order>();
+        orders.clear();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element item = (Element) nodeList.item(i);
 
@@ -139,40 +175,67 @@ public class MyOrderActivity extends BalanceActivity {
         Driver driver = TaxiApplication.getDriver();
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server
         driver.setOrders(orders);
-        // driver = new Driver(status, carClass, ordersCount, district, subdistrict);
+        arrayAdapter.notifyDataSetChanged();
+        // driver = new Driver(status, carClass, ordersCount, district,
+        // subdistrict);
 
         // itemsList = new ArrayList<Map<String, String>>();
-        // itemsList.add(createItem("item", "Мои закакзы: " + driver.getOrdersCount()));
-        // itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
+        // itemsList.add(createItem("item", "Мои закакзы: " +
+        // driver.getOrdersCount()));
+        // itemsList.add(createItem("item", "Статус: " +
+        // driver.getStatusString()));
         // itemsList.add(createItem("item", "Свободные заказы"));
         // if (driver.getStatus() != 1)
         // itemsList
-        // .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
-        // itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
+        // .add(createItem("item", "Район: " + driver.getDistrict() + "," +
+        // driver.getSubdistrict()));
+        // itemsList.add(createItem("item", "Класс: " +
+        // driver.getClassAutoString()));
         // itemsList.add(createItem("item", "Отчет"));
         // itemsList.add(createItem("item", "Звонок из офиса"));
         // itemsList.add(createItem("item", "Настройки"));
+        Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
+        Integer newrefreshperiod = null;
+        if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
+            newrefreshperiod = Integer.valueOf(refreshperiodNode.getTextContent());
 
-        ListView lv = (ListView) findViewById(R.id.mainListView);
-        lv.setEmptyView(findViewById(R.id.empty));
-        ArrayAdapter<Order> arrayAdapter = new ArrayAdapter<Order>(this, android.R.layout.simple_list_item_1,
-                orders);
 
-        lv.setAdapter(arrayAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        boolean update = false;
 
-            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                // Bundle extras = getIntent().getExtras();
-                // int id = extras.getInt("id");
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
 
-                Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
-                Bundle bundle = new Bundle();
-                // bundle.putInt("id", id);
-                bundle.putInt("index", position);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_EXIT);
+        if (newrefreshperiod != null) {
+            if (refreshperiod != newrefreshperiod) {
+                refreshperiod = newrefreshperiod;
+                update = true;
             }
-        });
+        }
+
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
+
+        if (update && refreshperiod != null) {
+            if (start) {
+                myTimer.cancel();
+                start = true;
+                Log.d("My_tag", "cancel timer");
+            }
+            final Handler uiHandler = new Handler();
+
+            TimerTask timerTask = new TimerTask() { // Определяем задачу
+                @Override
+                public void run() {
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getOrders();
+                        }
+                    });
+                }
+            };
+
+            myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
+        }
+
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,15 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import orders.CostOrder;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,7 +36,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import model.Driver;
 import model.Order;
 import myorders.MyCostOrder;
 
@@ -48,7 +43,6 @@ public class MyOrderItemActivity extends BalanceActivity {
 
     protected static final int REQUEST_EXIT = 0;
     private CountDownTimer timer;
-    private ArrayList<String> orderList;
     private TextView counterView;
     private MyCostOrder order;
     private Dialog dialog;
@@ -69,7 +63,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 
         order = (MyCostOrder) TaxiApplication.getDriver().getOrder(index);
 
-        orderList = order.toArrayList();
+        ArrayList<String> orderList = order.toArrayList();
 
         counterView = (TextView) findViewById(R.id.textView1);
 
@@ -125,95 +119,97 @@ public class MyOrderItemActivity extends BalanceActivity {
     }
 
     private void initOrder(Document doc) throws DOMException, ParseException {
-        NodeList nodeList = doc.getElementsByTagName("item");
         tv.setText("");
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            // nominalcost - рекомендуемая стоимость заказа
-            // class - класс автомобля (0 - все равно, 1 - Эконом, 2 - Стандарт,
-            // 3 - Базовый)
-            // addressdeparture - адрес подачи автомобиля
-            // departuretime - время подачи(если есть)
-            // paymenttype - форма оплаты (0 - наличные, 1 - безнал)
-            // invitationtime - время приглашения (если пригласили)
-            // quantity - количество заказов от этого клиента
-            // comment - примечание
-            // nickname - ник абонента (если есть)
-            // registrationtime - время регистрации заказа
-            // addressarrival - куда поедут
+        // nominalcost - рекомендуемая стоимость заказа
+        // class - класс автомобля (0 - все равно, 1 - Эконом, 2 - Стандарт,
+        // 3 - Базовый)
+        // addressdeparture - адрес подачи автомобиля
+        // departuretime - время подачи(если есть)
+        // paymenttype - форма оплаты (0 - наличные, 1 - безнал)
+        // invitationtime - время приглашения (если пригласили)
+        // quantity - количество заказов от этого клиента
+        // comment - примечание
+        // nickname - ник абонента (если есть)
+        // registrationtime - время регистрации заказа
+        // addressarrival - куда поедут
 
-            Element item = (Element) nodeList.item(i);
+        Element item = (Element) doc.getElementsByTagName("order").item(0);
 
-            Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
-            Node classNode = item.getElementsByTagName("classid").item(0);
-            Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
-            Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
-            Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
-            Node quantityNode = item.getElementsByTagName("quantity").item(0);
-            Node commentNode = item.getElementsByTagName("comment").item(0);
-            Node nicknameNode = item.getElementsByTagName("nickname").item(0);
-            Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
-            Node orderIdNode = item.getElementsByTagName("orderid").item(0);
+        Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
+        Node classNode = item.getElementsByTagName("classid").item(0);
+        Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
+        Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
+        Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
+        Node quantityNode = item.getElementsByTagName("quantity").item(0);
+        Node commentNode = item.getElementsByTagName("comment").item(0);
+        Node nicknameNode = item.getElementsByTagName("nickname").item(0);
+        Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
+        Node orderIdNode = item.getElementsByTagName("orderid").item(0);
+        Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
 
-            Integer nominalcost = null;
-            Integer carClass = 0;
-            String addressdeparture = null;
-            Date departuretime = null;
-            Integer paymenttype = null;
-            Integer quantity = null;
-            String comment = null;
-            String nickname = null;
-//          Date registrationtime = null;
-            String addressarrival = null;
-            String orderId = null;
+        Integer nominalcost = null;
+        Integer carClass = 0;
+        String addressdeparture = null;
+        Date departuretime = null;
+        Integer paymenttype = null;
+        Integer quantity = null;
+        String comment = null;
+        String nickname = null;
+        Date invitationtime = null;
+        String addressarrival = null;
+        String orderId = null;
 
-            // if(departuretime==null)
-            // //TODO:не предварительный
-            // else
-            // //TODO:предварительный
+        // if(departuretime==null)
+        // //TODO:не предварительный
+        // else
+        // //TODO:предварительный
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
 
-            if (!classNode.getTextContent().equalsIgnoreCase(""))
-                carClass = Integer.valueOf(classNode.getTextContent());
+        if (!classNode.getTextContent().equalsIgnoreCase(""))
+            carClass = Integer.valueOf(classNode.getTextContent());
 
-            if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
-                nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
+        if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
+            nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
 
 //          if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
 //              registrationtime = format.parse(registrationtimeNode.getTextContent());
 
-            if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
-                addressdeparture = addressdepartureNode.getTextContent();
+        if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
+            addressdeparture = addressdepartureNode.getTextContent();
 
-            if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
-                addressarrival = addressarrivalNode.getTextContent();
+        if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
+            addressarrival = addressarrivalNode.getTextContent();
 
-            if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
-                paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
+        if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
+            paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
 
-            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
-                departuretime = format.parse(departuretimeNode.getTextContent());
+        if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
+            departuretime = format.parse(departuretimeNode.getTextContent());
 
-            if (!commentNode.getTextContent().equalsIgnoreCase(""))
-                comment = commentNode.getTextContent();
+        if (!commentNode.getTextContent().equalsIgnoreCase(""))
+            comment = commentNode.getTextContent();
 
-            if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
-                orderId = orderIdNode.getTextContent();
+        if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
+            orderId = orderIdNode.getTextContent();
+
+        if (!invitationNode.getTextContent().equalsIgnoreCase(""))
+            invitationtime = format.parse(invitationNode.getTextContent());
 
 
-           // orders.add(new CostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-            //        addressarrival, paymenttype, departuretime));
+        order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
+                addressarrival, paymenttype, invitationtime, departuretime);
 
-            if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
-                nickname = nicknameNode.getTextContent();
+        if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
+            nickname = nicknameNode.getTextContent();
 
-                if (!quantityNode.getTextContent().equalsIgnoreCase(""))
-                    quantity = Integer.parseInt(quantityNode.getTextContent());
-               // orders.get(i).setAbonent(nickname);
-               // orders.get(i).setRides(quantity);
-            }
+            if (!quantityNode.getTextContent().equalsIgnoreCase(""))
+                quantity = Integer.parseInt(quantityNode.getTextContent());
+            order.setAbonent(nickname);
+            order.setRides(quantity);
         }
 
+        ArrayList<String> orderList = order.toArrayList();
         int arraySize = orderList.size();
         for (int i = 0; i < arraySize; i++) {
             tv.append(orderList.get(i));
@@ -348,7 +344,7 @@ public class MyOrderItemActivity extends BalanceActivity {
     private void timeDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
         alert.setTitle(this.getString(R.string.time));
-        final String cs[] = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
+        final String cs[] = new String[]{"3", "5", "7", "10", "15"};//, "20", "25", "30", "35"};
 
         alert.setItems(cs, new OnClickListener() {
 
@@ -359,7 +355,7 @@ public class MyOrderItemActivity extends BalanceActivity {
                 nameValuePairs.add(new BasicNameValuePair("action", "delay"));
                 nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
                 nameValuePairs.add(new BasicNameValuePair("object", "order"));
-                nameValuePairs.add(new BasicNameValuePair("time", cs[which]));
+                nameValuePairs.add(new BasicNameValuePair("minutes", cs[which]));
                 nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));
 
                 Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs, PhpData.newURL);
@@ -397,9 +393,9 @@ public class MyOrderItemActivity extends BalanceActivity {
 
     private void initActionDialog() {
         final CharSequence[] items = {
-            (order.get_invitationtime() == null) ? this.getString(R.string.invite) : "Поторопить",
-            this.getString(R.string.delay), this.getString(R.string.close),
-            this.getString(R.string.call_office) };
+                (order.get_invitationtime() == null) ? this.getString(R.string.invite) : "Поторопить",
+                this.getString(R.string.delay), this.getString(R.string.close),
+                this.getString(R.string.call_office)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(this.getString(R.string.choose_action));
         builder.setItems(items, onContextMenuItemListener());
@@ -441,7 +437,7 @@ public class MyOrderItemActivity extends BalanceActivity {
         alert.setTitle(this.getString(R.string.time));
         final CharSequence cs[];
 
-        cs = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
+        cs = new String[]{"3", "5", "7", "10", "15", "20", "25", "30", "35"};
 
         alert.setItems(cs, new OnClickListener() {
 
@@ -622,6 +618,6 @@ public class MyOrderItemActivity extends BalanceActivity {
             }
         }
 
-        ;
+                ;
     }
 }

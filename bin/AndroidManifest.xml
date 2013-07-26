@@ -1,52 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.peppers"
-    android:versionCode="45"
-    android:versionName="2.2">
+          package="ru.peppers"
+          android:versionCode="46"
+          android:versionName="2.3">
 
-<uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="8"/>
+
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <application
-        android:theme="@style/CustomTheme"
-        android:icon="@drawable/icon"
-        android:label="@string/app_name" android:name=".TaxiApplication">
-        <activity
-            android:name=".PozivnoiActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+    <application
+            android:theme="@style/CustomTheme"
+            android:icon="@drawable/icon"
+            android:label="@string/app_name"
+            android:name=".TaxiApplication">
+        <activity
+                android:name=".PozivnoiActivity"
+                android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:label="Главное меню" android:name=".MainListActivity"></activity>
-        <activity android:label="Мои заказы" android:name=".MyOrderActivity"></activity>
-        <activity android:label="Мой заказ" android:name=".MyOrderItemActivity"></activity>
-        <activity android:label="Свободные заказы"  android:name=".FreeOrderActivity"></activity>
-        <activity android:label="Свободный заказ"  android:name=".FreeOrderItemActivity"></activity>
+        <activity
+                android:label="Главное меню"
+                android:name=".MainListActivity"></activity>
+        <activity
+                android:label="Мои заказы"
+                android:name=".MyOrderActivity"></activity>
+        <activity
+                android:label="Мой заказ"
+                android:name=".MyOrderItemActivity"></activity>
+        <activity
+                android:label="Свободные заказы"
+                android:name=".FreeOrderActivity"></activity>
+        <activity
+                android:label="Свободный заказ"
+                android:name=".FreeOrderItemActivity"></activity>
         <activity
                 android:label="Статус"
                 android:name=".ReportActivity"></activity>
-        <activity android:label="Отчет заказов"  android:name=".ReportListActivity"></activity>
-        <activity android:label="Отчет заказа"  android:name=".ReportListItemActivity"></activity>
-        <activity android:label="Районы"  android:name=".DistrictActivity"></activity>
-        <activity android:label="Подрайоны"  android:name=".SubDistrictActivity"></activity>
-        <activity android:label="Настройки"  android:name=".SettingsActivity"></activity>
-        <activity android:label="Сообщения"  android:name=".MessageActivity"></activity>
-        <activity android:label="Пароль водителя"  android:name=".PasswordActivity"></activity>
-        <activity android:label="Заказы района"  android:name=".DistrictListActivity"></activity>
-        <activity android:label="Заказ района"  android:name=".DistrictListItemActivity"></activity>
-        <activity android:label="Сообщение из сервиса"  android:name=".MessageFromServiceActivity"></activity>
-        <service android:name=".PhpService" android:process=":process"></service>
+        <activity
+                android:label="Отчет заказов"
+                android:name=".ReportListActivity"></activity>
+        <activity
+                android:label="Отчет заказа"
+                android:name=".ReportListItemActivity"></activity>
+        <activity
+                android:label="Районы"
+                android:name=".DistrictActivity"></activity>
+        <activity
+                android:label="Подрайоны"
+                android:name=".SubDistrictActivity"></activity>
+        <activity
+                android:label="Настройки"
+                android:name=".SettingsActivity"></activity>
+        <activity
+                android:label="Сообщения"
+                android:name=".MessageActivity"></activity>
+        <activity
+                android:label="Пароль водителя"
+                android:name=".PasswordActivity"></activity>
+        <activity
+                android:label="Заказы района"
+                android:name=".DistrictListActivity"></activity>
+        <activity
+                android:label="Заказ района"
+                android:name=".DistrictListItemActivity"></activity>
+        <activity
+                android:label="Сообщение из сервиса"
+                android:name=".MessageFromServiceActivity"></activity>
+
+        <service
+                android:name=".PhpService"
+                android:process=":process"></service>
         <receiver android:name=".NetworkStateReceiver">
-             <intent-filter>
-                  <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-             </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
         </receiver>
     </application>
 

@@ -160,10 +160,7 @@ public class MainListActivity extends BalanceActivity {
                                 startActivity(intent);
                                 return;
                             }
-                        default:
-                            break;
-                    }
-                    if (position == 4) {
+                        case 4: {
 //                      // TODO:fix
 //						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 //						nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
@@ -195,6 +192,10 @@ public class MainListActivity extends BalanceActivity {
                     }
                     if (position == 8) {
                         exitDialog();
+                    }
+
+                        default:
+                            break;
                     }
                 }
 

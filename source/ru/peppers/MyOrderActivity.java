@@ -180,17 +180,13 @@ public class MyOrderActivity extends BalanceActivity {
         // subdistrict);
 
         // itemsList = new ArrayList<Map<String, String>>();
-        // itemsList.add(createItem("item", "Мои закакзы: " +
-        // driver.getOrdersCount()));
-        // itemsList.add(createItem("item", "Статус: " +
-        // driver.getStatusString()));
+        // itemsList.add(createItem("item", "Мои закакзы: " + driver.getOrdersCount()));
+        // itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
         // itemsList.add(createItem("item", "Свободные заказы"));
         // if (driver.getStatus() != 1)
         // itemsList
-        // .add(createItem("item", "Район: " + driver.getDistrict() + "," +
-        // driver.getSubdistrict()));
-        // itemsList.add(createItem("item", "Класс: " +
-        // driver.getClassAutoString()));
+        // .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
+        // itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
         // itemsList.add(createItem("item", "Отчет"));
         // itemsList.add(createItem("item", "Звонок из офиса"));
         // itemsList.add(createItem("item", "Настройки"));

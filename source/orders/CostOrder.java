@@ -35,7 +35,7 @@ public class CostOrder extends Order {
         String over = "";
         if (get_nominalcost() != null)
             over = ", " + get_nominalcost() + " " + _context.getString(R.string.currency);
-        return pred + _addressdeparture + over;
+        return pred + _addressdeparture + " " + get_addressarrival() + " " + over;
     }
 
     public ArrayList<String> toArrayList() {

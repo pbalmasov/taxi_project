@@ -11,9 +11,8 @@ public class BalanceActivity extends Activity {
 
     public TextView title;
     private TextView balance;
+    private TextView pozivnoi;
     protected static final String PREFS_NAME = "MyNamePrefs1";
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +28,9 @@ public class BalanceActivity extends Activity {
 
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 
+        pozivnoi = (TextView) findViewById(R.id.pozivnoiView);
+        if (isLightTheme != 0)
+            pozivnoi.setTextColor(Color.WHITE);
         title = (TextView) findViewById(R.id.titleView);
         if (isLightTheme != 0)
             title.setTextColor(Color.WHITE);
@@ -37,6 +39,14 @@ public class BalanceActivity extends Activity {
             balance.setTextColor(Color.WHITE);
         title.setText(this.getTitle());
         updateBalance();
+        updatePozivnoi();
+    }
+
+    private void updatePozivnoi() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String pozivnoidata = settings.getString("pozivnoidata", "");
+        if(pozivnoidata.length()!=0)
+            pozivnoi.setText("Позывной: " + pozivnoidata);
     }
 
     public void updateBalance() {

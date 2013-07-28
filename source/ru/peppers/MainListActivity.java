@@ -113,10 +113,12 @@ public class MainListActivity extends BalanceActivity {
             // ": "
             // +
             // driver.getOrdersCount()));
-            itemsList.add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));
+            itemsList
+                    .add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));
             itemsList.add(createItem("item", this.getString(R.string.free_orders)));
             if (driver.getStatus() != 1) {
-                itemsList.add(createItem("item", this.getString(R.string.region) + " " + driver.getFullDisctrict()));
+                itemsList.add(createItem("item",
+                        this.getString(R.string.region) + " " + driver.getFullDisctrict()));
             }
             itemsList.add(createItem("item", this.getString(R.string.call_office)));
             itemsList.add(createItem("item", this.getString(R.string.settings)));
@@ -127,7 +129,7 @@ public class MainListActivity extends BalanceActivity {
             lv = (ListView) findViewById(R.id.mainListView);
 
             simpleAdpt = new SimpleAdapter(this, itemsList, android.R.layout.simple_list_item_1,
-                    new String[]{"item"}, new int[]{android.R.id.text1});
+                    new String[] { "item" }, new int[] { android.R.id.text1 });
 
             lv.setAdapter(simpleAdpt);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -160,39 +162,42 @@ public class MainListActivity extends BalanceActivity {
                                 startActivity(intent);
                                 return;
                             }
-                        case 4: {
-//                      // TODO:fix
-//						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//						nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
-//						// nameValuePairs.add(new BasicNameValuePair("id",
-//						// String.valueOf(id)));
-//
-//						Document doc = PhpData.postData(MainListActivity.this, nameValuePairs);
-//						if (doc != null) {
-//							Node errorNode = doc.getElementsByTagName("error").item(0);
-//
-//							if (Integer.parseInt(errorNode.getTextContent()) == 1)
-//								PhpData.errorHandler(MainListActivity.this, null);
-//							else {
-//								PhpData.errorHandler(MainListActivity.this, null);
-//							}
-//						}
-                    }
-                    if (position == 5) {
-                        intent = new Intent(MainListActivity.this, SettingsActivity.class);
-                        startActivityForResult(intent, REQUEST_EXIT);
-                    }
-                    if (position == 6) {
-                        intent = new Intent(MainListActivity.this, MessageActivity.class);
-                        startActivity(intent);
-                    }
-                    if (position == 7) {
-                        intent = new Intent(MainListActivity.this, ReportListActivity.class);
-                        startActivity(intent);
-                    }
-                    if (position == 8) {
-                        exitDialog();
-                    }
+                            break;
+                        case 4:
+                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+                            nameValuePairs.add(new BasicNameValuePair("action", "callback"));
+                            nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                            nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+
+                            Document doc = PhpData.postData(MainListActivity.this, nameValuePairs,
+                                    PhpData.newURL);
+                            if (doc != null) {
+                                Node responseNode = doc.getElementsByTagName("response").item(0);
+                                Node errorNode = doc.getElementsByTagName("message").item(0);
+
+                                if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                                    PhpData.errorFromServer(MainListActivity.this, errorNode);
+                                else {
+                                    new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
+                                    .setMessage("Ваш звонок принят. Ожидайте звонка.").setNeutralButton("Ок", null).show();
+                                }
+                            }
+                            break;
+                        case 5:
+                            intent = new Intent(MainListActivity.this, SettingsActivity.class);
+                            startActivityForResult(intent, REQUEST_EXIT);
+                            break;
+                        case 6:
+                            intent = new Intent(MainListActivity.this, MessageActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 7:
+                            intent = new Intent(MainListActivity.this, ReportListActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 8:
+                            exitDialog();
+                            break;
 
                         default:
                             break;
@@ -222,8 +227,7 @@ public class MainListActivity extends BalanceActivity {
     private void exitDialog() {
         new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
                 .setMessage(this.getString(R.string.sorry_exit))
-                .setPositiveButton("Да", onExitClickListener())
-                .setNegativeButton("Нет", null).show();
+                .setPositiveButton("Да", onExitClickListener()).setNegativeButton("Нет", null).show();
     }
 
     private OnClickListener onExitClickListener() {

@@ -54,7 +54,7 @@ public class PhpService extends Service {
         // intent.putExtra("id", String.valueOf(TaxiApplication.getDriverId()));
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        Notification notif = new Notification(R.drawable.icon,
+        Notification notif = new Notification(R.drawable.icon2,
                 this.getString(R.string.service_started),
                 System.currentTimeMillis());
         notif.setLatestEventInfo(this, this.getString(R.string.service),
@@ -146,7 +146,7 @@ public class PhpService extends Service {
                     .getText());
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent,
                     0);
-            Notification notif = new Notification(R.drawable.icon,
+            Notification notif = new Notification(R.drawable.icon2,
                     this.getString(R.string.new_message),
                     System.currentTimeMillis());
             notif.setLatestEventInfo(this, this.getString(R.string.message),

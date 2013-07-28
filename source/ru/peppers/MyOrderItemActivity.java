@@ -285,27 +285,22 @@ public class MyOrderItemActivity extends BalanceActivity {
                         priceDialog();
                         break;
                     case 3:
-                        Bundle bundle = getIntent().getExtras();
-                        // int id = bundle.getInt("id");
-                        int index = bundle.getInt("index");
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                        nameValuePairs.add(new BasicNameValuePair("action", "calloffice"));
-                        // nameValuePairs.add(new BasicNameValuePair("id",
-                        // String.valueOf(id)));
-                        nameValuePairs.add(new BasicNameValuePair("index", String.valueOf(index)));
+                        nameValuePairs.add(new BasicNameValuePair("action", "callback"));
+                        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                        nameValuePairs.add(new BasicNameValuePair("object", "driver"));
 
-                        Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
+                        Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs,
+                                PhpData.newURL);
                         if (doc != null) {
-                            Node errorNode = doc.getElementsByTagName("error").item(0);
+                            Node responseNode = doc.getElementsByTagName("response").item(0);
+                            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-                            if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                                PhpData.errorHandler(MyOrderItemActivity.this, null);
+                            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                                PhpData.errorFromServer(MyOrderItemActivity.this, errorNode);
                             else {
-                                new AlertDialog.Builder(MyOrderItemActivity.this)
-                                        .setTitle(MyOrderItemActivity.this.getString(R.string.Ok))
-                                        .setMessage(MyOrderItemActivity.this.getString(R.string.wait_call))
-                                        .setNeutralButton(MyOrderItemActivity.this.getString(R.string.close),
-                                                null).show();
+                                new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Звонок")
+                                .setMessage("Ваш звонок принят. Ожидайте звонка.").setNeutralButton("Ок", null).show();
                             }
                         }
                         break;

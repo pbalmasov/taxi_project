@@ -61,13 +61,12 @@ public class MyOrderItemActivity extends BalanceActivity {
         Bundle bundle = getIntent().getExtras();
         int index = bundle.getInt("index");
 
+        counterView = (TextView) findViewById(R.id.textView1);
+        tv = (TextView) findViewById(R.id.textView2);
         order = (MyCostOrder) TaxiApplication.getDriver().getOrder(index);
 
         ArrayList<String> orderList = order.toArrayList();
 
-        counterView = (TextView) findViewById(R.id.textView1);
-
-        tv = (TextView) findViewById(R.id.textView2);
 
         int arraySize = orderList.size();
         for (int i = 0; i < arraySize; i++) {
@@ -285,10 +284,11 @@ public class MyOrderItemActivity extends BalanceActivity {
                         priceDialog();
                         break;
                     case 3:
-                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
                         nameValuePairs.add(new BasicNameValuePair("action", "callback"));
                         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
                         nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+                        nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));
 
                         Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs,
                                 PhpData.newURL);
@@ -300,7 +300,7 @@ public class MyOrderItemActivity extends BalanceActivity {
                                 PhpData.errorFromServer(MyOrderItemActivity.this, errorNode);
                             else {
                                 new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Звонок")
-                                .setMessage("Ваш звонок принят. Ожидайте звонка.").setNeutralButton("Ок", null).show();
+                                        .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка").setNeutralButton("Ок", null).show();
                             }
                         }
                         break;

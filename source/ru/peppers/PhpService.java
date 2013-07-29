@@ -4,45 +4,37 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Message;
 import model.Order;
 
 public class PhpService extends Service {
     NotificationManager nm;
+    String sessionid = "";
+    String candidateId = "";
 
     @Override
     public void onCreate() {
@@ -66,7 +58,10 @@ public class PhpService extends Service {
 
     }
 
+
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        sessionid = intent.getStringExtra("sessionid");
+        Log.d("My_tag", "service session = " + sessionid);
         // Notification notif = new Notification(R.drawable.ic_launcher,
         // "Text in status bar",
         // System.currentTimeMillis());
@@ -77,23 +72,22 @@ public class PhpService extends Service {
         // notif.flags |= Notification.FLAG_AUTO_CANCEL;
         // startForeground(2, notif);
 
-//        final Timer myTimer = new Timer(); // Создаем таймер
-//        final Handler uiHandler = new Handler();
-//
-//        final TimerTask timerTask = new TimerTask() { // Определяем задачу
-//            @Override
-//            public void run() {
-//                uiHandler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Log.d("My_tag","1111");
-//                        myTimer.cancel();
-//                    }
-//                });
-//            }
-//        };
-//
-//        myTimer.schedule(timerTask, 0L, 1000*(new Random()).nextInt(10));
+        final Timer myTimer = new Timer(); // Создаем таймер
+        final Handler uiHandler = new Handler();
+
+        final TimerTask timerTask = new TimerTask() { // Определяем задачу
+            @Override
+            public void run() {
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getStatus();
+                    }
+                });
+            }
+        };
+
+        myTimer.schedule(timerTask, 0L, 1000 * 60);
 
 //        final Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
@@ -102,10 +96,50 @@ public class PhpService extends Service {
 //            }
 //        }, 1000*(new Random()).nextInt(10));
 
-        if (checkConnection()) {
-            //	getMessages();
-        }
+
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void getStatus() {
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "get"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "status"));
+        nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL, sessionid);
+        if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
+            else {
+                try {
+                    parseStatus(doc);
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        }
+    }
+
+    private void parseStatus(Document doc) {
+
+        Node candidateNode = doc.getElementsByTagName("candidateorderid").item(0);
+        String candidate = "";
+        if (!candidateNode.getTextContent().equalsIgnoreCase(""))
+            candidate = candidateNode.getTextContent();
+        Log.d("My_tag", candidate + " " + candidateId);
+        if (candidate != "" && !candidateId.equalsIgnoreCase(candidate)) {
+            candidateId = candidate;
+            Intent intent = new Intent(this, CandidateOrderActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle bundle = new Bundle();
+            bundle.putString("id", candidate);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
@@ -128,11 +162,9 @@ public class PhpService extends Service {
                     .getTextContent();
 
             Message message = new Message(text, date, isRead, index);
-            // if (!isRead) {
-            all.add(message);
-            // } else {
-            // readed.add(message);
-            // }
+            if (!isRead) {
+                all.add(message);
+            }
 
         }
 
@@ -173,7 +205,7 @@ public class PhpService extends Service {
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL, sessionid);
         if (doc != null) {
             // Node errorNode = doc.getElementsByTagName("error").item(0);
             //
@@ -185,7 +217,7 @@ public class PhpService extends Service {
             try {
                 initMainList(doc);
             } catch (Exception e) {
-                PhpData.errorHandler(this, e);
+                PhpData.errorHandler(null, e);
             }
         }
 
@@ -276,52 +308,6 @@ public class PhpService extends Service {
 
     }
 
-    private Document postToServer() {
-
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("action",
-                "messageandserverdata"));
-        // nameValuePairs.add(new BasicNameValuePair("id",
-        // String.valueOf(TaxiApplication.getDriverId())));
-
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(
-                "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
-        // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
-        // http://10.0.2.2/api
-        try {
-            // Add your data
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                    .newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-
-            Document doc = builder.parse(response.getEntity().getContent());
-            return doc;
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private boolean checkConnection() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) this
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager
-                .getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
     public IBinder onBind(Intent arg0) {
         return null;

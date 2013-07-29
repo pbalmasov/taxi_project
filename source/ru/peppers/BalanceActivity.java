@@ -19,7 +19,7 @@ public class BalanceActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         int isLightTheme = settings.getInt("theme", 0);
         if (isLightTheme != 0)
-            setTheme(android.R.style.Theme_Light);
+            setTheme(R.style.CustomLightTheme);
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -45,7 +45,7 @@ public class BalanceActivity extends Activity {
     private void updatePozivnoi() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String pozivnoidata = settings.getString("pozivnoidata", "");
-        if(pozivnoidata.length()!=0)
+        if (pozivnoidata.length() != 0)
             pozivnoi.setText("Позывной: " + pozivnoidata);
     }
 

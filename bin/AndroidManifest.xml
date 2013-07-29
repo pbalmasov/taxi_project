@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="ru.peppers"
-          android:versionCode="46"
-          android:versionName="2.3">
+          android:versionCode="47"
+          android:versionName="2.4">
 
     <uses-sdk android:minSdkVersion="8"/>
 
@@ -12,10 +12,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
-
     <application
             android:theme="@style/CustomTheme"
-            android:icon="@drawable/icon"
+            android:icon="@drawable/icon2"
             android:label="@string/app_name"
             android:name=".TaxiApplication">
         <activity
@@ -46,10 +45,10 @@
                 android:label="Статус"
                 android:name=".ReportActivity"></activity>
         <activity
-                android:label="Отчет заказов"
+                android:label="Архив заказов"
                 android:name=".ReportListActivity"></activity>
         <activity
-                android:label="Отчет заказа"
+                android:label="Архив заказа"
                 android:name=".ReportListItemActivity"></activity>
         <activity
                 android:label="Районы"
@@ -75,6 +74,9 @@
         <activity
                 android:label="Сообщение из сервиса"
                 android:name=".MessageFromServiceActivity"></activity>
+        <activity
+                android:label="Кандидатский заказ"
+                android:name=".CandidateOrderActivity"></activity>
 
         <service
                 android:name=".PhpService"

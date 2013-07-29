@@ -81,18 +81,25 @@ final public class PhpData {
         String str = "";
         if (e != null)
             str = e.toString();
-        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                .setMessage(context.getString(R.string.error_message) + " " + str)
-                .setNeutralButton(context.getString(R.string.close), null).show();
+        if (context != null)
+            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                    .setMessage(context.getString(R.string.error_message) + " " + str)
+                    .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public void errorFromServer(Context context, Node errorNode) {
-        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                .setMessage(errorNode.getTextContent()).setNeutralButton(context.getString(R.string.close), null)
-                .show();
+        if (context != null)
+            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+                    .setMessage(errorNode.getTextContent()).setNeutralButton(context.getString(R.string.close), null)
+                    .show();
     }
 
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url) {
+        return postData(activity, nameValuePairs, url, sessionid);
+    }
+
+
+    static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url, String sessionidvar) {
         if (isNetworkAvailable(activity)) {
 
             // Create a new HttpClient and Post Header
@@ -103,8 +110,9 @@ final public class PhpData {
                 // Add your data
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 Log.d("My_tag", nameValuePairs.toString());
-                if (sessionid != "" && url == newURL)
-                    httppost.setHeader("cookie", "cmansid=" + sessionid);
+                Log.d("My_tag", "sessionid = " + sessionidvar);
+                if (sessionidvar != "" && url == newURL)
+                    httppost.setHeader("cookie", "cmansid=" + sessionidvar);
                 // Execute HTTP Post Request
 
                 HttpResponse response = httpclient.execute(httppost);
@@ -127,18 +135,21 @@ final public class PhpData {
                 return doc;
 
             } catch (ConnectTimeoutException e) {
-                new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-                        .setMessage("Сервер не отвечает. Обратитесь к администратору.")
-                        .setNeutralButton(activity.getString(R.string.close), null).show();
+                if (activity.getClass() != PhpService.class)
+                    new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+                            .setMessage("Сервер не отвечает. Обратитесь к администратору.")
+                            .setNeutralButton(activity.getString(R.string.close), null).show();
             } catch (SocketTimeoutException e) {
                 return null;
             } catch (Exception e) {
-                errorHandler(activity, e);
+                if (activity.getClass() != PhpService.class)
+                    errorHandler(activity, e);
             }
         } else {
-            new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-                    .setMessage(activity.getString(R.string.no_internet))
-                    .setNeutralButton(activity.getString(R.string.close), null).show();
+            if (activity.getClass() != PhpService.class)
+                new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+                        .setMessage(activity.getString(R.string.no_internet))
+                        .setNeutralButton(activity.getString(R.string.close), null).show();
         }
         Log.d("My_tag", "no connection");
         return null;

@@ -116,10 +116,8 @@ public class MainListActivity extends BalanceActivity {
             itemsList
                     .add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));
             itemsList.add(createItem("item", this.getString(R.string.free_orders)));
-            if (driver.getStatus() != 1) {
-                itemsList.add(createItem("item",
-                        this.getString(R.string.region) + " " + driver.getFullDisctrict()));
-            }
+            itemsList.add(createItem("item",
+                    this.getString(R.string.region) + " " + driver.getFullDisctrict()));
             itemsList.add(createItem("item", this.getString(R.string.call_office)));
             itemsList.add(createItem("item", this.getString(R.string.settings)));
             itemsList.add(createItem("item", this.getString(R.string.messages)));
@@ -179,7 +177,7 @@ public class MainListActivity extends BalanceActivity {
                                     PhpData.errorFromServer(MainListActivity.this, errorNode);
                                 else {
                                     new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
-                                    .setMessage("Ваш звонок принят. Ожидайте звонка.").setNeutralButton("Ок", null).show();
+                                            .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка").setNeutralButton("Ок", null).show();
                                 }
                             }
                             break;

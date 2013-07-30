@@ -11,8 +11,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -101,14 +101,13 @@ final public class PhpData {
 
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url, String sessionidvar) {
         if (isNetworkAvailable(activity)) {
-
             // Create a new HttpClient and Post Header
-            HttpPost httppost = new HttpPost(url);
+            HttpGet httppost = new HttpGet(url + "?" + URLEncodedUtils.format(nameValuePairs, "utf-8"));
             // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
             // http://10.0.2.2/api
             try {
                 // Add your data
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 Log.d("My_tag", nameValuePairs.toString());
                 Log.d("My_tag", "sessionid = " + sessionidvar);
                 if (sessionidvar != "" && url == newURL)

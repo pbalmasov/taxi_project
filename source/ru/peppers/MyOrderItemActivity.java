@@ -316,7 +316,7 @@ public class MyOrderItemActivity extends BalanceActivity {
     private void inviteDialog() {
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-        nameValuePairs.add(new BasicNameValuePair("action", "invite"));
+        nameValuePairs.add(new BasicNameValuePair("action", (order.get_invitationtime() == null) ? "invite" : "hurry"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "client"));
         nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));

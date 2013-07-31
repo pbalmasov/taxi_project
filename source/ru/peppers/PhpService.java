@@ -33,7 +33,6 @@ import model.Order;
 
 public class PhpService extends Service {
     NotificationManager nm;
-    String sessionid = "";
     String candidateId = "";
 
     @Override
@@ -60,8 +59,6 @@ public class PhpService extends Service {
 
 
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
-        sessionid = intent.getStringExtra("sessionid");
-        Log.d("My_tag", "service session = " + sessionid);
         // Notification notif = new Notification(R.drawable.ic_launcher,
         // "Text in status bar",
         // System.currentTimeMillis());
@@ -107,7 +104,7 @@ public class PhpService extends Service {
         nameValuePairs.add(new BasicNameValuePair("mode", "status"));
         nameValuePairs.add(new BasicNameValuePair("object", "driver"));
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL, sessionid);
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
         if (doc != null) {
             Node responseNode = doc.getElementsByTagName("response").item(0);
             Node errorNode = doc.getElementsByTagName("message").item(0);
@@ -205,7 +202,7 @@ public class PhpService extends Service {
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL, sessionid);
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
         if (doc != null) {
             // Node errorNode = doc.getElementsByTagName("error").item(0);
             //

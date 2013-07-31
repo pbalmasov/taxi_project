@@ -3,6 +3,7 @@ package ru.peppers;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -40,9 +41,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 final public class PhpData {
+    // static final String NEWURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";;
     static boolean withDebug = true;
-    static String sessionid = "";
-    static String newURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";
+    static final String newURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";
+    private static final String PREFS_NAME = "MyNamePrefs1";
     static HttpClient httpclient = getNewHttpClient();
 
     public static HttpClient getNewHttpClient() {
@@ -90,16 +92,18 @@ final public class PhpData {
     static public void errorFromServer(Context context, Node errorNode) {
         if (context != null)
             new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                    .setMessage(errorNode.getTextContent()).setNeutralButton(context.getString(R.string.close), null)
-                    .show();
+                    .setMessage(errorNode.getTextContent())
+                    .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url) {
+        SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+        String sessionid = settings.getString("sessionid", null);
         return postData(activity, nameValuePairs, url, sessionid);
     }
 
-
-    static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url, String sessionidvar) {
+    static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url,
+            String sessionidvar) {
         if (isNetworkAvailable(activity)) {
             // Create a new HttpClient and Post Header
             HttpGet httppost = new HttpGet(url + "?" + URLEncodedUtils.format(nameValuePairs, "utf-8"));
@@ -110,8 +114,8 @@ final public class PhpData {
                 // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 Log.d("My_tag", nameValuePairs.toString());
                 Log.d("My_tag", "sessionid = " + sessionidvar);
-                if (sessionidvar != "" && url == newURL)
-                    httppost.setHeader("cookie", "cmansid=" + sessionidvar);
+                if(sessionidvar!=null)
+                httppost.setHeader("cookie", "cmansid=" + sessionidvar);
                 // Execute HTTP Post Request
 
                 HttpResponse response = httpclient.execute(httppost);
@@ -162,7 +166,8 @@ final public class PhpData {
 
     static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
 
-        return postData(activity, nameValuePairs, "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
+        return postData(activity, nameValuePairs,
+                "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
 
     }
 

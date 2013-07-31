@@ -41,7 +41,6 @@ public class PozivnoiActivity extends BalanceActivity {
     private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
     private static final String MY_TAG = "My_tag";
     protected static final String PREFS_NAME = "MyNamePrefs1";
-    private String sessionid;
 
     /**
      * Called when the activity is first created.
@@ -419,8 +418,12 @@ public class PozivnoiActivity extends BalanceActivity {
                     // editor.putString("pozivnoidata", pozivnoi);
                     // editor.commit();
 
-                    sessionid = doc.getElementsByTagName("sessionid").item(0).getTextContent();
-                    PhpData.sessionid = sessionid;
+                    SharedPreferences.Editor editor = settings.edit();
+                    String sessionid = doc.getElementsByTagName("sessionid").item(0).getTextContent();
+                    editor.putString("sessionid", sessionid);
+                    editor.commit();
+
+
                     Log.d("My_tag", doc.getElementsByTagName("sessionid").item(0).getTextContent());
                     initMessages(doc);
                 }
@@ -486,7 +489,6 @@ public class PozivnoiActivity extends BalanceActivity {
 
             startActivity(intent);
             Intent service = new Intent(PozivnoiActivity.this, PhpService.class);
-            service.putExtra("sessionid", sessionid);
             startService(service);
             finish();
         } else {
@@ -547,7 +549,6 @@ public class PozivnoiActivity extends BalanceActivity {
                             // TaxiApplication.setDriverId(index);
                             startActivity(intent);
                             Intent service = new Intent(PozivnoiActivity.this, PhpService.class);
-                            service.putExtra("sessionid", sessionid);
                             startService(service);
                             finish();
                         }

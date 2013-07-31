@@ -135,12 +135,16 @@ public class ReportActivity extends BalanceActivity {
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-				if (position == 1) {
+				if (position == 1 && driver.getCarId()!=1) {
 					Resources res = ReportActivity.this.getResources();
 					String[] classArray = res.getStringArray(R.array.class_array);
+                    ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(classArray));
+                    if(driver.getCarId()==2)
+                    arrayList.remove(2);
+
 					AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
                     builder.setTitle("Выбор статуса");
-                    builder.setSingleChoiceItems(classArray, driver.getClassAuto(),
+                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), driver.getClassAuto(),
 							onClassContextMenuItemListener(position));
 					AlertDialog alert = builder.create();
 					alert.show();

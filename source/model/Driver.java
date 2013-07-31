@@ -10,9 +10,10 @@ import ru.peppers.R;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.util.Log;
 
 /**
- * 
+ *
  * @author papas
  */
 public class Driver {
@@ -35,6 +36,7 @@ public class Driver {
 	private ArrayList<Order> _reports;
 
 	private Activity _context;
+    private Integer carId;
 
 	public Driver(Activity context, int status, int carClass, String district, String subdistrict) {
 		this._context = context;
@@ -167,6 +169,9 @@ public class Driver {
 	public String getClassAutoString() {
 		Resources res = _context.getResources();
 		String[] carClass = res.getStringArray(R.array.class_array);
+		Log.d("My_tag",String.valueOf(getCarId()));
+		for(int i=0;i<carClass.length;i++)
+		Log.d("My_tag", carClass[i]);
 		return carClass[_carClass].toLowerCase();
 	}
 
@@ -268,6 +273,14 @@ public class Driver {
 	public void set_districtOrders(ArrayList<Order> _districtOrders) {
 		this._districtOrders = _districtOrders;
 	}
+
+	public Integer getCarId() {
+        return carId;
+    }
+
+	public void setCarId(Integer carId) {
+        this.carId = carId;
+    }
 
 
 }

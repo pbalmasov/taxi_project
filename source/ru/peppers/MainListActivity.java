@@ -92,6 +92,7 @@ public class MainListActivity extends BalanceActivity {
         String district = doc.getElementsByTagName("districttitle").item(0).getTextContent();
         String subdistrict = doc.getElementsByTagName("subdistricttitle").item(0).getTextContent();
         String balance = doc.getElementsByTagName("balance").item(0).getTextContent();
+        Integer classid1 = Integer.valueOf(doc.getElementsByTagName("classid").item(0).getTextContent());
 
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
@@ -101,6 +102,7 @@ public class MainListActivity extends BalanceActivity {
         driver.setDistrict(district);
         driver.setSubdistrict(subdistrict);
         driver.setBalance(balance);
+        driver.setCarId(classid1);
         this.updateBalance();
         initMainList();
     }

@@ -170,9 +170,15 @@ public class Driver {
 		Resources res = _context.getResources();
 		String[] carClass = res.getStringArray(R.array.class_array);
 		Log.d("My_tag",String.valueOf(getCarId()));
-		for(int i=0;i<carClass.length;i++)
-		Log.d("My_tag", carClass[i]);
-		return carClass[_carClass].toLowerCase();
+        Log.d("My_tag",String.valueOf(_carClass));
+		String result = "";
+		int i=0;
+		if(_carClass==1)
+		    i++;
+
+		for(;i<getCarId();i++)
+		    result = result+carClass[i].toLowerCase()+", ";
+		return result.substring(0, result.length()-2);
 	}
 
 	/**

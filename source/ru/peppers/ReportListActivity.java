@@ -32,13 +32,14 @@ public class ReportListActivity extends BalanceActivity {
     private ArrayAdapter<Order> arrayAdapter;
     final ArrayList<Order> orders = new ArrayList<Order>();
     private String titleText;
+    private boolean canMove;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emptylistreport);
         titleText = (String) title.getText();
-        title.setText(titleText+" "+currentPage);
+        title.setText(titleText + " " + currentPage);
 
         ListView lv = (ListView) findViewById(R.id.lvMain);
         lv.setEmptyView(findViewById(R.id.emptyView));
@@ -65,9 +66,11 @@ public class ReportListActivity extends BalanceActivity {
 
             @Override
             public void onClick(View arg0) {
-                currentPage++;
-                title.setText(titleText+" "+currentPage);
-                getPage();
+                if (canMove) {
+                    currentPage++;
+                    title.setText(titleText + " " + currentPage);
+                    getPage();
+                }
             }
         });
 
@@ -76,9 +79,9 @@ public class ReportListActivity extends BalanceActivity {
 
             @Override
             public void onClick(View arg0) {
-                if (currentPage > 1){
+                if (currentPage > 1) {
                     currentPage--;
-                    title.setText(titleText+" "+currentPage);
+                    title.setText(titleText + " " + currentPage);
                     getPage();
                 }
             }
@@ -195,6 +198,11 @@ public class ReportListActivity extends BalanceActivity {
             }
         }
 
+        if (orders.size() != 0)
+            canMove = true;
+        else
+            canMove = false;
+
         Driver driver = TaxiApplication.getDriver();
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server
         driver.setReports(orders);
@@ -215,5 +223,4 @@ public class ReportListActivity extends BalanceActivity {
         arrayAdapter.notifyDataSetChanged();
 
     }
-
 }

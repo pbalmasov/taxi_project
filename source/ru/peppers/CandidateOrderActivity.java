@@ -3,6 +3,7 @@ package ru.peppers;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -35,6 +36,11 @@ public class CandidateOrderActivity extends BalanceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.candidateorder);
+
+        MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.iphone));
+        mp.start();
+
+
         Bundle bundle = getIntent().getExtras();
         final String index = bundle.getString("id");
 

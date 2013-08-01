@@ -103,7 +103,7 @@ public class MainListActivity extends BalanceActivity {
         driver.setSubdistrict(subdistrict);
         driver.setBalance(balance);
         driver.setCarId(classid1);
-        this.updateBalance();
+        this.updateData();
         initMainList();
     }
 

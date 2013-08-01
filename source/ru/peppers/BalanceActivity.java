@@ -10,7 +10,6 @@ import android.widget.TextView;
 public class BalanceActivity extends Activity {
 
     public TextView title;
-    private TextView balance;
     private TextView pozivnoi;
     protected static final String PREFS_NAME = "MyNamePrefs1";
 
@@ -34,23 +33,17 @@ public class BalanceActivity extends Activity {
         title = (TextView) findViewById(R.id.titleView);
         if (isLightTheme != 0)
             title.setTextColor(Color.WHITE);
-        balance = (TextView) findViewById(R.id.balanceView);
-        if (isLightTheme != 0)
-            balance.setTextColor(Color.WHITE);
         title.setText(this.getTitle());
-        updateBalance();
-        updatePozivnoi();
+        updateData();
     }
 
-    private void updatePozivnoi() {
+    protected void updateData() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String pozivnoidata = settings.getString("pozivnoidata", "");
         if (pozivnoidata.length() != 0)
             pozivnoi.setText("Позывной: " + pozivnoidata);
+        if (TaxiApplication.getDriver() != null)
+            pozivnoi.append(", Баланс: " + TaxiApplication.getDriver().getBalance());
     }
 
-    public void updateBalance() {
-        if (TaxiApplication.getDriver() != null)
-            balance.setText("Баланс: " + TaxiApplication.getDriver().getBalance());
-    }
 }

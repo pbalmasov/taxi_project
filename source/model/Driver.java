@@ -3,14 +3,13 @@
  */
 package model;
 
-import java.util.ArrayList;
-
-import ru.peppers.PozivnoiActivity;
-import ru.peppers.R;
-
 import android.app.Activity;
 import android.content.res.Resources;
 import android.util.Log;
+
+import java.util.ArrayList;
+
+import ru.peppers.R;
 
 /**
  *
@@ -173,7 +172,9 @@ public class Driver {
         Log.d("My_tag",String.valueOf(_carClass));
 		String result = "";
 		int i=0;
-		if(_carClass==1)
+        if (_carClass == 2)
+            i += 2;
+        if(_carClass==1)
 		    i++;
 
 		for(;i<getCarId();i++)

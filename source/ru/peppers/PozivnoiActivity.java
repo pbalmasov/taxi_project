@@ -326,7 +326,7 @@ public class PozivnoiActivity extends BalanceActivity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Регистрация");
-        builder.setMessage("Запрос на регистрацию отправлен. Позвоните в диспетчерскую службу." + login.substring(login.length() - 4, login.length()));
+        builder.setMessage("Запрос на регистрацию отправлен. Позвоните в диспетчерскую службу. (" + login.substring(login.length() - 4, login.length()) + ")");
         builder.setCancelable(false);
         builder.setPositiveButton("Позвонить", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

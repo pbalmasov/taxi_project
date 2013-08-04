@@ -115,9 +115,9 @@ public class MainListActivity extends BalanceActivity {
             // ": "
             // +
             // driver.getOrdersCount()));
+            itemsList.add(createItem("item", this.getString(R.string.free_orders)));
             itemsList
                     .add(createItem("item", this.getString(R.string.status) + " " + driver.getStatusString()));
-            itemsList.add(createItem("item", this.getString(R.string.free_orders)));
             itemsList.add(createItem("item",
                     this.getString(R.string.region) + " " + driver.getFullDisctrict()));
             itemsList.add(createItem("item", this.getString(R.string.call_office)));
@@ -144,6 +144,10 @@ public class MainListActivity extends BalanceActivity {
                             startActivity(intent);
                             break;
                         case 1:
+                            intent = new Intent(MainListActivity.this, FreeOrderActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 2:
                             if (driver.getStatus() != 3) {
                                 intent = new Intent(MainListActivity.this, ReportActivity.class);
                                 startActivity(intent);
@@ -151,10 +155,6 @@ public class MainListActivity extends BalanceActivity {
                                 intent = new Intent(MainListActivity.this, DistrictActivity.class);
                                 startActivity(intent);
                             }
-                            break;
-                        case 2:
-                            intent = new Intent(MainListActivity.this, FreeOrderActivity.class);
-                            startActivity(intent);
                             break;
                         case 3:
                             if (driver.getStatus() != 1) {

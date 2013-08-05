@@ -19,13 +19,19 @@ public class ReportCostOrder extends Order {
 
     private Date _orderDate;
     private String _result;
+    private String _drivercost;
+    private String _actualcost;
+    private Date _accepttime;
 
-    public ReportCostOrder(Context context, String index, Integer nominalcost,
-                           String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
-                           Date orderDate, String result) {
+    public ReportCostOrder(Context context, String index, Integer nominalcost, String addressdeparture,
+            Integer carClass, String comment, String addressarrival, Integer paymenttype, Date orderDate,
+            String result, String drivercost, String actualcost, Date accepttime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
         _orderDate = orderDate;
         _result = result;
+        _drivercost = drivercost;
+        _actualcost = actualcost;
+        _accepttime = accepttime;
 
     }
 
@@ -55,6 +61,12 @@ public class ReportCostOrder extends Order {
         array.add(_context.getString(R.string.car_class) + " " + getCarClass());
         array.add(_context.getString(R.string.cost_type) + " " + getPayment());
 
+        if (_drivercost != null)
+            array.add("Стоимость закрытия:" + " " + _drivercost);
+        if (_actualcost != null)
+            array.add("Оплата диспетчерской:" + " " + _actualcost);
+        if (_accepttime != null)
+            array.add("Время приглашения:" + " " + getTimeString(_accepttime));
         array.add("Результат:" + " " + _result);
 
         String costValue = "не указано";
@@ -63,7 +75,6 @@ public class ReportCostOrder extends Order {
 
         array.add(_context.getString(R.string.cost_ride) + " " + costValue);
 
-
         if (_comment == null)
             _comment = "не указано";
         array.add(_context.getString(R.string.description) + " " + _comment);
@@ -71,6 +82,6 @@ public class ReportCostOrder extends Order {
     }
 
     private String getTimeString(Date date) {
-        return new SimpleDateFormat("dd.MM").format(date);
+        return new SimpleDateFormat("dd.MM HH:mm").format(date);
     }
 }

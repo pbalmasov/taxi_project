@@ -21,14 +21,16 @@ public class MyCostOrder extends Order {
 
     private Date _invitationtime;
     private Date _departuretime;
+    private Date _accepttime;
 
     public MyCostOrder(Context context, String index, Integer nominalcost,
                        String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
-                       Date invitationtime, Date departuretime) {
+                       Date invitationtime, Date departuretime, Date accepttime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
         // TODO:wrong index
         set_invitationtime(invitationtime);
         _departuretime = departuretime;
+        _accepttime = accepttime;
     }
 
     public String toString() {
@@ -67,6 +69,9 @@ public class MyCostOrder extends Order {
 
         if (get_nominalcost() != null)
             array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " " + _context.getString(R.string.currency));
+
+        if (_accepttime != null)
+            array.add("Время приглашения:" + " " + getTimeString(_accepttime));
 
         if (_comment != null)
             array.add(_context.getString(R.string.description) + " " + _comment);

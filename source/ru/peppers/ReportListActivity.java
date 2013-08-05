@@ -68,7 +68,6 @@ public class ReportListActivity extends BalanceActivity {
             public void onClick(View arg0) {
                 if (canMove) {
                     currentPage++;
-                    title.setText(titleText + " " + currentPage);
                     getPage();
                 }
             }
@@ -81,7 +80,6 @@ public class ReportListActivity extends BalanceActivity {
             public void onClick(View arg0) {
                 if (currentPage > 1) {
                     currentPage--;
-                    title.setText(titleText + " " + currentPage);
                     getPage();
                 }
             }
@@ -117,8 +115,18 @@ public class ReportListActivity extends BalanceActivity {
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
-        orders.clear();
         NodeList nodeList = doc.getElementsByTagName("item");
+
+        if (nodeList.getLength() != 0) {
+            canMove = true;
+            orders.clear();
+        } else {
+            currentPage--;
+            canMove = false;
+            return;
+        }
+        title.setText(titleText + " " + currentPage);
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element item = (Element) nodeList.item(i);
 
@@ -133,8 +141,19 @@ public class ReportListActivity extends BalanceActivity {
             Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
             Node resultNode = item.getElementsByTagName("result").item(0);
+            Node actualcostNode = item.getElementsByTagName("actualcost").item(0);
+            Node drivercostNode = item.getElementsByTagName("drivercost").item(0);
+            Node accepttimeNode = item.getElementsByTagName("accepttime").item(0);
+
+            // actualcost - фактическая стоимость
+            // drivercost - сколько водитель платит диспетчерской службе
+            // nominalcost - рекомендуемая стоимость
+
             // Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
 
+            Date accepttime = null;
+            String actualcost = null;
+            String drivercost = null;
             Integer nominalcost = null;
             Integer carClass = 0;
             String addressdeparture = null;
@@ -182,11 +201,20 @@ public class ReportListActivity extends BalanceActivity {
             if (!resultNode.getTextContent().equalsIgnoreCase(""))
                 result = resultNode.getTextContent();
 
+            if (!drivercostNode.getTextContent().equalsIgnoreCase(""))
+                drivercost = drivercostNode.getTextContent();
+
+            if (!actualcostNode.getTextContent().equalsIgnoreCase(""))
+                actualcost = actualcostNode.getTextContent();
+
+            if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
+                accepttime = format.parse(accepttimeNode.getTextContent());
+
             // if (!invitationNode.getTextContent().equalsIgnoreCase(""))
             // invitationtime = format.parse(invitationNode.getTextContent());
 
             orders.add(new ReportCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, orderdate, result));
+                    addressarrival, paymenttype, orderdate, result, drivercost, actualcost,accepttime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();
@@ -197,11 +225,6 @@ public class ReportListActivity extends BalanceActivity {
                 orders.get(i).setRides(quantity);
             }
         }
-
-        if (orders.size() != 0)
-            canMove = true;
-        else
-            canMove = false;
 
         Driver driver = TaxiApplication.getDriver();
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server

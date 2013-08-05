@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import orders.CostOrder;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.DOMException;
@@ -31,15 +33,15 @@ public class CandidateOrderActivity extends BalanceActivity {
 
     private ArrayAdapter<Order> arrayAdapter;
     private TextView tv;
+    private CostOrder order;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.candidateorder);
 
-        MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.new_sound));
+        MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
         mp.start();
-
 
         Bundle bundle = getIntent().getExtras();
         final String index = bundle.getString("id");
@@ -52,21 +54,26 @@ public class CandidateOrderActivity extends BalanceActivity {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(CandidateOrderActivity.this);
-                alert.setTitle(CandidateOrderActivity.this.getString(R.string.time));
-                final CharSequence cs[];
+                if (order.get_departuretime() != null)
+                    onAccept(index, null);
+                else {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(CandidateOrderActivity.this);
+                    alert.setTitle(CandidateOrderActivity.this.getString(R.string.time));
+                    final CharSequence cs[];
 
-                cs = new String[]{"3", "5", "7", "10", "15", "20", "25", "30", "35"};
+                    cs = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
 
-                alert.setItems(cs, new DialogInterface.OnClickListener() {
+                    alert.setItems(cs, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                        onAccept(index, (String) cs[which]);
-                    }
-                });
-                alert.show();
+                            onAccept(index, (String) cs[which]);
+                        }
+                    });
+                    alert.show();
+                }
+
             }
 
         });
@@ -105,7 +112,7 @@ public class CandidateOrderActivity extends BalanceActivity {
                     Intent intent = new Intent(this, MyOrderActivity.class);
                     startActivity(intent);
                     finish();
-                    //TODO:заканчивать парент активити
+                    // TODO:заканчивать парент активити
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
                 }
@@ -130,7 +137,7 @@ public class CandidateOrderActivity extends BalanceActivity {
             else {
                 try {
                     finish();
-                    //initOrder(doc);
+                    // initOrder(doc);
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
                 }
@@ -202,7 +209,6 @@ public class CandidateOrderActivity extends BalanceActivity {
         Node nicknameNode = item.getElementsByTagName("nickname").item(0);
         Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
         Node orderIdNode = item.getElementsByTagName("orderid").item(0);
-        Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
 
         Integer nominalcost = null;
         Integer carClass = 0;
@@ -212,7 +218,7 @@ public class CandidateOrderActivity extends BalanceActivity {
         Integer quantity = null;
         String comment = null;
         String nickname = null;
-        Date invitationtime = null;
+        // Date registrationtime = null;
         String addressarrival = null;
         String orderId = null;
 
@@ -229,8 +235,8 @@ public class CandidateOrderActivity extends BalanceActivity {
         if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
             nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
 
-//          if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
-//              registrationtime = format.parse(registrationtimeNode.getTextContent());
+        // if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
+        // registrationtime = format.parse(registrationtimeNode.getTextContent());
 
         if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
             addressdeparture = addressdepartureNode.getTextContent();
@@ -250,12 +256,8 @@ public class CandidateOrderActivity extends BalanceActivity {
         if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
             orderId = orderIdNode.getTextContent();
 
-        if (!invitationNode.getTextContent().equalsIgnoreCase(""))
-            invitationtime = format.parse(invitationNode.getTextContent());
-
-
-        MyCostOrder order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype, invitationtime, departuretime);
+        order = new CostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
+                addressarrival, paymenttype, departuretime);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();

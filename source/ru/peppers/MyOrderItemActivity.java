@@ -143,7 +143,9 @@ public class MyOrderItemActivity extends BalanceActivity {
         Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
         Node orderIdNode = item.getElementsByTagName("orderid").item(0);
         Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
+        Node accepttimeNode = item.getElementsByTagName("accepttime").item(0);
 
+        Date accepttime = null;
         Integer nominalcost = null;
         Integer carClass = 0;
         String addressdeparture = null;
@@ -193,8 +195,11 @@ public class MyOrderItemActivity extends BalanceActivity {
         if (!invitationNode.getTextContent().equalsIgnoreCase(""))
             invitationtime = format.parse(invitationNode.getTextContent());
 
+        if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
+            accepttime = format.parse(accepttimeNode.getTextContent());
+
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype, invitationtime, departuretime);
+                addressarrival, paymenttype, invitationtime, departuretime,accepttime);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();

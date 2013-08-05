@@ -292,7 +292,7 @@ public class PozivnoiActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("devserial", symbols));
         nameValuePairs.add(new BasicNameValuePair("drvnumber", pozivnoi));
         // TODO: сохранить токен
-        Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
+        Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL,null);
         if (doc != null) {
 
             Node responseNode = doc.getElementsByTagName("response").item(0);
@@ -396,7 +396,7 @@ public class PozivnoiActivity extends BalanceActivity {
             Log.d("My_tag", settings.getString("password", ""));
             nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));
 
-            Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL);
+            Document doc = PhpData.postData(PozivnoiActivity.this, nameValuePairs, PhpData.newURL,null);
             if (doc != null) {
                 Node responseNode = doc.getElementsByTagName("response").item(0);
                 Node errorNode = doc.getElementsByTagName("message").item(0);

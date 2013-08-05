@@ -49,7 +49,6 @@ public class MyOrderItemActivity extends BalanceActivity {
     private Bundle bundle;
     private TextView tv;
 
-
     private Timer myTimer = new Timer();
     private Integer refreshperiod = null;
     private boolean start = false;
@@ -67,16 +66,15 @@ public class MyOrderItemActivity extends BalanceActivity {
 
         ArrayList<String> orderList = order.toArrayList();
 
-
         int arraySize = orderList.size();
         for (int i = 0; i < arraySize; i++) {
             tv.append(orderList.get(i));
             tv.append("\n");
         }
 
-//        if (order.getTimerDate() != null) {
-//            timerInit(order);
-//        }
+        // if (order.getTimerDate() != null) {
+        // timerInit(order);
+        // }
 
         Button button = (Button) findViewById(R.id.button1);
         button.setText(this.getString(R.string.choose_action));
@@ -171,8 +169,8 @@ public class MyOrderItemActivity extends BalanceActivity {
         if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
             nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
 
-//          if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
-//              registrationtime = format.parse(registrationtimeNode.getTextContent());
+        // if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
+        // registrationtime = format.parse(registrationtimeNode.getTextContent());
 
         if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
             addressdeparture = addressdepartureNode.getTextContent();
@@ -195,7 +193,6 @@ public class MyOrderItemActivity extends BalanceActivity {
         if (!invitationNode.getTextContent().equalsIgnoreCase(""))
             invitationtime = format.parse(invitationNode.getTextContent());
 
-
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
                 addressarrival, paymenttype, invitationtime, departuretime);
 
@@ -215,12 +212,11 @@ public class MyOrderItemActivity extends BalanceActivity {
             tv.append("\n");
         }
 
-        //TODO:UPDATE ORDER
+        // TODO:UPDATE ORDER
         Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
         Integer newrefreshperiod = null;
         if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
             newrefreshperiod = Integer.valueOf(refreshperiodNode.getTextContent());
-
 
         boolean update = false;
 
@@ -258,7 +254,6 @@ public class MyOrderItemActivity extends BalanceActivity {
             myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
         }
 
-
     }
 
     @Override
@@ -278,12 +273,9 @@ public class MyOrderItemActivity extends BalanceActivity {
                         inviteDialog();
                         break;
                     case 1:
-                        timeDialog();
-                        break;
-                    case 2:
                         priceDialog();
                         break;
-                    case 3:
+                    case 2:
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
                         nameValuePairs.add(new BasicNameValuePair("action", "callback"));
                         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
@@ -300,11 +292,14 @@ public class MyOrderItemActivity extends BalanceActivity {
                                 PhpData.errorFromServer(MyOrderItemActivity.this, errorNode);
                             else {
                                 new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Звонок")
-                                        .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка").setNeutralButton("Ок", null).show();
+                                        .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка")
+                                        .setNeutralButton("Ок", null).show();
                             }
                         }
                         break;
-
+                    case 3:
+                        timeDialog();
+                        break;
                     default:
                         break;
                 }
@@ -316,7 +311,8 @@ public class MyOrderItemActivity extends BalanceActivity {
     private void inviteDialog() {
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-        nameValuePairs.add(new BasicNameValuePair("action", (order.get_invitationtime() == null) ? "invite" : "hurry"));
+        nameValuePairs.add(new BasicNameValuePair("action", (order.get_invitationtime() == null) ? "invite"
+                : "hurry"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "client"));
         nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));
@@ -339,7 +335,7 @@ public class MyOrderItemActivity extends BalanceActivity {
     private void timeDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
         alert.setTitle(this.getString(R.string.time));
-        final String cs[] = new String[]{"3", "5", "7", "10", "15"};//, "20", "25", "30", "35"};
+        final String cs[] = new String[] { "3", "5", "7", "10", "15" };// , "20", "25", "30", "35"};
 
         alert.setItems(cs, new OnClickListener() {
 
@@ -387,13 +383,23 @@ public class MyOrderItemActivity extends BalanceActivity {
     }
 
     private void initActionDialog() {
-        final CharSequence[] items = {
-                (order.get_invitationtime() == null) ? this.getString(R.string.invite) : "Поторопить",
-                this.getString(R.string.delay), this.getString(R.string.close),
-                this.getString(R.string.call_office)};
+        ArrayList<String> arrayList = new ArrayList<String>();
+        if (order.get_invitationtime() == null)
+            arrayList.add(this.getString(R.string.invite));
+        else
+            arrayList.add("Поторопить");
+        arrayList.add(this.getString(R.string.close));
+        arrayList.add(this.getString(R.string.call_office));
+
+        if (order.get_invitationtime() == null)
+            arrayList.add(this.getString(R.string.delay));
+
+        // final CharSequence[] items = { this.getString(R.string.invite) : ,
+        // this.getString(R.string.delay), this.getString(R.string.close),
+        // this.getString(R.string.call_office)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(this.getString(R.string.choose_action));
-        builder.setItems(items, onContextMenuItemListener());
+        builder.setItems(arrayList.toArray(new String[arrayList.size()]), onContextMenuItemListener());
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -432,7 +438,7 @@ public class MyOrderItemActivity extends BalanceActivity {
         alert.setTitle(this.getString(R.string.time));
         final CharSequence cs[];
 
-        cs = new String[]{"3", "5", "7", "10", "15", "20", "25", "30", "35"};
+        cs = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
 
         alert.setItems(cs, new OnClickListener() {
 
@@ -613,6 +619,6 @@ public class MyOrderItemActivity extends BalanceActivity {
             }
         }
 
-                ;
+        ;
     }
 }

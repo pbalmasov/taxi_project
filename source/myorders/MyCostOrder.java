@@ -55,6 +55,9 @@ public class MyCostOrder extends Order {
         }
         if (_invitationtime != null)
             array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_invitationtime));
+        else
+            array.add(_context.getString(R.string.date_invite) + " " + "не приглашены");
+
 
         array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
         array.add(_context.getString(R.string.where) + " " + get_addressarrival());

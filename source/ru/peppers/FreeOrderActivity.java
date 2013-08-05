@@ -1,22 +1,5 @@
 package ru.peppers;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +11,24 @@ import java.util.TimerTask;
 import model.Driver;
 import model.Order;
 import orders.CostOrder;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class FreeOrderActivity extends BalanceActivity {
     protected static final int REQUEST_EXIT = 0;
@@ -66,21 +67,14 @@ public class FreeOrderActivity extends BalanceActivity {
         getOrders();
         // TODO:нету заказов
         /*
-         * new
-		 * AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
-		 * setMessage(this.getString(R.string.noOrders))
-		 * .setNeutralButton(this.getString(R.string.close), new
-		 * OnClickListener() {
-		 *
-		 * @Override public void onClick(DialogInterface dialog, int which) { //
-		 * Bundle extras = getIntent().getExtras(); // int id =
-		 * extras.getInt("id");
-		 *
-		 * Intent intent = new Intent(FreeOrderActivity.this,
-		 * MainListActivity.class); // Bundle bundle = new Bundle(); //
-		 * bundle.putInt("id", id); // intent.putExtras(bundle);
-		 * startActivity(intent); } }).show();
-		 */
+         * new AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
+         * setMessage(this.getString(R.string.noOrders)) .setNeutralButton(this.getString(R.string.close), new
+         * OnClickListener() {
+         * @Override public void onClick(DialogInterface dialog, int which) { // Bundle extras =
+         * getIntent().getExtras(); // int id = extras.getInt("id"); Intent intent = new
+         * Intent(FreeOrderActivity.this, MainListActivity.class); // Bundle bundle = new Bundle(); //
+         * bundle.putInt("id", id); // intent.putExtras(bundle); startActivity(intent); } }).show();
+         */
     }
 
     private void getOrders() {
@@ -109,6 +103,7 @@ public class FreeOrderActivity extends BalanceActivity {
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
+        int length = orders.size();
         orders.clear();
         for (int i = 0; i < nodeList.getLength(); i++) {
             // nominalcost - рекомендуемая стоимость заказа
@@ -145,7 +140,7 @@ public class FreeOrderActivity extends BalanceActivity {
             Integer quantity = null;
             String comment = null;
             String nickname = null;
-//			Date registrationtime = null;
+            // Date registrationtime = null;
             String addressarrival = null;
             String orderId = null;
 
@@ -162,8 +157,8 @@ public class FreeOrderActivity extends BalanceActivity {
             if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
                 nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
 
-//			if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
-//				registrationtime = format.parse(registrationtimeNode.getTextContent());
+            // if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
+            // registrationtime = format.parse(registrationtimeNode.getTextContent());
 
             if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
                 addressdeparture = addressdepartureNode.getTextContent();
@@ -183,7 +178,6 @@ public class FreeOrderActivity extends BalanceActivity {
             if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
                 orderId = orderIdNode.getTextContent();
 
-
             orders.add(new CostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
                     addressarrival, paymenttype, departuretime));
 
@@ -200,6 +194,12 @@ public class FreeOrderActivity extends BalanceActivity {
         Driver driver = TaxiApplication.getDriver();
         driver.setFreeOrders(orders);
         arrayAdapter.notifyDataSetChanged();
+
+        if (length != orders.size()) {
+            MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.new_sound));
+            mp.start();
+        }
+
         // driver = new Driver(status, carClass, ordersCount, district,
         // subdistrict);
 
@@ -222,7 +222,6 @@ public class FreeOrderActivity extends BalanceActivity {
         Integer newrefreshperiod = null;
         if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
             newrefreshperiod = Integer.valueOf(refreshperiodNode.getTextContent());
-
 
         boolean update = false;
 
@@ -259,7 +258,6 @@ public class FreeOrderActivity extends BalanceActivity {
 
             myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
         }
-
 
     }
 

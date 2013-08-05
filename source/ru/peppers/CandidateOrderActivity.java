@@ -37,7 +37,7 @@ public class CandidateOrderActivity extends BalanceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.candidateorder);
 
-        MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.iphone));
+        MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.new_sound));
         mp.start();
 
 

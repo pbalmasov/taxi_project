@@ -3,6 +3,7 @@ package ru.peppers;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -124,6 +125,11 @@ public class ReportActivity extends BalanceActivity {
 	public void initList() {
 		final Driver driver = TaxiApplication.getDriver();
 		itemsList = new ArrayList<String>();
+		
+        try {
+			itemsList.add("Версия программы: " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+		} catch (NameNotFoundException e) {
+		}
         itemsList.add("Статус: " + driver.getStatusString());
         itemsList.add("Класс: " + driver.getClassAutoString());
 
@@ -135,7 +141,7 @@ public class ReportActivity extends BalanceActivity {
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-				if (position == 1 && driver.getCarId()!=1) {
+				if (position == 2 && driver.getCarId()!=1) {
 					Resources res = ReportActivity.this.getResources();
 					String[] classArray = res.getStringArray(R.array.class_array);
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(classArray));
@@ -149,7 +155,7 @@ public class ReportActivity extends BalanceActivity {
 					AlertDialog alert = builder.create();
 					alert.show();
 				}
-				if (position == 0) {
+				if (position == 1) {
 					Resources res = ReportActivity.this.getResources();
 					String[] statusArray = res.getStringArray(R.array.status_array);
 					ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(statusArray));

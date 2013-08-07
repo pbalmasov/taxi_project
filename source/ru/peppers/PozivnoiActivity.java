@@ -37,8 +37,8 @@ import model.Driver;
 import model.Message;
 
 public class PozivnoiActivity extends BalanceActivity {
-    private static final String URL_APK = "https://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk?raw=true";
-    private static final String URL_MANIFEST = "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
+    private static final String URL_APK = "http://abs-taxi.ru/abs.apk";//"https://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk?raw=true";
+    private static final String URL_MANIFEST = "http://abs-taxi.ru/AndroidManifest.xml";//"https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";
     private static final String MY_TAG = "My_tag";
     protected static final String PREFS_NAME = "MyNamePrefs1";
 

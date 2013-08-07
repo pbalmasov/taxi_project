@@ -61,10 +61,6 @@ public class ReportCostOrder extends Order {
         array.add(_context.getString(R.string.car_class) + " " + getCarClass());
         array.add(_context.getString(R.string.cost_type) + " " + getPayment());
 
-        if (_drivercost != null)
-            array.add("Стоимость закрытия:" + " " + _drivercost);
-        if (_actualcost != null)
-            array.add("Оплата диспетчерской:" + " " + _actualcost);
         if (_accepttime != null)
             array.add("Время приглашения:" + " " + getTimeString(_accepttime));
         array.add("Результат:" + " " + _result);
@@ -72,6 +68,11 @@ public class ReportCostOrder extends Order {
         String costValue = "не указано";
         if (get_nominalcost() != null)
             costValue = String.valueOf(get_nominalcost()) + " " + _context.getString(R.string.currency);
+        
+        if (_drivercost != null)
+            array.add("Стоимость закрытия:" + " " + _actualcost + " " + _context.getString(R.string.currency) );
+        if (_actualcost != null)
+            array.add("Оплата диспетчерской:" + " " + _drivercost + " " + _context.getString(R.string.currency));
 
         array.add(_context.getString(R.string.cost_ride) + " " + costValue);
 

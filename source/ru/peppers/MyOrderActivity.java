@@ -112,7 +112,10 @@ public class MyOrderActivity extends BalanceActivity {
             Node orderIdNode = item.getElementsByTagName("orderid").item(0);
             Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
             Node accepttimeNode = item.getElementsByTagName("accepttime").item(0);
+            Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
 
+
+            Integer driverstate = null;
             Date accepttime = null;
             Integer nominalcost = null;
             Integer carClass = 0;
@@ -132,6 +135,9 @@ public class MyOrderActivity extends BalanceActivity {
             // //TODO:предварительный
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+
+            if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
+            	driverstate = Integer.valueOf(driverstateNode.getTextContent());
 
             if (!classNode.getTextContent().equalsIgnoreCase(""))
                 carClass = Integer.valueOf(classNode.getTextContent());
@@ -164,7 +170,7 @@ public class MyOrderActivity extends BalanceActivity {
                 accepttime = format.parse(accepttimeNode.getTextContent());
 
             orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, invitationtime, departuretime,accepttime));
+                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();

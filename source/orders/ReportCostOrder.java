@@ -68,13 +68,13 @@ public class ReportCostOrder extends Order {
         String costValue = "не указано";
         if (get_nominalcost() != null)
             costValue = String.valueOf(get_nominalcost()) + " " + _context.getString(R.string.currency);
-        
+
         if (_drivercost != null)
             array.add("Стоимость закрытия:" + " " + _actualcost + " " + _context.getString(R.string.currency) );
         if (_actualcost != null)
             array.add("Оплата диспетчерской:" + " " + _drivercost + " " + _context.getString(R.string.currency));
 
-        array.add(_context.getString(R.string.cost_ride) + " " + costValue);
+        array.add("Расчетная стоимость:" + " " + costValue);
 
         if (_comment == null)
             _comment = "не указано";

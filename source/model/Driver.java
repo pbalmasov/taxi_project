@@ -17,7 +17,7 @@ import ru.peppers.R;
  */
 public class Driver {
 
-	private int _status;
+	private Integer _status;
 	private String _area;
 	private String _city;
 	private int _carClass;
@@ -36,6 +36,7 @@ public class Driver {
 
 	private Activity _context;
     private Integer carId;
+    private String waitString;
 
 	public Driver(Activity context, int status, int carClass, String district, String subdistrict) {
 		this._context = context;
@@ -147,7 +148,7 @@ public class Driver {
 	/**
 	 * @return the _status
 	 */
-	public int getStatus() {
+	public Integer getStatus() {
 		return _status;
 	}
 
@@ -155,11 +156,13 @@ public class Driver {
 	 * @param status
 	 *            the _status to set
 	 */
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this._status = status;
 	}
 
 	public String getStatusString() {
+	    if(_status==null)
+	        return "не указан";
 		Resources res = _context.getResources();
 		String[] status = res.getStringArray(R.array.status_array);
 		return status[_status].toLowerCase();
@@ -287,6 +290,16 @@ public class Driver {
 
 	public void setCarId(Integer carId) {
         this.carId = carId;
+    }
+
+    public String getWaitString() {
+        if(waitString==null)
+            return "отсутсвует";
+        return waitString;
+    }
+
+    public void setWaitString(String waitString) {
+        this.waitString = waitString;
     }
 
 

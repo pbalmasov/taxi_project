@@ -2,10 +2,13 @@ package ru.peppers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,135 +33,156 @@ import model.Driver;
 import model.Order;
 
 public class ReportActivity extends BalanceActivity {
-	private ArrayAdapter<String> simpleAdpt;
-	private ArrayList<String> itemsList;
+    private ArrayAdapter<String> simpleAdpt;
+    private ArrayList<String> itemsList;
+    protected static final String PREFS_NAME = "MyNamePrefs1";
+    private static final int REQUEST_GET = 0;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		initList();
-		// Bundle bundle = getIntent().getExtras();
-		// // int id = bundle.getInt("id");
-		//
-		// List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		// nameValuePairs.add(new BasicNameValuePair("action", "reportdata"));
-		// // nameValuePairs.add(new BasicNameValuePair("id",
-		// String.valueOf(id)));
-		//
-		// Document doc = PhpData.postData(this, nameValuePairs);
-		// if (doc != null) {
-		// Node errorNode = doc.getElementsByTagName("error").item(0);
-		//
-		// if (Integer.parseInt(errorNode.getTextContent()) == 1)
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        initList();
+        // Bundle bundle = getIntent().getExtras();
+        // // int id = bundle.getInt("id");
+        //
+        // List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        // nameValuePairs.add(new BasicNameValuePair("action", "reportdata"));
+        // // nameValuePairs.add(new BasicNameValuePair("id",
+        // String.valueOf(id)));
+        //
+        // Document doc = PhpData.postData(this, nameValuePairs);
+        // if (doc != null) {
+        // Node errorNode = doc.getElementsByTagName("error").item(0);
+        //
+        // if (Integer.parseInt(errorNode.getTextContent()) == 1)
         // new AlertDialog.Builder(this).setTitle("Ошибка")
         // .setMessage("Ошибка на сервере. Перезапустите приложение.").setNeutralButton("Закрыть",
         // null)
-		// .show();
-		// else {
-		// try {
-		// initMainList(doc);
-		// } catch (DOMException e) {
-		// e.printStackTrace();
+        // .show();
+        // else {
+        // try {
+        // initMainList(doc);
+        // } catch (DOMException e) {
+        // e.printStackTrace();
         // new AlertDialog.Builder(this).setTitle("Ошибка")
         // .setMessage("Ошибка на сервере. Перезапустите приложение.")
         // .setNeutralButton("Закрыть", null).show();
         // } catch (ParseException e) {
-		// e.printStackTrace();
+        // e.printStackTrace();
         // new AlertDialog.Builder(this).setTitle("Ошибка")
         // .setMessage("Ошибка на сервере. Перезапустите приложение.")
         // .setNeutralButton("Закрыть", null).show();
         // }
-		// }
-		// } else {
-		// initList();
-		// }
-	}
+        // }
+        // } else {
+        // initList();
+        // }
+    }
 
-	private void initMainList(Document doc) throws DOMException, ParseException {
-		NodeList nodeList = doc.getElementsByTagName("order");
-		ArrayList<Order> reports = new ArrayList<Order>();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			NamedNodeMap attributes = nodeList.item(i).getAttributes();
+//    private void initMainList(Document doc) throws DOMException, ParseException {
+//        NodeList nodeList = doc.getElementsByTagName("order");
+//        ArrayList<Order> reports = new ArrayList<Order>();
+//        for (int i = 0; i < nodeList.getLength(); i++) {
+//            NamedNodeMap attributes = nodeList.item(i).getAttributes();
+//
+//            int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
+//            int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
+//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+//            Date date = format.parse(attributes.getNamedItem("date").getTextContent());
+//            String carClass = attributes.getNamedItem("class").getTextContent();
+//            String adress = attributes.getNamedItem("adress").getTextContent();
+//            String where = attributes.getNamedItem("where").getTextContent();
+//            int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
+//
+//            if (type == 0) {
+//                int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
+//                String costType = attributes.getNamedItem("costType").getTextContent();
+//                String text = nodeList.item(i).getTextContent();
+//                // reports.add(new CostOrder(this,costOrder,index,date, adress,
+//                // carClass, text, where, cost, costType));
+//            }
+//            if (type == 1) {
+//                String text = nodeList.item(i).getTextContent();
+//                // reports.add(new NoCostOrder(this,costOrder,index,date,
+//                // adress, carClass, text, where));
+//            }
+//            if (type == 2) {
+//                String text = nodeList.item(i).getTextContent();
+//                // reports.add(new PreliminaryOrder(this,costOrder,index,date,
+//                // adress, carClass, text, where));
+//            }
+//            if (attributes.getNamedItem("abonent") != null) {
+//                String abonent = attributes.getNamedItem("abonent").getTextContent();
+//                int rides = Integer.parseInt(attributes.getNamedItem("rides").getTextContent());
+//                reports.get(i).setAbonent(abonent);
+//                reports.get(i).setRides(rides);
+//            }
+//
+//        }
+//        String balance = doc.getElementsByTagName("balance").item(0).getTextContent();
+//        Driver driver = TaxiApplication.getDriver();
+//        driver.setBalance(balance);
+//        driver.setReports(reports);
+//        initList();
+//    }
 
-			int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
-			int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-			Date date = format.parse(attributes.getNamedItem("date").getTextContent());
-			String carClass = attributes.getNamedItem("class").getTextContent();
-			String adress = attributes.getNamedItem("adress").getTextContent();
-			String where = attributes.getNamedItem("where").getTextContent();
-			int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-			if (type == 0) {
-				int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
-				String costType = attributes.getNamedItem("costType").getTextContent();
-				String text = nodeList.item(i).getTextContent();
-				// reports.add(new CostOrder(this,costOrder,index,date, adress,
-				// carClass, text, where, cost, costType));
-			}
-			if (type == 1) {
-				String text = nodeList.item(i).getTextContent();
-				// reports.add(new NoCostOrder(this,costOrder,index,date,
-				// adress, carClass, text, where));
-			}
-			if (type == 2) {
-				String text = nodeList.item(i).getTextContent();
-				// reports.add(new PreliminaryOrder(this,costOrder,index,date,
-				// adress, carClass, text, where));
-			}
-			if (attributes.getNamedItem("abonent") != null) {
-				String abonent = attributes.getNamedItem("abonent").getTextContent();
-				int rides = Integer.parseInt(attributes.getNamedItem("rides").getTextContent());
-				reports.get(i).setAbonent(abonent);
-				reports.get(i).setRides(rides);
-			}
+        if (requestCode == REQUEST_GET) {
+            if (resultCode == RESULT_OK) {
+                if(itemsList!=null){
+                    itemsList.set(itemsList.size()-1, "Жду заказа: " + TaxiApplication.getDriver().getWaitString());
+                    simpleAdpt.notifyDataSetChanged();
+                }
+            }
+        }
+    }
 
-		}
-		String balance = doc.getElementsByTagName("balance").item(0).getTextContent();
-		Driver driver = TaxiApplication.getDriver();
-		driver.setBalance(balance);
-		driver.setReports(reports);
-		initList();
-	}
+    public void initList() {
+        final Driver driver = TaxiApplication.getDriver();
+        itemsList = new ArrayList<String>();
 
-	public void initList() {
-		final Driver driver = TaxiApplication.getDriver();
-		itemsList = new ArrayList<String>();
-		
         try {
-			itemsList.add("Версия программы: " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
-		} catch (NameNotFoundException e) {
-		}
+            itemsList.add("Версия программы: "
+                    + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+        } catch (NameNotFoundException e) {
+        }
         itemsList.add("Статус: " + driver.getStatusString());
         itemsList.add("Класс: " + driver.getClassAutoString());
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        if(settings.getString("pozivnoidata", "").equalsIgnoreCase("500"))
+            itemsList.add("Жду заказа: " + TaxiApplication.getDriver().getWaitString());
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
 
-		simpleAdpt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemsList);
+        simpleAdpt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemsList);
 
-		lv.setAdapter(simpleAdpt);
-		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lv.setAdapter(simpleAdpt);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-				if (position == 2 && driver.getCarId()!=1) {
-					Resources res = ReportActivity.this.getResources();
-					String[] classArray = res.getStringArray(R.array.class_array);
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
+                if (position == 3) {
+                    Intent intent = new Intent(ReportActivity.this, WaitActivity.class);
+                    startActivityForResult(intent,REQUEST_GET);
+                } else if (position == 2 && driver.getCarId() != 1) {
+                    Resources res = ReportActivity.this.getResources();
+                    String[] classArray = res.getStringArray(R.array.class_array);
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(classArray));
-                    if(driver.getCarId()==2)
-                    arrayList.remove(2);
+                    if (driver.getCarId() == 2)
+                        arrayList.remove(2);
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
                     builder.setTitle("Выбор статуса");
-                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), driver.getClassAuto(),
-							onClassContextMenuItemListener(position));
-					AlertDialog alert = builder.create();
-					alert.show();
-				}
-				if (position == 1) {
-					Resources res = ReportActivity.this.getResources();
-					String[] statusArray = res.getStringArray(R.array.status_array);
-					ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(statusArray));
+                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]),
+                            driver.getClassAuto(), onClassContextMenuItemListener(position));
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else if (position == 1) {
+                    Resources res = ReportActivity.this.getResources();
+                    String[] statusArray = res.getStringArray(R.array.status_array);
+                    ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(statusArray));
                     arrayList.remove(arrayList.size() - 3);
                     ArrayList<Integer> arrayList1 = new ArrayList<Integer>();
                     arrayList1.add(0, 0);
@@ -166,99 +190,100 @@ public class ReportActivity extends BalanceActivity {
                     arrayList1.add(2, 3);
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
                     builder.setTitle("Выбор статуса");
-                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]), arrayList1.indexOf(driver.getStatus()),
-                            onStatusContextMenuItemListener(position));
-					AlertDialog alert = builder.create();
-					alert.show();
-				}
+                    builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]),
+                            arrayList1.indexOf(driver.getStatus()), onStatusContextMenuItemListener(position));
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
 
-			}
-		});
-	}
+            }
+        });
+    }
 
-	private OnClickListener onStatusContextMenuItemListener(final int position) {
-		return new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				Driver driver = TaxiApplication.getDriver();
+    private OnClickListener onStatusContextMenuItemListener(final int position) {
+        return new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Driver driver = TaxiApplication.getDriver();
 
-				// if (item == 2 && driver.getOrdersCount() != 0) {
-				// new
+                // if (item == 2 && driver.getOrdersCount() != 0) {
+                // new
                 // AlertDialog.Builder(ReportActivity.this).setTitle("Заказы")
                 // .setMessage("К сожалению у вас есть не закрытые заказы.").setNeutralButton("Закрыть",
                 // null)
-				// .show();
-				// dialog.dismiss();
-				// return;
-				// }
+                // .show();
+                // dialog.dismiss();
+                // return;
+                // }
 
-                int[] statusArray = {0, 2, 3};
-                if (statusArray[item] != driver.getStatus()) {
-                    String[] sendArray = {"online", "leaveforabreak", "quit"};
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                    nameValuePairs.add(new BasicNameValuePair("action", sendArray[item]));
+                int[] statusArray = { 0, 2, 3 };
+                if (driver.getStatus() != null)
+                    if (statusArray[item] != driver.getStatus()) {
+                        String[] sendArray = { "online", "leaveforabreak", "quit" };
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+                        nameValuePairs.add(new BasicNameValuePair("action", sendArray[item]));
+                        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                        nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+                        // nameValuePairs.add(new BasicNameValuePair("orderid",
+                        // String.valueOf(order.get_index())));
+                        // nameValuePairs.add(new BasicNameValuePair("minutes",
+                        // (String) cs[which]));
+
+                        Document doc = PhpData.postData(ReportActivity.this, nameValuePairs, PhpData.newURL);
+                        if (doc != null) {
+                            Node responseNode = doc.getElementsByTagName("response").item(0);
+                            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+                            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                                PhpData.errorFromServer(ReportActivity.this, errorNode);
+                            else {
+                                driver.setStatus(statusArray[item]);
+                                itemsList.set(position, "Статус: " + driver.getStatusString());
+                                simpleAdpt.notifyDataSetChanged();
+                                // предлагаем поменять район
+                                // if (item == 0 && driver.getDistrict() == "") {
+                                // Intent intent = new Intent(ReportActivity.this, DistrictActivity.class);
+                                // startActivity(intent);
+                                // finish();
+                                // return;
+                                // }
+                            }
+                        }
+                    }
+                dialog.dismiss();
+            }
+        };
+    }
+
+    private OnClickListener onClassContextMenuItemListener(final int position) {
+        return new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Driver driver = TaxiApplication.getDriver();
+                if (item != driver.getClassAuto()) {
+
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+                    nameValuePairs.add(new BasicNameValuePair("action", "set"));
                     nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
                     nameValuePairs.add(new BasicNameValuePair("object", "driver"));
-                    // nameValuePairs.add(new BasicNameValuePair("orderid",
-					// String.valueOf(order.get_index())));
-					// nameValuePairs.add(new BasicNameValuePair("minutes",
-					// (String) cs[which]));
+                    nameValuePairs.add(new BasicNameValuePair("mode", "class"));
+                    nameValuePairs.add(new BasicNameValuePair("classid", String.valueOf(item + 1)));
 
-					Document doc = PhpData.postData(ReportActivity.this, nameValuePairs, PhpData.newURL);
-					if (doc != null) {
-						Node responseNode = doc.getElementsByTagName("response").item(0);
-						Node errorNode = doc.getElementsByTagName("message").item(0);
+                    Document doc = PhpData.postData(ReportActivity.this, nameValuePairs, PhpData.newURL);
+                    if (doc != null) {
+                        Node responseNode = doc.getElementsByTagName("response").item(0);
+                        Node errorNode = doc.getElementsByTagName("message").item(0);
 
-						if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-							PhpData.errorFromServer(ReportActivity.this, errorNode);
-						else {
-                            driver.setStatus(statusArray[item]);
-                            itemsList.set(position, "Статус: " + driver.getStatusString());
-                            simpleAdpt.notifyDataSetChanged();
-                            // предлагаем поменять район
-//                            if (item == 0 && driver.getDistrict() == "") {
-//								Intent intent = new Intent(ReportActivity.this, DistrictActivity.class);
-//								startActivity(intent);
-//								finish();
-//								return;
-//							}
-                        }
-					}
-				}
-				dialog.dismiss();
-			}
-		};
-	}
-
-	private OnClickListener onClassContextMenuItemListener(final int position) {
-		return new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				Driver driver = TaxiApplication.getDriver();
-				if (item != driver.getClassAuto()) {
-
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
-					nameValuePairs.add(new BasicNameValuePair("action", "set"));
-					nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-					nameValuePairs.add(new BasicNameValuePair("object", "driver"));
-					nameValuePairs.add(new BasicNameValuePair("mode", "class"));
-					nameValuePairs.add(new BasicNameValuePair("classid", String.valueOf(item + 1)));
-
-					Document doc = PhpData.postData(ReportActivity.this, nameValuePairs, PhpData.newURL);
-					if (doc != null) {
-						Node responseNode = doc.getElementsByTagName("response").item(0);
-						Node errorNode = doc.getElementsByTagName("message").item(0);
-
-						if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-							PhpData.errorFromServer(ReportActivity.this, errorNode);
-						else {
-							driver.setClassAuto(item);
+                        if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                            PhpData.errorFromServer(ReportActivity.this, errorNode);
+                        else {
+                            driver.setClassAuto(item);
                             itemsList.set(position, "Класс: " + driver.getClassAutoString());
                             simpleAdpt.notifyDataSetChanged();
-						}
-					}
-				}
-				dialog.dismiss();
-			}
-		};
-	}
+                        }
+                    }
+                }
+                dialog.dismiss();
+            }
+        };
+    }
 
 }

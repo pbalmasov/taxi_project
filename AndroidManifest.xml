@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.peppers"
-    android:versionCode="51"
-    android:versionName="2.8">
+    android:versionCode="52"
+    android:versionName="2.9">
 
 <uses-sdk android:minSdkVersion="8" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -41,6 +41,7 @@
         <activity android:label="Пароль водителя"  android:name=".PasswordActivity"></activity>
         <activity android:label="Заказы района"  android:name=".DistrictListActivity"></activity>
         <activity android:label="Заказ района"  android:name=".DistrictListItemActivity"></activity>
+        <activity android:label="Жду заказа"  android:name=".WaitActivity"></activity>
         <activity android:label="Сообщение из сервиса"  android:name=".MessageFromServiceActivity"></activity>
         <activity
                 android:label="Кандидатский заказ"

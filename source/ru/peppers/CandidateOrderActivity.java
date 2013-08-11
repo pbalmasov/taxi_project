@@ -210,7 +210,7 @@ public class CandidateOrderActivity extends BalanceActivity {
         Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
         Node orderIdNode = item.getElementsByTagName("orderid").item(0);
 
-        Integer nominalcost = null;
+        String nominalcost = null;
         Integer carClass = 0;
         String addressdeparture = null;
         Date departuretime = null;
@@ -227,13 +227,13 @@ public class CandidateOrderActivity extends BalanceActivity {
         // else
         // //TODO:предварительный
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
         if (!classNode.getTextContent().equalsIgnoreCase(""))
             carClass = Integer.valueOf(classNode.getTextContent());
 
         if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
-            nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
+            nominalcost = nominalcostNode.getTextContent();
 
         // if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
         // registrationtime = format.parse(registrationtimeNode.getTextContent());

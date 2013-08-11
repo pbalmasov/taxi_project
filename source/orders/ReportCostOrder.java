@@ -8,6 +8,7 @@ import android.content.Context;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import model.Order;
 import ru.peppers.R;
@@ -23,7 +24,7 @@ public class ReportCostOrder extends Order {
     private String _actualcost;
     private Date _accepttime;
 
-    public ReportCostOrder(Context context, String index, Integer nominalcost, String addressdeparture,
+    public ReportCostOrder(Context context, String index, String nominalcost, String addressdeparture,
             Integer carClass, String comment, String addressarrival, Integer paymenttype, Date orderDate,
             String result, String drivercost, String actualcost, Date accepttime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
@@ -34,6 +35,7 @@ public class ReportCostOrder extends Order {
         _accepttime = accepttime;
 
     }
+
 
     public String toString() {
         String pred = "";

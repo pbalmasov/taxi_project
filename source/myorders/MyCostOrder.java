@@ -24,7 +24,7 @@ public class MyCostOrder extends Order {
     private Date _accepttime;
     private Integer _driverstate;
 
-    public MyCostOrder(Context context, String index, Integer nominalcost,
+    public MyCostOrder(Context context, String index, String nominalcost,
                        String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
                        Date invitationtime, Date departuretime, Date accepttime, Integer driverstate) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
@@ -33,7 +33,7 @@ public class MyCostOrder extends Order {
         _departuretime = departuretime;
         _accepttime = accepttime;
         _driverstate = driverstate;
-        
+
     }
 
     public String toString() {

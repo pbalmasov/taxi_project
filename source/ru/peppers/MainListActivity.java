@@ -80,8 +80,8 @@ public class MainListActivity extends BalanceActivity {
     private void parseMainList(Document doc) {
         // int carClass =
         // Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
-        Integer status = null;
-        int classid = 1;
+        Integer status = 3;
+        Integer classid = null;
         Node statusNode = doc.getElementsByTagName("status").item(1);
         if (!statusNode.getTextContent().equalsIgnoreCase(""))
             status = Integer.valueOf(statusNode.getTextContent());
@@ -99,7 +99,7 @@ public class MainListActivity extends BalanceActivity {
         // int id = bundle.getInt("id");
         Driver driver = TaxiApplication.getDriver();
         driver.setStatus(status);
-        driver.setClassAuto(classid - 1);
+        driver.setClassAuto(classid);
         driver.setDistrict(district);
         driver.setSubdistrict(subdistrict);
         driver.setBalance(balance);

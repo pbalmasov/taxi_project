@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -138,9 +139,10 @@ public class PozivnoiActivity extends BalanceActivity {
 
 
     private void emptyPozivnoiError() {
-        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
-                .setMessage(this.getString(R.string.empty_pozivnoi))
-                .setNeutralButton(this.getString(R.string.close), null).show();
+        Toast.makeText(this, this.getString(R.string.empty_pozivnoi), Toast.LENGTH_LONG).show();
+//        new AlertDialog.Builder(this).setTitle(this.getString(R.string.error_title))
+//                .setMessage(this.getString(R.string.empty_pozivnoi))
+//                .setNeutralButton(this.getString(R.string.close), null).show();
     }
 
     private void init(SharedPreferences settings) {
@@ -444,9 +446,7 @@ public class PozivnoiActivity extends BalanceActivity {
             Node errorNode = doc.getElementsByTagName("message").item(0);
 
             if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-                new AlertDialog.Builder(PozivnoiActivity.this).setTitle(this.getString(R.string.error_title))
-                        .setMessage(errorNode.getTextContent()).setNeutralButton(this.getString(R.string.close), null)
-                        .show();
+                PhpData.errorFromServer(this, errorNode);
             else {
                 try {
                     getMessages(doc);
@@ -467,7 +467,7 @@ public class PozivnoiActivity extends BalanceActivity {
             if (item.getElementsByTagName("readdate").item(0) == null)
                 isRead = false;
             int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
             Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
             String text = item.getElementsByTagName("message").item(0).getTextContent();
 
@@ -517,10 +517,7 @@ public class PozivnoiActivity extends BalanceActivity {
                     Node errorNode = doc.getElementsByTagName("message").item(0);
 
                     if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-                        new AlertDialog.Builder(PozivnoiActivity.this)
-                                .setTitle(PozivnoiActivity.this.getString(R.string.error_title))
-                                .setMessage(errorNode.getTextContent())
-                                .setNeutralButton(PozivnoiActivity.this.getString(R.string.close), null).show();
+                        PhpData.errorFromServer(PozivnoiActivity.this, errorNode);
                     else {
                         unreaded.remove(0);
                         if (unreaded.size() != 0) {

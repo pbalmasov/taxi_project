@@ -166,7 +166,7 @@ public class ReportActivity extends BalanceActivity {
                 if (position == 3) {
                     Intent intent = new Intent(ReportActivity.this, WaitActivity.class);
                     startActivityForResult(intent,REQUEST_GET);
-                } else if (position == 2 && driver.getCarId() != 1) {
+                } else if (position == 2 && driver.getCarId() != 1 && driver.getClassAuto()!=null) {
                     Resources res = ReportActivity.this.getResources();
                     String[] classArray = res.getStringArray(R.array.class_array);
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(classArray));

@@ -21,14 +21,14 @@ public class Order implements OrderInterface {
     protected String _comment;
     private String _addressarrival;
     protected String _index;
-    private Integer _nominalcost;
+    private String _nominalcost;
     protected Date _timerDate;
     protected Integer quantity;
     protected String nickname;
     private Integer _paymenttype;
     protected Context _context;
 
-    public Order(Context context, Integer costRide, String adress, Integer carClass, String orderText, String where,
+    public Order(Context context, String nominalcost, String adress, Integer carClass, String orderText, String where,
                  Integer paymenttype, String index) {
         _context = context;
         set_paymenttype(paymenttype);
@@ -37,7 +37,7 @@ public class Order implements OrderInterface {
         _comment = orderText;
         set_addressarrival(where);
         _index = index;
-        set_nominalcost(costRide);
+        set_nominalcost(nominalcost);
     }
 
     public String get_index() {
@@ -97,13 +97,6 @@ public class Order implements OrderInterface {
         this.quantity = rides;
     }
 
-    public Integer get_nominalcost() {
-        return _nominalcost;
-    }
-
-    public void set_nominalcost(Integer _nominalcost) {
-        this._nominalcost = _nominalcost;
-    }
 
     public Integer get_paymenttype() {
         return _paymenttype;
@@ -119,5 +112,13 @@ public class Order implements OrderInterface {
 
     public void set_addressarrival(String _addressarrival) {
         this._addressarrival = _addressarrival;
+    }
+
+    public String get_nominalcost() {
+        return _nominalcost;
+    }
+
+    public void set_nominalcost(String _nominalcost) {
+        this._nominalcost = _nominalcost;
     }
 }

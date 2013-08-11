@@ -59,7 +59,7 @@ public class MessageActivity extends BalanceActivity {
             if (item.getElementsByTagName("readdate").item(0) == null)
                 isRead = false;
             int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
             Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
             String text = item.getElementsByTagName("message").item(0).getTextContent();
 

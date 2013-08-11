@@ -117,7 +117,7 @@ public class MyOrderActivity extends BalanceActivity {
 
             Integer driverstate = null;
             Date accepttime = null;
-            Integer nominalcost = null;
+            String nominalcost = null;
             Integer carClass = 0;
             String addressdeparture = null;
             Date departuretime = null;
@@ -134,7 +134,7 @@ public class MyOrderActivity extends BalanceActivity {
             // else
             // //TODO:предварительный
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
             if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
             	driverstate = Integer.valueOf(driverstateNode.getTextContent());
@@ -143,7 +143,7 @@ public class MyOrderActivity extends BalanceActivity {
                 carClass = Integer.valueOf(classNode.getTextContent());
 
             if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
-                nominalcost = Integer.parseInt(nominalcostNode.getTextContent());
+                nominalcost = nominalcostNode.getTextContent();
 
             if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
                 addressdeparture = addressdepartureNode.getTextContent();

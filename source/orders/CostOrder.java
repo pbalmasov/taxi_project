@@ -20,7 +20,7 @@ public class CostOrder extends Order {
 
     private Date _departuretime;
 
-    public CostOrder(Context context, String index, Integer nominalcost,
+    public CostOrder(Context context, String index, String nominalcost,
                      String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
                      Date departuretime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);

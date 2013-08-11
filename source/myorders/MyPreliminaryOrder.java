@@ -22,7 +22,7 @@ public class MyPreliminaryOrder extends Order {
 
     private Date _date;
 
-    public MyPreliminaryOrder(Activity activity, int costRide, int index, Date date, String adress,
+    public MyPreliminaryOrder(Activity activity, String costRide, int index, Date date, String adress,
             Integer type, String orderText, String where) {
         super(activity, costRide, adress, type, orderText, where, index,"0");
         _date = date;

@@ -23,7 +23,7 @@ public class MyNoCostOrder extends Order {
     private Date _date;
     private Date _dateAccept;
 
-    public MyNoCostOrder(Activity activity, int costRide, int index, Date date, String adress, Integer type,
+    public MyNoCostOrder(Activity activity, String costRide, int index, Date date, String adress, Integer type,
             String orderText, String where, Date dateAccept) {
         super(activity, costRide, adress, type, orderText, where, index,"0");
         _date = date;

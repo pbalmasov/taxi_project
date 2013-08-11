@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -84,16 +85,18 @@ final public class PhpData {
         if (e != null)
             str = e.toString();
         if (context != null)
-            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                    .setMessage(context.getString(R.string.error_message) + " " + str)
-                    .setNeutralButton(context.getString(R.string.close), null).show();
+            Toast.makeText(context, context.getString(R.string.error_message) + " " + str, Toast.LENGTH_LONG).show();
+//            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+//                    .setMessage(context.getString(R.string.error_message) + " " + str)
+//                    .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public void errorFromServer(Context context, Node errorNode) {
         if (context != null)
-            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                    .setMessage(errorNode.getTextContent())
-                    .setNeutralButton(context.getString(R.string.close), null).show();
+            Toast.makeText(context, context.getString(R.string.error_message), Toast.LENGTH_LONG).show();
+//            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+//                    .setMessage(errorNode.getTextContent())
+//                    .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url) {
@@ -139,9 +142,10 @@ final public class PhpData {
 
             } catch (ConnectTimeoutException e) {
                 if (activity.getClass() != PhpService.class)
-                    new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-                            .setMessage("Сервер не отвечает. Обратитесь к администратору.")
-                            .setNeutralButton(activity.getString(R.string.close), null).show();
+                    Toast.makeText(activity, "Сервер не отвечает. Обратитесь к администратору.", Toast.LENGTH_LONG).show();
+//                    new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+//                            .setMessage("Сервер не отвечает. Обратитесь к администратору.")
+//                            .setNeutralButton(activity.getString(R.string.close), null).show();
             } catch (SocketTimeoutException e) {
                 return null;
             } catch (Exception e) {
@@ -150,9 +154,10 @@ final public class PhpData {
             }
         } else {
             if (activity.getClass() != PhpService.class)
-                new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-                        .setMessage(activity.getString(R.string.no_internet))
-                        .setNeutralButton(activity.getString(R.string.close), null).show();
+                Toast.makeText(activity, activity.getString(R.string.no_internet), Toast.LENGTH_LONG).show();
+//                new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+//                        .setMessage(activity.getString(R.string.no_internet))
+//                        .setNeutralButton(activity.getString(R.string.close), null).show();
         }
         Log.d("My_tag", "no connection");
         return null;

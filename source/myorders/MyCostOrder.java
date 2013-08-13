@@ -30,7 +30,7 @@ public class MyCostOrder extends Order {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
         // TODO:wrong index
         set_invitationtime(invitationtime);
-        _departuretime = departuretime;
+        set_departuretime(departuretime);
         _accepttime = accepttime;
         _driverstate = driverstate;
 
@@ -38,8 +38,8 @@ public class MyCostOrder extends Order {
 
     public String toString() {
         String pred = "";
-        if (_departuretime != null)
-            pred = getTimeString(_departuretime) + ", ";
+        if (get_departuretime() != null)
+            pred = getTimeString(get_departuretime()) + ", ";
 //		else
 //			pred = getTimeString(_registrationtime) + ", ";
 
@@ -55,8 +55,8 @@ public class MyCostOrder extends Order {
         array.addAll(getAbonentArray());
 
         //String departureTimeValue = "не указано";
-        if (_departuretime != null) {
-            array.add(_context.getString(R.string.date) + " " + getTimeString(_departuretime));
+        if (get_departuretime() != null) {
+            array.add(_context.getString(R.string.date) + " " + getTimeString(get_departuretime()));
         }
         if (_invitationtime != null)
             array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_invitationtime));
@@ -100,6 +100,14 @@ public class MyCostOrder extends Order {
 
 	public Integer get_driverstate() {
 		return _driverstate;
+	}
+
+	public Date get_departuretime() {
+		return _departuretime;
+	}
+
+	public void set_departuretime(Date _departuretime) {
+		this._departuretime = _departuretime;
 	}
 
 }

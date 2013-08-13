@@ -169,10 +169,18 @@ public class ReportActivity extends BalanceActivity {
                 } else if (position == 2 && driver.getCarId() != 1 && driver.getClassAuto()!=null) {
                     Resources res = ReportActivity.this.getResources();
                     String[] classArray = res.getStringArray(R.array.class_array);
+
+//                    <item>Эконом</item> 0
+//                    <item>Стандарт</item> 1
+//                    <item>Базовый</item> 2
+                    
+//                  если classid=3 базовый=базовый   стандарт=стандарт,базовый   эконом=эконом,стандарт,базовый
+//                  если classid=2, базовый=нельзя   стандарт=стандарт   эконом=стандарт, эконом
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(classArray));
                     if (driver.getCarId() == 2)
                         arrayList.remove(2);
 
+                    
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
                     builder.setTitle("Выбор статуса");
                     builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]),
@@ -275,7 +283,7 @@ public class ReportActivity extends BalanceActivity {
                         if (responseNode.getTextContent().equalsIgnoreCase("failure"))
                             PhpData.errorFromServer(ReportActivity.this, errorNode);
                         else {
-                            driver.setClassAuto(item);
+                            driver.setClassAuto(item+1);
                             itemsList.set(position, "Класс: " + driver.getClassAutoString());
                             simpleAdpt.notifyDataSetChanged();
                         }

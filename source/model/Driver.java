@@ -20,7 +20,7 @@ public class Driver {
     private Integer _status;
     private String _area;
     private String _city;
-    private Integer _carClass;
+    private Integer _carClass = null;
 
     private ArrayList<Message> _messages;
     private ArrayList<Order> _myOrders;
@@ -174,14 +174,11 @@ public class Driver {
         Log.d("My_tag", String.valueOf(getCarId()));
         Log.d("My_tag", String.valueOf(_carClass));
         String result = "";
-        int i = 0;
-        if (_carClass == 2)
-            i += 2;
-        if (_carClass == 1)
-            i++;
+        int i = _carClass;
 
         for (; i < getCarId(); i++)
             result = result + carClass[i].toLowerCase() + ", ";
+        Log.d("My_tag",result);
         return result.substring(0, result.length() - 2);
     }
 

@@ -93,7 +93,7 @@ final public class PhpData {
 
     static public void errorFromServer(Context context, Node errorNode) {
         if (context != null)
-            Toast.makeText(context, context.getString(R.string.error_message), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, errorNode.getTextContent(), Toast.LENGTH_LONG).show();
 //            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
 //                    .setMessage(errorNode.getTextContent())
 //                    .setNeutralButton(context.getString(R.string.close), null).show();
@@ -176,7 +176,7 @@ final public class PhpData {
 
     }
 
-    private static boolean isNetworkAvailable(Context context) {
+    public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

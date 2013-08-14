@@ -136,6 +136,8 @@ public class MainListActivity extends BalanceActivity {
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
+                	if(!PhpData.isNetworkAvailable(MainListActivity.this))
+                		return;
                     Bundle extras = getIntent().getExtras();
                     // //int id = extras.getInt("id");
                     Intent intent;
@@ -250,10 +252,13 @@ public class MainListActivity extends BalanceActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                new AlertDialog.Builder(MainListActivity.this).setTitle("Смена")
+            	if(TaxiApplication.getDriver().getStatus()!=3)
+            		new AlertDialog.Builder(MainListActivity.this).setTitle("Смена")
                         .setMessage("Закончить смену?").setPositiveButton("Да", onExitLineClickListener())
                         .setNegativeButton("Нет", onFinishClickListener()).show();
+            	else{
+                    finishApp();
+            	}
             }
         };
     }

@@ -293,7 +293,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 				PhpData.errorFromServer(MyOrderItemActivity.this, errorNode);
 			else {
 				new AlertDialog.Builder(MyOrderItemActivity.this).setTitle(this.getString(R.string.Ok))
-						.setMessage(this.getString(R.string.invite_sended))
+						.setMessage((order.get_invitationtime() == null) ? "Ок. Приглашаем!" : "Ок. Торопим!")
 						.setNeutralButton(this.getString(R.string.close), null).show();
 			}
 		}
@@ -466,7 +466,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 							callbackDialog();// ЗВОНОК ИЗ ОФИСА
 							break;
 						case 1:
-							// canceldialog();ОТКАЗАТЬСЯ
+							//cancelDialog();//ОТКАЗАТЬСЯ
 							break;
 						default:
 							break;
@@ -486,6 +486,26 @@ public class MyOrderItemActivity extends BalanceActivity {
 			}
 
 		};
+	}
+
+	private void cancelDialog() {
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+		nameValuePairs.add(new BasicNameValuePair("action", "refuse"));
+		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+		nameValuePairs.add(new BasicNameValuePair("object", "order"));
+		nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));
+
+		Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs, PhpData.newURL);
+		if (doc != null) {
+			Node responseNode = doc.getElementsByTagName("response").item(0);
+			Node errorNode = doc.getElementsByTagName("message").item(0);
+
+			if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+				PhpData.errorFromServer(MyOrderItemActivity.this, errorNode);
+			else {
+				finish();
+			}
+		}
 	}
 
 	private void callbackDialog() {

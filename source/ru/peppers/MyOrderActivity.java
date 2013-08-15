@@ -56,6 +56,7 @@ public class MyOrderActivity extends BalanceActivity {
                 // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
+                if(PhpData.isNetworkAvailable(MyOrderActivity.this))
                 startActivityForResult(intent, REQUEST_EXIT);
             }
         });

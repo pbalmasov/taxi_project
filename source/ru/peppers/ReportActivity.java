@@ -165,6 +165,7 @@ public class ReportActivity extends BalanceActivity {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
                 if (position == 3) {
                     Intent intent = new Intent(ReportActivity.this, WaitActivity.class);
+                    if(PhpData.isNetworkAvailable(ReportActivity.this))
                     startActivityForResult(intent,REQUEST_GET);
                 } else if (position == 2 && driver.getCarId() != 1 && driver.getClassAuto()!=null) {
                     Resources res = ReportActivity.this.getResources();

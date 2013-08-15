@@ -37,12 +37,14 @@ public class WaitActivity extends BalanceActivity {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                if (list.size()-1 == arg2)
+                if (list.size() - 1 == arg2)
                     TaxiApplication.getDriver().setWaitString(null);
                 else
                     TaxiApplication.getDriver().setWaitString(list.get(arg2));
-                setResult(RESULT_OK);
-                finish();
+                if (PhpData.isNetworkAvailable(WaitActivity.this)) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
             }
 
         });

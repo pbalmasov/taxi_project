@@ -155,7 +155,9 @@ public class DistrictListActivity extends BalanceActivity {
                 Bundle bundle = new Bundle();
 				bundle.putInt("index", position);
 				intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CLOSE);
+
+                if(PhpData.isNetworkAvailable(DistrictListActivity.this))
+                    startActivityForResult(intent, REQUEST_CLOSE);
             }
 		});
 	}

@@ -60,6 +60,8 @@ public class FreeOrderActivity extends BalanceActivity {
                 // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
+
+                if(PhpData.isNetworkAvailable(FreeOrderActivity.this))
                 startActivityForResult(intent, REQUEST_EXIT);
             }
         });

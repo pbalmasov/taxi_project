@@ -111,10 +111,12 @@ public class DistrictActivity extends BalanceActivity {
 				bundle.putInt("districtdrivers", districts.get(arg2).getDrivers());
 				bundle.putBoolean("close", close);
 				intent.putExtras(bundle);
+				if(PhpData.isNetworkAvailable(DistrictActivity.this)){
 				if (close)
 					startActivityForResult(intent, REQUEST_CLOSE);
 				else
 					startActivityForResult(intent, REQUEST_EXIT);
+				}
 			}
 
 		});

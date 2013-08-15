@@ -57,6 +57,7 @@ public class ReportListActivity extends BalanceActivity {
                 // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
+                if(PhpData.isNetworkAvailable(ReportListActivity.this))
                 startActivity(intent);
             }
         });

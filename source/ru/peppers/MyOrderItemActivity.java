@@ -631,6 +631,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 			public void onClick(View arg0) {
 				Intent intent = new Intent(MyOrderItemActivity.this, DistrictActivity.class);
 				intent.putExtra("close", true);
+				if(PhpData.isNetworkAvailable(MyOrderItemActivity.this))
 				startActivityForResult(intent, REQUEST_EXIT);
 			}
 

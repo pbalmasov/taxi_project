@@ -363,7 +363,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 		// если driverstate=2: ЗВОНОК ИЗ ОФИСА, ОТКАЗАТЬСЯ
 		// если driverstate=3: ПРИНЯТЬ, ОТКЛОНИТЬ
 
-		if (order.get_departuretime() != null) {
+		if (order.get_departuretime() == null) {
 			if (order.get_invitationtime() == null)
 	            arrayList.add(this.getString(R.string.invite));
 	        else
@@ -393,7 +393,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 				arrayList.add("Отказаться");
 			} else if (order.get_driverstate() == 3) {
 				arrayList.add("Принять");
-				arrayList.add("Отклонить");
+				arrayList.add("Отказаться");
 			}
 		}
 
@@ -415,7 +415,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 				// если driverstate=2: ЗВОНОК ИЗ ОФИСА, ОТКАЗАТЬСЯ
 				// если driverstate=3: ПРИНЯТЬ, ОТКЛОНИТЬ
 				dialog.dismiss();
-				if (order.get_departuretime() != null) {
+				if (order.get_departuretime() == null) {
 					switch (item) {
 					case 0:
 						inviteDialog();// ПОТОРОПИТЬ

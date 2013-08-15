@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -46,4 +48,22 @@ public class BalanceActivity extends Activity {
             pozivnoi.append(", Баланс: " + TaxiApplication.getDriver().getBalance());
     }
 
+    
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Handle the back button
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+            // Ask the user if they want to quit
+        	if(!PhpData.isNetworkAvailable(this)){
+        		Log.d("My_tag", "on back");
+        		return true;
+        	}
+        	else
+        		return super.onKeyDown(keyCode, event);
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+
+    }
 }

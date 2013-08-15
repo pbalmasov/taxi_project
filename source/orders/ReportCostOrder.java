@@ -44,7 +44,7 @@ public class ReportCostOrder extends Order {
 
         String over = "";
         if (get_nominalcost() != null)
-            over = ", " + get_nominalcost() + " " + _context.getString(R.string.currency);
+            over = ", " + _actualcost + " " + _context.getString(R.string.currency);
         return pred + _addressdeparture + over;
     }
 

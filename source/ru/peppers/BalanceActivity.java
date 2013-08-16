@@ -49,19 +49,18 @@ public class BalanceActivity extends Activity {
             pozivnoi.append(", Баланс: " + TaxiApplication.getDriver().getBalance());
     }
 
-    
-    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Handle the back button
         if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
             // Ask the user if they want to quit
-        	if(!PhpData.isNetworkAvailable(this)){
-        		Log.d("My_tag", "on back");
-        		return true;
-        	}
-        	else
-        		return super.onKeyDown(keyCode, event);
+            if (!PhpData.isNetworkAvailable(this)) {
+                Log.d("My_tag", "on back");
+                if (getClass().toString().equalsIgnoreCase("class ru.peppers.PozivnoiActivity"))
+                    return super.onKeyDown(keyCode, event);
+                return true;
+            } else
+                return super.onKeyDown(keyCode, event);
         } else {
             return super.onKeyDown(keyCode, event);
         }

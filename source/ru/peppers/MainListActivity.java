@@ -82,6 +82,10 @@ public class MainListActivity extends BalanceActivity {
         // Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
         Integer status = 3;
         Integer classid = null;
+        Integer classid1 = null;
+        String district = null;
+        String subdistrict = null;
+        String balance = null;
         Node statusNode = doc.getElementsByTagName("status").item(1);
         if (!statusNode.getTextContent().equalsIgnoreCase(""))
             status = Integer.valueOf(statusNode.getTextContent());
@@ -90,10 +94,21 @@ public class MainListActivity extends BalanceActivity {
         if (!classNode.getTextContent().equalsIgnoreCase(""))
             classid = Integer.valueOf(classNode.getTextContent());
 
-        String district = doc.getElementsByTagName("districttitle").item(0).getTextContent();
-        String subdistrict = doc.getElementsByTagName("subdistricttitle").item(0).getTextContent();
-        String balance = doc.getElementsByTagName("balance").item(0).getTextContent();
-        Integer classid1 = Integer.valueOf(doc.getElementsByTagName("classid").item(0).getTextContent());
+        Node districttitleNode = doc.getElementsByTagName("districttitle").item(0);
+        if (!districttitleNode.getTextContent().equalsIgnoreCase(""))
+            district = districttitleNode.getTextContent();
+
+        Node subdistricttitleNode = doc.getElementsByTagName("subdistricttitle").item(0);
+        if (!subdistricttitleNode.getTextContent().equalsIgnoreCase(""))
+            subdistrict = subdistricttitleNode.getTextContent();
+
+        Node balanceNode = doc.getElementsByTagName("balance").item(0);
+        if (!balanceNode.getTextContent().equalsIgnoreCase(""))
+            balance = balanceNode.getTextContent();
+
+        Node classidNode = doc.getElementsByTagName("classid").item(0);
+        if (!classidNode.getTextContent().equalsIgnoreCase(""))
+            classid1 = Integer.valueOf(classidNode.getTextContent());
 
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
@@ -288,7 +303,8 @@ public class MainListActivity extends BalanceActivity {
         // Handle the back button
         if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
             // Ask the user if they want to quit
-
+            if(PhpData.errorHappen)
+                finishApp();
             return true;
         } else {
             return super.onKeyDown(keyCode, event);

@@ -47,6 +47,7 @@ final public class PhpData {
     static final String newURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";
     private static final String PREFS_NAME = "MyNamePrefs1";
     static HttpClient httpclient = getNewHttpClient();
+    public static boolean errorHappen;
 
     public static HttpClient getNewHttpClient() {
         try {
@@ -85,18 +86,19 @@ final public class PhpData {
         if (e != null)
             str = e.toString();
         if (context != null)
-            Toast.makeText(context, context.getString(R.string.error_message) + " " + str, Toast.LENGTH_LONG).show();
-//            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-//                    .setMessage(context.getString(R.string.error_message) + " " + str)
-//                    .setNeutralButton(context.getString(R.string.close), null).show();
+            Toast.makeText(context, context.getString(R.string.error_message) + " " + str, Toast.LENGTH_LONG)
+                    .show();
+        // new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+        // .setMessage(context.getString(R.string.error_message) + " " + str)
+        // .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public void errorFromServer(Context context, Node errorNode) {
         if (context != null)
             Toast.makeText(context, errorNode.getTextContent(), Toast.LENGTH_LONG).show();
-//            new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-//                    .setMessage(errorNode.getTextContent())
-//                    .setNeutralButton(context.getString(R.string.close), null).show();
+        // new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+        // .setMessage(errorNode.getTextContent())
+        // .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url) {
@@ -117,8 +119,8 @@ final public class PhpData {
                 // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 Log.d("My_tag", nameValuePairs.toString());
                 Log.d("My_tag", "sessionid = " + sessionidvar);
-                if(sessionidvar!=null)
-                httppost.setHeader("cookie", "cmansid=" + sessionidvar);
+                if (sessionidvar != null)
+                    httppost.setHeader("cookie", "cmansid=" + sessionidvar);
                 // Execute HTTP Post Request
 
                 HttpResponse response = httpclient.execute(httppost);
@@ -142,22 +144,25 @@ final public class PhpData {
 
             } catch (ConnectTimeoutException e) {
                 if (activity.getClass() != PhpService.class)
-                    Toast.makeText(activity, "Сервер не отвечает. Обратитесь к администратору.", Toast.LENGTH_LONG).show();
-//                    new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-//                            .setMessage("Сервер не отвечает. Обратитесь к администратору.")
-//                            .setNeutralButton(activity.getString(R.string.close), null).show();
+                    Toast.makeText(activity, "Сервер не отвечает. Обратитесь к администратору.",
+                            Toast.LENGTH_LONG).show();
+                // new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+                // .setMessage("Сервер не отвечает. Обратитесь к администратору.")
+                // .setNeutralButton(activity.getString(R.string.close), null).show();
             } catch (SocketTimeoutException e) {
                 return null;
             } catch (Exception e) {
-                if (activity.getClass() != PhpService.class)
+                if (activity.getClass() != PhpService.class) {
                     errorHandler(activity, e);
+                    errorHappen = true;
+                }
             }
         } else {
             if (activity.getClass() != PhpService.class)
                 Toast.makeText(activity, activity.getString(R.string.no_internet), Toast.LENGTH_LONG).show();
-//                new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
-//                        .setMessage(activity.getString(R.string.no_internet))
-//                        .setNeutralButton(activity.getString(R.string.close), null).show();
+            // new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
+            // .setMessage(activity.getString(R.string.no_internet))
+            // .setNeutralButton(activity.getString(R.string.close), null).show();
         }
         Log.d("My_tag", "no connection");
         return null;
@@ -181,8 +186,8 @@ final public class PhpData {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         boolean isNetwork = activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        if(!isNetwork)
-        	Toast.makeText(context, context.getString(R.string.no_internet), Toast.LENGTH_LONG).show();
+        if (!isNetwork)
+            Toast.makeText(context, context.getString(R.string.no_internet), Toast.LENGTH_LONG).show();
         return isNetwork;
     }
 

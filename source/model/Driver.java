@@ -48,9 +48,9 @@ public class Driver {
 
     public String getFullDisctrict() {
         String rayonString = "";
-        if (district != "") {
+        if (district != null) {
             rayonString = district;
-            if (subdistrict != "")
+            if (subdistrict != null)
                 rayonString += ", " + subdistrict;
         } else
             rayonString = _context.getString(R.string.no_region);

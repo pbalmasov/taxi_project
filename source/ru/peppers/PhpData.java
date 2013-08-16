@@ -180,7 +180,10 @@ final public class PhpData {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        boolean isNetwork = activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        if(!isNetwork)
+        	Toast.makeText(context, context.getString(R.string.no_internet), Toast.LENGTH_LONG).show();
+        return isNetwork;
     }
 
 }

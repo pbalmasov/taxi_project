@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BalanceActivity extends Activity {
 

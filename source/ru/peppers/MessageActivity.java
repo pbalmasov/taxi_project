@@ -1,5 +1,6 @@
 package ru.peppers;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,7 +20,7 @@ import java.util.List;
 
 import model.Message;
 
-public class MessageActivity extends BalanceActivity {
+public class MessageActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +30,14 @@ public class MessageActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+    }
+
+    @Override
+    public void onTaskComplete(Document doc) {
         if (doc != null) {
             // Node errorNode = doc.getElementsByTagName("error").item(0);
             //
@@ -45,7 +52,6 @@ public class MessageActivity extends BalanceActivity {
                 PhpData.errorHandler(this, e);
             }
         }
-
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
@@ -106,4 +112,5 @@ public class MessageActivity extends BalanceActivity {
         lv.setAdapter(adapter);
 
     }
+
 }

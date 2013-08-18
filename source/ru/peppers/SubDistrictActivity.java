@@ -1,6 +1,7 @@
 package ru.peppers;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -25,7 +26,7 @@ import java.util.List;
 
 import model.SubDistrict;
 
-public class SubDistrictActivity extends BalanceActivity {
+public class SubDistrictActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     public static final int REQUEST_CLOSE = 1;
     private String districtid;
     private int districtdrivers;
@@ -46,8 +47,13 @@ public class SubDistrictActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("object", "subdistrict"));
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
         nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
+    }
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+    @Override
+    public void onTaskComplete(Document doc) {
         if (doc != null) {
 
             Node responseNode = doc.getElementsByTagName("response").item(0);
@@ -185,4 +191,5 @@ public class SubDistrictActivity extends BalanceActivity {
             }
         }
     }
+
 }

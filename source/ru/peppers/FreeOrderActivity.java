@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class FreeOrderActivity extends BalanceActivity {
+public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document>{
     protected static final int REQUEST_EXIT = 0;
     private ArrayList<Order> orders = new ArrayList<Order>();
     private Timer myTimer = new Timer();
@@ -67,6 +68,8 @@ public class FreeOrderActivity extends BalanceActivity {
         });
 
         getOrders();
+
+
         // TODO:нету заказов
         /*
          * new AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
@@ -79,14 +82,8 @@ public class FreeOrderActivity extends BalanceActivity {
          */
     }
 
-    private void getOrders() {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-        nameValuePairs.add(new BasicNameValuePair("action", "list"));
-        nameValuePairs.add(new BasicNameValuePair("mode", "available"));
-        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-        nameValuePairs.add(new BasicNameValuePair("object", "order"));
-
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+    @Override
+    public void onTaskComplete(Document doc) {
         if (doc != null) {
             Node responseNode = doc.getElementsByTagName("response").item(0);
             Node errorNode = doc.getElementsByTagName("message").item(0);
@@ -101,6 +98,19 @@ public class FreeOrderActivity extends BalanceActivity {
                 }
             }
         }
+    }
+
+    private void getOrders() {
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "available"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
+
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
+
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {
@@ -278,4 +288,6 @@ public class FreeOrderActivity extends BalanceActivity {
             }
         }
     }
+
+
 }

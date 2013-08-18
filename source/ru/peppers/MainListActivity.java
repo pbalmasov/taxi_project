@@ -1,6 +1,7 @@
 package ru.peppers;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -24,10 +25,11 @@ import java.util.Map;
 
 import model.Driver;
 
-public class MainListActivity extends BalanceActivity {
+public class MainListActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     private ListView lv;
     public SimpleAdapter simpleAdpt;
     public List<Map<String, String>> itemsList;
+    private MyTask task;
     private static final String MY_TAG = "My_tag";
     private static final int REQUEST_EXIT = 0;
 
@@ -38,8 +40,27 @@ public class MainListActivity extends BalanceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainlist);
-
         // init();
+    }
+
+    @Override
+    public void onTaskComplete(Document doc) {
+        if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
+            else {
+                try {
+                    parseMainList(doc);
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        } else {
+            initMainList();
+        }
     }
 
     @Override
@@ -57,24 +78,11 @@ public class MainListActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("mode", "status"));
         nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
-        if (doc != null) {
-            Node responseNode = doc.getElementsByTagName("response").item(0);
-            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-                PhpData.errorFromServer(this, errorNode);
-            else {
-                try {
-                    parseMainList(doc);
-                } catch (Exception e) {
-                    PhpData.errorHandler(this, e);
-                }
-            }
-        } else {
-            initMainList();
-        }
     }
 
     private void parseMainList(Document doc) {
@@ -151,8 +159,8 @@ public class MainListActivity extends BalanceActivity {
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                	if(!PhpData.isNetworkAvailable(MainListActivity.this))
-                		return;
+                    if (!PhpData.isNetworkAvailable(MainListActivity.this))
+                        return;
                     Bundle extras = getIntent().getExtras();
                     // //int id = extras.getInt("id");
                     Intent intent;
@@ -168,10 +176,10 @@ public class MainListActivity extends BalanceActivity {
                         case 2:
                             if (driver.getStatus() != null) {
                                 if (driver.getStatus() == 1) {
-                                    Toast.makeText(MainListActivity.this, "Вы на заказе",
-                                            Toast.LENGTH_SHORT).show();
-//                                    intent = new Intent(MainListActivity.this, MyOrderActivity.class);
-//                                    startActivity(intent);
+                                    Toast.makeText(MainListActivity.this, "Вы на заказе", Toast.LENGTH_SHORT)
+                                            .show();
+                                    // intent = new Intent(MainListActivity.this, MyOrderActivity.class);
+                                    // startActivity(intent);
                                     return;
                                 }
                                 if (driver.getStatus() != 3) {
@@ -267,13 +275,14 @@ public class MainListActivity extends BalanceActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            	if(TaxiApplication.getDriver().getStatus()!=3)
-            		new AlertDialog.Builder(MainListActivity.this).setTitle("Смена")
-                        .setMessage("Закончить смену?").setPositiveButton("Да", onExitLineClickListener())
-                        .setNegativeButton("Нет", onFinishClickListener()).show();
-            	else{
+                if (TaxiApplication.getDriver().getStatus() != 3)
+                    new AlertDialog.Builder(MainListActivity.this).setTitle("Смена")
+                            .setMessage("Закончить смену?")
+                            .setPositiveButton("Да", onExitLineClickListener())
+                            .setNegativeButton("Нет", onFinishClickListener()).show();
+                else {
                     finishApp();
-            	}
+                }
             }
         };
     }
@@ -303,7 +312,7 @@ public class MainListActivity extends BalanceActivity {
         // Handle the back button
         if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
             // Ask the user if they want to quit
-            if(PhpData.errorHappen)
+            if (PhpData.errorHappen)
                 finishApp();
             return true;
         } else {

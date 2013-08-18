@@ -1,5 +1,7 @@
 package ru.peppers;
 
+import org.w3c.dom.Document;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -66,4 +68,5 @@ public class BalanceActivity extends Activity {
         }
 
     }
+
 }

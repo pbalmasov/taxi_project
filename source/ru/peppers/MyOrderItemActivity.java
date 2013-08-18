@@ -2,6 +2,7 @@ package ru.peppers;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -39,7 +40,7 @@ import java.util.TimerTask;
 import model.Order;
 import myorders.MyCostOrder;
 
-public class MyOrderItemActivity extends BalanceActivity {
+public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
 
     protected static final int REQUEST_EXIT = 0;
     private CountDownTimer timer;
@@ -48,6 +49,7 @@ public class MyOrderItemActivity extends BalanceActivity {
     private Dialog dialog;
     private Bundle bundle;
     private TextView tv;
+    private Date currentTimer;
 
     private Timer myTimer = new Timer();
     private Integer refreshperiod = null;
@@ -72,9 +74,12 @@ public class MyOrderItemActivity extends BalanceActivity {
             tv.append("\n");
         }
 
-        // if (order.getTimerDate() != null) {
-        // timerInit(order);
-        // }
+        if (order.get_invitationtime() != null) {
+            if (new Date().before(order.get_invitationtime())) {
+                currentTimer = order.get_invitationtime();
+                timerInit();
+            }
+        }
 
         Button button = (Button) findViewById(R.id.button1);
         button.setText(this.getString(R.string.choose_action));
@@ -90,15 +95,9 @@ public class MyOrderItemActivity extends BalanceActivity {
 
     }
 
-    private void getOrder() {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-        nameValuePairs.add(new BasicNameValuePair("action", "get"));
-        nameValuePairs.add(new BasicNameValuePair("mode", "available"));
-        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-        nameValuePairs.add(new BasicNameValuePair("object", "order"));
-        nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+    @Override
+    public void onTaskComplete(Document doc) {
         if (doc != null) {
             Node responseNode = doc.getElementsByTagName("response").item(0);
             Node errorNode = doc.getElementsByTagName("message").item(0);
@@ -113,6 +112,21 @@ public class MyOrderItemActivity extends BalanceActivity {
                 }
             }
         }
+    }
+
+
+    private void getOrder() {
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "get"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "available"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
+        nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));
+
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
+
     }
 
     private void initOrder(Document doc) throws DOMException, ParseException {
@@ -217,6 +231,11 @@ public class MyOrderItemActivity extends BalanceActivity {
             order.setRides(quantity);
         }
 
+        if (currentTimer != null)
+            if (!order.get_invitationtime().equals(currentTimer)) {
+                currentTimer = order.get_invitationtime();
+                timerInit();
+            }
         ArrayList<String> orderList = order.toArrayList();
         int arraySize = orderList.size();
         for (int i = 0; i < arraySize; i++) {
@@ -556,9 +575,10 @@ public class MyOrderItemActivity extends BalanceActivity {
         }
     }
 
-    private void timerInit(final Order order) {
-        long diffInMs = order.getTimerDate().getTime() - new Date().getTime();
-
+    private void timerInit() {
+        long diffInMs = currentTimer.getTime() - new Date().getTime();
+        if (timer != null)
+            timer.cancel();
         timer = new CountDownTimer(diffInMs, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -576,7 +596,7 @@ public class MyOrderItemActivity extends BalanceActivity {
 
             public void onFinish() {
                 counterView.setText(MyOrderItemActivity.this.getString(R.string.ended_timer));
-                alertDelay(order);
+                timeDialog();
 
                 MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
                 mp.start();
@@ -585,43 +605,43 @@ public class MyOrderItemActivity extends BalanceActivity {
         }.start();
     }
 
-    private void alertDelay(final Order order) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
-        alert.setTitle(this.getString(R.string.time));
-        final CharSequence cs[];
-
-        cs = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
-
-        alert.setItems(cs, new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Bundle extras = getIntent().getExtras();
-                // int id = extras.getInt("id");
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-                nameValuePairs.add(new BasicNameValuePair("action", "saveminutes"));
-                nameValuePairs.add(new BasicNameValuePair("order_id", String.valueOf(order.get_index())));
-                // nameValuePairs.add(new BasicNameValuePair("id",
-                // String.valueOf(id)));
-                nameValuePairs.add(new BasicNameValuePair("minutes", String.valueOf(cs[which])));
-                Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
-                if (doc != null) {
-                    Node errorNode = doc.getElementsByTagName("error").item(0);
-                    if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                        PhpData.errorHandler(MyOrderItemActivity.this, null);
-                    else {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(new Date());
-                        cal.add(Calendar.MINUTE, Integer.valueOf((String) cs[which]));
-                        order.setTimerDate(cal.getTime());
-                        timerInit(order);
-                    }
-                }
-            }
-
-        });
-        alert.show();
-    }
+//    private void alertDelay() {
+//        AlertDialog.Builder alert = new AlertDialog.Builder(MyOrderItemActivity.this);
+//        alert.setTitle(this.getString(R.string.time));
+//        final CharSequence cs[];
+//
+//        cs = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
+//
+//        alert.setItems(cs, new OnClickListener() {
+//
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                // Bundle extras = getIntent().getExtras();
+//                // int id = extras.getInt("id");
+//                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+//                nameValuePairs.add(new BasicNameValuePair("action", "saveminutes"));
+//                nameValuePairs.add(new BasicNameValuePair("order_id", String.valueOf(order.get_index())));
+//                // nameValuePairs.add(new BasicNameValuePair("id",
+//                // String.valueOf(id)));
+//                nameValuePairs.add(new BasicNameValuePair("minutes", String.valueOf(cs[which])));
+//                Document doc = PhpData.postData(MyOrderItemActivity.this, nameValuePairs);
+//                if (doc != null) {
+//                    Node errorNode = doc.getElementsByTagName("error").item(0);
+//                    if (Integer.parseInt(errorNode.getTextContent()) == 1)
+//                        PhpData.errorHandler(MyOrderItemActivity.this, null);
+//                    else {
+//                        // Calendar cal = Calendar.getInstance();
+//                        // cal.setTime(new Date());
+//                        // cal.add(Calendar.MINUTE, Integer.valueOf((String) cs[which]));
+//                        // order.setTimerDate(cal.getTime());
+//                        // timerInit();
+//                    }
+//                }
+//            }
+//
+//        });
+//        alert.show();
+//    }
 
     private void priceDialog() {
 
@@ -774,4 +794,5 @@ public class MyOrderItemActivity extends BalanceActivity {
 
         ;
     }
+
 }

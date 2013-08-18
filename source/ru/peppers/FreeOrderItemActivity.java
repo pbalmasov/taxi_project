@@ -34,40 +34,8 @@ public class FreeOrderItemActivity extends BalanceActivity {
         Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
         int index = bundle.getInt("index");
-        if (bundle.getBoolean("service")) {
-            int type = bundle.getInt("type");
-            int orderindex = bundle.getInt("orderindex");
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            Date date = null;
-            try {
-                date = format.parse(bundle.getString("date"));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String carClass = bundle.getString("class");
-            String adress = bundle.getString("adress");
-            String where = bundle.getString("where");
-            int costOrder = bundle.getInt("costOrder");
 
-            if (type == 0) {
-                int cost = bundle.getInt("cost");
-                String costType = bundle.getString("costType");
-                String text = bundle.getString("text");
-                // order = new CostOrder(this,costOrder, orderindex, date,
-                // adress, carClass, text, where, cost, costType);
-            }
-            if (type == 1) {
-                String text = bundle.getString("text");
-                // order = new NoCostOrder(this,costOrder, orderindex, date,
-                // adress, carClass, text, where);
-            }
-            if (type == 2) {
-                String text = bundle.getString("text");
-                // order = new PreliminaryOrder(this,costOrder, orderindex,
-                // date, adress, carClass, text, where);
-            }
-        } else
-            order = (CostOrder) TaxiApplication.getDriver().getFreeOrders().get(index);
+        order = (CostOrder) TaxiApplication.getDriver().getFreeOrders().get(index);
 
         TextView tv = (TextView) findViewById(R.id.textView1);
 
@@ -90,7 +58,7 @@ public class FreeOrderItemActivity extends BalanceActivity {
                     alert.setTitle(FreeOrderItemActivity.this.getString(R.string.time));
                     final CharSequence cs[];
 
-                    cs = new String[]{"3", "5", "7", "10", "15", "20", "25", "30", "35"};
+                    cs = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
 
                     alert.setItems(cs, new OnClickListener() {
 
@@ -129,7 +97,7 @@ public class FreeOrderItemActivity extends BalanceActivity {
                     setResult(RESULT_OK);
                     startActivity(intent);
                     finish();
-                    //TODO:заканчивать парент активити
+                    // TODO:заканчивать парент активити
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
                 }

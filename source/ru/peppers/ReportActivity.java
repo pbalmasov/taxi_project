@@ -43,89 +43,8 @@ public class ReportActivity extends BalanceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         initList();
-        // Bundle bundle = getIntent().getExtras();
-        // // int id = bundle.getInt("id");
-        //
-        // List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        // nameValuePairs.add(new BasicNameValuePair("action", "reportdata"));
-        // // nameValuePairs.add(new BasicNameValuePair("id",
-        // String.valueOf(id)));
-        //
-        // Document doc = PhpData.postData(this, nameValuePairs);
-        // if (doc != null) {
-        // Node errorNode = doc.getElementsByTagName("error").item(0);
-        //
-        // if (Integer.parseInt(errorNode.getTextContent()) == 1)
-        // new AlertDialog.Builder(this).setTitle("Ошибка")
-        // .setMessage("Ошибка на сервере. Перезапустите приложение.").setNeutralButton("Закрыть",
-        // null)
-        // .show();
-        // else {
-        // try {
-        // initMainList(doc);
-        // } catch (DOMException e) {
-        // e.printStackTrace();
-        // new AlertDialog.Builder(this).setTitle("Ошибка")
-        // .setMessage("Ошибка на сервере. Перезапустите приложение.")
-        // .setNeutralButton("Закрыть", null).show();
-        // } catch (ParseException e) {
-        // e.printStackTrace();
-        // new AlertDialog.Builder(this).setTitle("Ошибка")
-        // .setMessage("Ошибка на сервере. Перезапустите приложение.")
-        // .setNeutralButton("Закрыть", null).show();
-        // }
-        // }
-        // } else {
-        // initList();
-        // }
-    }
 
-//    private void initMainList(Document doc) throws DOMException, ParseException {
-//        NodeList nodeList = doc.getElementsByTagName("order");
-//        ArrayList<Order> reports = new ArrayList<Order>();
-//        for (int i = 0; i < nodeList.getLength(); i++) {
-//            NamedNodeMap attributes = nodeList.item(i).getAttributes();
-//
-//            int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
-//            int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
-//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-//            Date date = format.parse(attributes.getNamedItem("date").getTextContent());
-//            String carClass = attributes.getNamedItem("class").getTextContent();
-//            String adress = attributes.getNamedItem("adress").getTextContent();
-//            String where = attributes.getNamedItem("where").getTextContent();
-//            int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
-//
-//            if (type == 0) {
-//                int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
-//                String costType = attributes.getNamedItem("costType").getTextContent();
-//                String text = nodeList.item(i).getTextContent();
-//                // reports.add(new CostOrder(this,costOrder,index,date, adress,
-//                // carClass, text, where, cost, costType));
-//            }
-//            if (type == 1) {
-//                String text = nodeList.item(i).getTextContent();
-//                // reports.add(new NoCostOrder(this,costOrder,index,date,
-//                // adress, carClass, text, where));
-//            }
-//            if (type == 2) {
-//                String text = nodeList.item(i).getTextContent();
-//                // reports.add(new PreliminaryOrder(this,costOrder,index,date,
-//                // adress, carClass, text, where));
-//            }
-//            if (attributes.getNamedItem("abonent") != null) {
-//                String abonent = attributes.getNamedItem("abonent").getTextContent();
-//                int rides = Integer.parseInt(attributes.getNamedItem("rides").getTextContent());
-//                reports.get(i).setAbonent(abonent);
-//                reports.get(i).setRides(rides);
-//            }
-//
-//        }
-//        String balance = doc.getElementsByTagName("balance").item(0).getTextContent();
-//        Driver driver = TaxiApplication.getDriver();
-//        driver.setBalance(balance);
-//        driver.setReports(reports);
-//        initList();
-//    }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -174,14 +93,14 @@ public class ReportActivity extends BalanceActivity {
 //                    <item>Эконом</item> 0
 //                    <item>Стандарт</item> 1
 //                    <item>Базовый</item> 2
-                    
+
 //                  если classid=3 базовый=базовый   стандарт=стандарт,базовый   эконом=эконом,стандарт,базовый
 //                  если classid=2, базовый=нельзя   стандарт=стандарт   эконом=стандарт, эконом
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(classArray));
                     if (driver.getCarId() == 2)
                         arrayList.remove(2);
 
-                    
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
                     builder.setTitle("Выбор статуса");
                     builder.setSingleChoiceItems(arrayList.toArray(new String[arrayList.size()]),
@@ -214,15 +133,6 @@ public class ReportActivity extends BalanceActivity {
             public void onClick(DialogInterface dialog, int item) {
                 Driver driver = TaxiApplication.getDriver();
 
-                // if (item == 2 && driver.getOrdersCount() != 0) {
-                // new
-                // AlertDialog.Builder(ReportActivity.this).setTitle("Заказы")
-                // .setMessage("К сожалению у вас есть не закрытые заказы.").setNeutralButton("Закрыть",
-                // null)
-                // .show();
-                // dialog.dismiss();
-                // return;
-                // }
 
                 int[] statusArray = { 0, 2, 3 };
                 if (driver.getStatus() != null)
@@ -232,10 +142,6 @@ public class ReportActivity extends BalanceActivity {
                         nameValuePairs.add(new BasicNameValuePair("action", sendArray[item]));
                         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
                         nameValuePairs.add(new BasicNameValuePair("object", "driver"));
-                        // nameValuePairs.add(new BasicNameValuePair("orderid",
-                        // String.valueOf(order.get_index())));
-                        // nameValuePairs.add(new BasicNameValuePair("minutes",
-                        // (String) cs[which]));
 
                         Document doc = PhpData.postData(ReportActivity.this, nameValuePairs, PhpData.newURL);
                         if (doc != null) {

@@ -27,40 +27,40 @@ public class MessageFromServiceActivity extends BalanceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        Intent intent = getIntent();
-
-        String title = intent.getStringExtra(TITLE);
-        String message = intent.getStringExtra(MESSAGE);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(MessageFromServiceActivity.this);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setNeutralButton(this.getString(R.string.Ok), new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (TaxiApplication.getDriver() != null) {
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                    nameValuePairs.add(new BasicNameValuePair("action", "districtdata"));
-                    // nameValuePairs.add(new BasicNameValuePair("id",
-                    // String.valueOf(TaxiApplication.getDriverId())));
-
-                    Document doc = PhpData.postData(MessageFromServiceActivity.this, nameValuePairs);
-                    if (doc != null) {
-                        Node errorNode = doc.getElementsByTagName("error").item(0);
-
-                        if (Integer.parseInt(errorNode.getTextContent()) == 1)
-                            PhpData.errorHandler(MessageFromServiceActivity.this,null);
-                        else {
-                            finish();
-                        }
-                    }
-                }
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+//
+//        Intent intent = getIntent();
+//
+//        String title = intent.getStringExtra(TITLE);
+//        String message = intent.getStringExtra(MESSAGE);
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MessageFromServiceActivity.this);
+//        builder.setTitle(title);
+//        builder.setMessage(message);
+//        builder.setNeutralButton(this.getString(R.string.Ok), new OnClickListener() {
+//
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if (TaxiApplication.getDriver() != null) {
+//                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//                    nameValuePairs.add(new BasicNameValuePair("action", "districtdata"));
+//                    // nameValuePairs.add(new BasicNameValuePair("id",
+//                    // String.valueOf(TaxiApplication.getDriverId())));
+//
+//                    Document doc = PhpData.postData(MessageFromServiceActivity.this, nameValuePairs);
+//                    if (doc != null) {
+//                        Node errorNode = doc.getElementsByTagName("error").item(0);
+//
+//                        if (Integer.parseInt(errorNode.getTextContent()) == 1)
+//                            PhpData.errorHandler(MessageFromServiceActivity.this,null);
+//                        else {
+//                            finish();
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//        AlertDialog alert = builder.create();
+//        alert.show();
 
     }
 

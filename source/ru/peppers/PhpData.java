@@ -174,12 +174,12 @@ final public class PhpData {
                 .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
-    static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
-
-        return postData(activity, nameValuePairs,
-                "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
-
-    }
+//    static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
+//
+//        return postData(activity, nameValuePairs,
+//                "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
+//
+//    }
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context

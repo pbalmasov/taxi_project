@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class DistrictActivity extends BalanceActivity {
+public class DistrictActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document>{
 	protected static final int REQUEST_EXIT = 0;
 	protected static final int REQUEST_CLOSE = 1;
 	protected int selectedDistrict;
@@ -32,6 +33,9 @@ public class DistrictActivity extends BalanceActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null)
+        close = bundle.getBoolean("close");
 	}
 
 	@Override
@@ -40,32 +44,36 @@ public class DistrictActivity extends BalanceActivity {
 		init();
 	}
 
+    @Override
+    public void onTaskComplete(Document doc) {
+        if (doc != null) {
+
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
+            else {
+                try {
+                    initMainList(doc);
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        }
+    }
+
 	private void init() {
-		Bundle bundle = getIntent().getExtras();
-		if(bundle != null)
-		close = bundle.getBoolean("close");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
 		nameValuePairs.add(new BasicNameValuePair("object", "district"));
 		nameValuePairs.add(new BasicNameValuePair("action", "list"));
 
-		Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
-		if (doc != null) {
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
 
-			Node responseNode = doc.getElementsByTagName("response").item(0);
-			Node errorNode = doc.getElementsByTagName("message").item(0);
-
-			if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-				PhpData.errorFromServer(this, errorNode);
-			else {
-				try {
-					initMainList(doc);
-				} catch (Exception e) {
-					PhpData.errorHandler(this, e);
-				}
-			}
-		}
 	}
 
 	private void initMainList(Document doc) throws DOMException, ParseException {

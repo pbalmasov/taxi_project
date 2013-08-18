@@ -1,5 +1,6 @@
 package ru.peppers;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +27,7 @@ import model.Driver;
 import model.Order;
 import orders.ReportCostOrder;
 
-public class ReportListActivity extends BalanceActivity {
+public class ReportListActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
 
     private int currentPage = 1;
     private ArrayAdapter<Order> arrayAdapter;
@@ -57,8 +58,8 @@ public class ReportListActivity extends BalanceActivity {
                 // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
-                if(PhpData.isNetworkAvailable(ReportListActivity.this))
-                startActivity(intent);
+                if (PhpData.isNetworkAvailable(ReportListActivity.this))
+                    startActivity(intent);
             }
         });
 
@@ -97,8 +98,14 @@ public class ReportListActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
         nameValuePairs.add(new BasicNameValuePair("page", String.valueOf(currentPage)));
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
 
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+    }
+
+    @Override
+    public void onTaskComplete(Document doc) {
         if (doc != null) {
             Node responseNode = doc.getElementsByTagName("response").item(0);
             Node errorNode = doc.getElementsByTagName("message").item(0);
@@ -215,7 +222,7 @@ public class ReportListActivity extends BalanceActivity {
             // invitationtime = format.parse(invitationNode.getTextContent());
 
             orders.add(new ReportCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, orderdate, result, drivercost, actualcost,accepttime));
+                    addressarrival, paymenttype, orderdate, result, drivercost, actualcost, accepttime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();

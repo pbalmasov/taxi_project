@@ -1,5 +1,6 @@
 package ru.peppers;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import org.w3c.dom.NodeList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -29,7 +31,7 @@ import model.Driver;
 import model.Order;
 import myorders.MyCostOrder;
 
-public class MyOrderActivity extends BalanceActivity {
+public class MyOrderActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document>{
     private static final int REQUEST_EXIT = 0;
     private ArrayList<Order> orders = new ArrayList<Order>();
     private Timer myTimer = new Timer();
@@ -61,17 +63,29 @@ public class MyOrderActivity extends BalanceActivity {
             }
         });
 
+
+//        Driver driver = TaxiApplication.getDriver();
+//        // if driver.order == null // else driver.setOrderWithIndex // or get date from server
+//       ArrayList<Order> orders = new ArrayList<Order>();
+//       Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
+//       calendar.add(Calendar.MINUTE, 5);
+//       System.out.println(calendar.getTime());
+//       orders.add(new MyCostOrder(this, "asdas", "", "", 1, "", "", 1, calendar.getTime(), calendar.getTime(), calendar.getTime(), 1));
+//        driver.setOrders(orders);
+//
+//        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
+//        Bundle bundle = new Bundle();
+//        // bundle.putInt("id", id);
+//        bundle.putInt("index", 0);
+//        intent.putExtras(bundle);
+//        if(PhpData.isNetworkAvailable(MyOrderActivity.this))
+//        startActivityForResult(intent, REQUEST_EXIT);
+
         getOrders();
     }
 
-    private void getOrders() {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-        nameValuePairs.add(new BasicNameValuePair("action", "list"));
-        nameValuePairs.add(new BasicNameValuePair("mode", "my"));
-        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-        nameValuePairs.add(new BasicNameValuePair("object", "order"));
-
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+    @Override
+    public void onTaskComplete(Document doc) {
         if (doc != null) {
             Node responseNode = doc.getElementsByTagName("response").item(0);
             Node errorNode = doc.getElementsByTagName("message").item(0);
@@ -86,6 +100,19 @@ public class MyOrderActivity extends BalanceActivity {
                 }
             }
         }
+    }
+
+    private void getOrders() {
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "my"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading...");
+        new MyTask(this, progress, this).execute(nameValuePairs);
+
     }
 
     @Override
@@ -255,4 +282,5 @@ public class MyOrderActivity extends BalanceActivity {
             }
         }
     }
+
 }

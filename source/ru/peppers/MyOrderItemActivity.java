@@ -74,9 +74,9 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             tv.append("\n");
         }
 
-        if (order.get_invitationtime() != null) {
-            if (new Date().before(order.get_invitationtime())) {
-                currentTimer = order.get_invitationtime();
+        if (order.get_departuretime() != null) {
+            if (new Date().before(order.get_departuretime())) {
+                currentTimer = order.get_departuretime();
                 timerInit();
             }
         }
@@ -232,8 +232,8 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         }
 
         if (currentTimer != null)
-            if (!order.get_invitationtime().equals(currentTimer)) {
-                currentTimer = order.get_invitationtime();
+            if (!order.get_departuretime().equals(currentTimer)) {
+                currentTimer = order.get_departuretime();
                 timerInit();
             }
         ArrayList<String> orderList = order.toArrayList();

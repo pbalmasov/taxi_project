@@ -29,7 +29,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     private ListView lv;
     public SimpleAdapter simpleAdpt;
     public List<Map<String, String>> itemsList;
-    private MyTask task;
     private static final String MY_TAG = "My_tag";
     private static final int REQUEST_EXIT = 0;
 

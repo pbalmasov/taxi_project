@@ -203,25 +203,9 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                                 }
                             break;
                         case 4:
-                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                            nameValuePairs.add(new BasicNameValuePair("action", "callback"));
-                            nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-                            nameValuePairs.add(new BasicNameValuePair("object", "driver"));
-
-                            Document doc = PhpData.postData(MainListActivity.this, nameValuePairs,
-                                    PhpData.newURL);
-                            if (doc != null) {
-                                Node responseNode = doc.getElementsByTagName("response").item(0);
-                                Node errorNode = doc.getElementsByTagName("message").item(0);
-
-                                if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-                                    PhpData.errorFromServer(MainListActivity.this, errorNode);
-                                else {
-                                    new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
-                                            .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка")
-                                            .setNeutralButton("Ок", null).show();
-                                }
-                            }
+                            new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
+                            .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка")
+                            .setNeutralButton("Ок", null).show();
                             break;
                         case 5:
                             intent = new Intent(MainListActivity.this, SettingsActivity.class);
@@ -247,6 +231,28 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
             });
         }
     }
+
+
+    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+    nameValuePairs.add(new BasicNameValuePair("action", "callback"));
+    nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+    nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+
+    Document doc = PhpData.postData(MainListActivity.this, nameValuePairs,
+            PhpData.newURL);
+    if (doc != null) {
+        Node responseNode = doc.getElementsByTagName("response").item(0);
+        Node errorNode = doc.getElementsByTagName("message").item(0);
+
+        if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+            PhpData.errorFromServer(MainListActivity.this, errorNode);
+        else {
+            new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
+                    .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка")
+                    .setNeutralButton("Ок", null).show();
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

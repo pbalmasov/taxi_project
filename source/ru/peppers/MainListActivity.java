@@ -29,7 +29,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     private ListView lv;
     public SimpleAdapter simpleAdpt;
     public List<Map<String, String>> itemsList;
-    private MyTask task;
     private static final String MY_TAG = "My_tag";
     private static final int REQUEST_EXIT = 0;
 
@@ -204,8 +203,8 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                             break;
                         case 4:
                             new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
-                            .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка")
-                            .setNeutralButton("Ок", null).show();
+                            .setMessage("Вы действительно хотите заказать обратный звонок?").setNegativeButton("Нет", null)
+                            .setPositiveButton("Да", onCallbackClickListener()).show();
                             break;
                         case 5:
                             intent = new Intent(MainListActivity.this, SettingsActivity.class);
@@ -233,24 +232,31 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     }
 
 
-    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-    nameValuePairs.add(new BasicNameValuePair("action", "callback"));
-    nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-    nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+    private OnClickListener onCallbackClickListener() {
+        return new DialogInterface.OnClickListener() {
 
-    Document doc = PhpData.postData(MainListActivity.this, nameValuePairs,
-            PhpData.newURL);
-    if (doc != null) {
-        Node responseNode = doc.getElementsByTagName("response").item(0);
-        Node errorNode = doc.getElementsByTagName("message").item(0);
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+                nameValuePairs.add(new BasicNameValuePair("action", "callback"));
+                nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                nameValuePairs.add(new BasicNameValuePair("object", "driver"));
 
-        if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-            PhpData.errorFromServer(MainListActivity.this, errorNode);
-        else {
-            new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
-                    .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка")
-                    .setNeutralButton("Ок", null).show();
-        }
+                Document doc = PhpData.postData(MainListActivity.this, nameValuePairs, PhpData.newURL);
+                if (doc != null) {
+                    Node responseNode = doc.getElementsByTagName("response").item(0);
+                    Node errorNode = doc.getElementsByTagName("message").item(0);
+
+                    if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                        PhpData.errorFromServer(MainListActivity.this, errorNode);
+                    else {
+                        new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
+                                .setMessage("Ваш запрос принят. Пожалуйста ожидайте звонка")
+                                .setNeutralButton("Ок", null).show();
+                    }
+                }
+            }
+        };
     }
 
 

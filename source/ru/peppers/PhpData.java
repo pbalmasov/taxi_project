@@ -100,16 +100,21 @@ final public class PhpData {
         // .setMessage(errorNode.getTextContent())
         // .setNeutralButton(context.getString(R.string.close), null).show();
     }
+    static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url,boolean asyncTask){
+        SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
+        String sessionid = settings.getString("sessionid", null);
+        return postData(activity, nameValuePairs, url, sessionid,asyncTask);
 
+    }
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url) {
         SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
         String sessionid = settings.getString("sessionid", null);
-        return postData(activity, nameValuePairs, url, sessionid);
+        return postData(activity, nameValuePairs, url, sessionid,false);
     }
 
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url,
-            String sessionidvar) {
-        if (isNetworkAvailable(activity)) {
+            String sessionidvar,boolean asyncTask) {
+        if (isNetworkAvailable(activity,asyncTask)) {
             // Create a new HttpClient and Post Header
             HttpGet httppost = new HttpGet(url + "?" + URLEncodedUtils.format(nameValuePairs, "utf-8"));
             // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
@@ -143,7 +148,7 @@ final public class PhpData {
                 return doc;
 
             } catch (ConnectTimeoutException e) {
-                if (activity.getClass() != PhpService.class)
+                if (activity.getClass() != PhpService.class && !asyncTask)
                     Toast.makeText(activity, "Сервер не отвечает. Обратитесь к администратору.",
                             Toast.LENGTH_LONG).show();
                 // new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
@@ -152,13 +157,13 @@ final public class PhpData {
             } catch (SocketTimeoutException e) {
                 return null;
             } catch (Exception e) {
-                if (activity.getClass() != PhpService.class) {
+                if (activity.getClass() != PhpService.class && !asyncTask) {
                     errorHandler(activity, e);
                     errorHappen = true;
                 }
             }
         } else {
-            if (activity.getClass() != PhpService.class)
+            if (activity.getClass() != PhpService.class && !asyncTask)
                 Toast.makeText(activity, activity.getString(R.string.no_internet), Toast.LENGTH_LONG).show();
             // new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.error_title))
             // .setMessage(activity.getString(R.string.no_internet))
@@ -180,13 +185,15 @@ final public class PhpData {
 //                "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
 //
 //    }
-
-    public static boolean isNetworkAvailable(Context context) {
+    public static boolean isNetworkAvailable(Context context){
+        return isNetworkAvailable(context, false);
+    }
+    public static boolean isNetworkAvailable(Context context,boolean asyncTask) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         boolean isNetwork = activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        if (!isNetwork)
+        if (!isNetwork && !asyncTask)
             Toast.makeText(context, context.getString(R.string.no_internet), Toast.LENGTH_LONG).show();
         return isNetwork;
     }

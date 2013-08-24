@@ -108,8 +108,12 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-
-                    Intent intent = new Intent(this, MyOrderActivity.class);
+                    ArrayList<Order> arrayList = new ArrayList<Order>();
+                    arrayList.add(order);
+                    TaxiApplication.getDriver().setOrders(arrayList);
+                    Intent intent = new Intent(this, MyOrderItemActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("index", 0);
                     startActivity(intent);
                     finish();
                     // TODO:заканчивать парент активити

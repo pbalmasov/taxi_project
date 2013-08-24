@@ -70,8 +70,8 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
 //       Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
 //       calendar.add(Calendar.MINUTE, 5);
 //       System.out.println(calendar.getTime());
-//       orders.add(new MyCostOrder(this, "asdas", "", "", 1, "", "", 1, calendar.getTime(), calendar.getTime(), calendar.getTime(), 1));
-//        driver.setOrders(orders);
+//       orders.add(new MyCostOrder(this, "asdas", "", "", 1, "", "", 1, null, calendar.getTime(), calendar.getTime(), 1));
+//        TaxiApplication.getDriver().setOrders(orders);
 //
 //        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
 //        Bundle bundle = new Bundle();

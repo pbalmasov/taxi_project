@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,27 +27,29 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Order;
 import myorders.MyCostOrder;
 
 public class CandidateOrderActivity extends BalanceActivity {
 
-    private ArrayAdapter<Order> arrayAdapter;
     private TextView tv;
     private CostOrder order;
+    private Timer myTimer = new Timer();
+    private Integer refreshperiod = null;
+    private boolean start = false;
+    private String orderIndex;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.candidateorder);
 
-        MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
-        mp.start();
-
         Bundle bundle = getIntent().getExtras();
         final String index = bundle.getString("id");
-
+        orderIndex = index;
         tv = (TextView) findViewById(R.id.textView1);
 
         Button button = (Button) findViewById(R.id.button1);
@@ -108,6 +112,7 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
+                    myTimer.cancel();
                     ArrayList<Order> arrayList = new ArrayList<Order>();
                     arrayList.add(order);
                     TaxiApplication.getDriver().setOrders(arrayList);
@@ -140,6 +145,7 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
+                    myTimer.cancel();
                     finish();
                     // initOrder(doc);
                 } catch (Exception e) {
@@ -271,12 +277,62 @@ public class CandidateOrderActivity extends BalanceActivity {
             order.setAbonent(nickname);
             order.setRides(quantity);
         }
-
+        MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
+        mp.start();
+        tv.setText("");
         ArrayList<String> orderList = order.toArrayList();
         int arraySize = orderList.size();
         for (int i = 0; i < arraySize; i++) {
             tv.append(orderList.get(i));
             tv.append("\n");
         }
+
+        Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
+        Integer newrefreshperiod = null;
+        if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
+            newrefreshperiod = Integer.valueOf(refreshperiodNode.getTextContent());
+
+        boolean update = false;
+
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
+
+        if (newrefreshperiod != null) {
+            if (refreshperiod != newrefreshperiod) {
+                refreshperiod = newrefreshperiod;
+                update = true;
+            }
+        }
+
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
+
+        if (update && refreshperiod != null) {
+            if (start) {
+                myTimer.cancel();
+                start = true;
+                Log.d("My_tag", "cancel timer");
+            }
+            final Handler uiHandler = new Handler();
+
+            TimerTask timerTask = new TimerTask() { // Определяем задачу
+                @Override
+                public void run() {
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getOrder(orderIndex);
+                        }
+                    });
+                }
+            };
+
+            myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        myTimer.cancel();
     }
 }

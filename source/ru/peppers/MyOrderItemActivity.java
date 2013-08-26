@@ -235,8 +235,10 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 timerInit();
             }
         if(order.get_invitationtime()!=null){
-            if (timer != null)
+            if (timer != null){
+                counterView.setText("");
                 timer.cancel();
+            }
         }
         ArrayList<String> orderList = order.toArrayList();
         int arraySize = orderList.size();
@@ -614,9 +616,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
 
             public void onFinish() {
                 counterView.setText("Время до приглашения: "+MyOrderItemActivity.this.getString(R.string.ended_timer));
-                timeDialog();
-
-
+                //timeDialog();
             }
         }.start();
     }

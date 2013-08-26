@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -99,7 +100,7 @@ public class CandidateOrderActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("action", "accept"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
-        nameValuePairs.add(new BasicNameValuePair("orderid", index));
+        nameValuePairs.add(new BasicNameValuePair("orderid", ""));
         if (c != null)
             nameValuePairs.add(new BasicNameValuePair("minutes", c));
 
@@ -112,16 +113,17 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-                    myTimer.cancel();
+                    if(myTimer!=null)
+                        myTimer.cancel();
                     ArrayList<Order> arrayList = new ArrayList<Order>();
                     arrayList.add(order);
                     TaxiApplication.getDriver().setOrders(arrayList);
                     Intent intent = new Intent(this, MyOrderItemActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("index", 0);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
-                    // TODO:заканчивать парент активити
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
                 }
@@ -145,7 +147,8 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-                    myTimer.cancel();
+                    if(myTimer!=null)
+                        myTimer.cancel();
                     finish();
                     // initOrder(doc);
                 } catch (Exception e) {
@@ -333,6 +336,7 @@ public class CandidateOrderActivity extends BalanceActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        myTimer.cancel();
+        if(myTimer!=null)
+            myTimer.cancel();
     }
 }

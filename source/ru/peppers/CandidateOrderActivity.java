@@ -37,7 +37,7 @@ import myorders.MyCostOrder;
 public class CandidateOrderActivity extends BalanceActivity {
 
     private TextView tv;
-    private CostOrder order;
+    private MyCostOrder order;
     private Timer myTimer = new Timer();
     private Integer refreshperiod = null;
     private boolean start = false;
@@ -100,7 +100,7 @@ public class CandidateOrderActivity extends BalanceActivity {
         nameValuePairs.add(new BasicNameValuePair("action", "accept"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
-        nameValuePairs.add(new BasicNameValuePair("orderid", ""));
+        nameValuePairs.add(new BasicNameValuePair("orderid", index));
         if (c != null)
             nameValuePairs.add(new BasicNameValuePair("minutes", c));
 
@@ -269,8 +269,8 @@ public class CandidateOrderActivity extends BalanceActivity {
         if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
             orderId = orderIdNode.getTextContent();
 
-        order = new CostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype, departuretime);
+        order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
+                addressarrival, paymenttype,null , departuretime, null, null);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();

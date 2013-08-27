@@ -229,11 +229,20 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             order.setRides(quantity);
         }
 
-        if (currentTimer != null)
+        if (currentTimer != null){
             if (!order.get_departuretime().equals(currentTimer) && order.get_invitationtime() == null) {
                 currentTimer = order.get_departuretime();
                 timerInit();
             }
+        }else{
+        	if (order.get_departuretime() != null) {
+                if (new Date().before(order.get_departuretime()) && order.get_invitationtime() == null) {
+                    currentTimer = order.get_departuretime();
+                    timerInit();
+                }
+            }
+        }
+        
         if(order.get_invitationtime()!=null){
             if (timer != null){
                 counterView.setText("");

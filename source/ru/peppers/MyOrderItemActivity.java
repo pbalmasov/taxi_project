@@ -58,6 +58,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("My_tag", "create");
         setContentView(R.layout.myorder);
         Bundle bundle = getIntent().getExtras();
         int index = bundle.getInt("index");
@@ -74,12 +75,13 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             tv.append("\n");
         }
 
-        if (order.get_departuretime() != null) {
-            if (new Date().before(order.get_departuretime()) && order.get_invitationtime() == null) {
-                currentTimer = order.get_departuretime();
-                timerInit();
-            }
-        }
+//        if (order.get_departuretime() != null) {
+//            if (order.get_servertime().before(order.get_departuretime())
+//                    && order.get_invitationtime() == null) {
+//                currentTimer = order.get_departuretime();
+//                timerInit();
+//            }
+//        }
 
         Button button = (Button) findViewById(R.id.button1);
         button.setText(this.getString(R.string.choose_action));
@@ -158,6 +160,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // Node accepttimeNode =
         // item.getElementsByTagName("accepttime").item(0);
         Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
+        Node servertimeNode = doc.getElementsByTagName("time").item(0);
 
         Integer driverstate = null;
         Date accepttime = null;
@@ -170,6 +173,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         String comment = null;
         String nickname = null;
         Date invitationtime = null;
+        Date servertime = null;
         String addressarrival = null;
         String orderId = null;
 
@@ -188,6 +192,9 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
 
         if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
             nominalcost = nominalcostNode.getTextContent();
+
+        if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
+            servertime = format.parse(servertimeNode.getTextContent());
 
         // if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
         // registrationtime =
@@ -218,7 +225,8 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // accepttime = format.parse(accepttimeNode.getTextContent());
 
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate);
+                addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
+                servertime);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();
@@ -229,22 +237,23 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             order.setRides(quantity);
         }
 
-        if (currentTimer != null){
+        if (currentTimer != null) {
             if (!order.get_departuretime().equals(currentTimer) && order.get_invitationtime() == null) {
                 currentTimer = order.get_departuretime();
                 timerInit();
             }
-        }else{
-        	if (order.get_departuretime() != null) {
-                if (new Date().before(order.get_departuretime()) && order.get_invitationtime() == null) {
+        } else {
+            if (order.get_departuretime() != null) {
+                if (order.get_servertime().before(order.get_departuretime())
+                        && order.get_invitationtime() == null) {
                     currentTimer = order.get_departuretime();
                     timerInit();
                 }
             }
         }
-        
-        if(order.get_invitationtime()!=null){
-            if (timer != null){
+
+        if (order.get_invitationtime() != null) {
+            if (timer != null) {
                 counterView.setText("");
                 timer.cancel();
             }
@@ -303,9 +312,30 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     @Override
     protected void onPause() {
         super.onPause();
+        //myTimer.cancel();
+        Log.d("My_tag", "pause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("My_tag", "resume");
+        if (order.get_departuretime() != null) {
+            if (order.get_servertime().before(order.get_departuretime())
+                    && order.get_invitationtime() == null) {
+                currentTimer = order.get_departuretime();
+                timerInit();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         myTimer.cancel();
-        if (timer != null)
+        if(timer!=null)
             timer.cancel();
+        Log.d("My_tag", "stop");
     }
 
     private void inviteDialog() {
@@ -398,6 +428,12 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // если driverstate=2: ЗВОНОК ИЗ ОФИСА, ОТКАЗАТЬСЯ
         // если driverstate=3: ПРИНЯТЬ, ОТКЛОНИТЬ
 
+        // пункт 1 (если driverstate=1 и invitationtime NULL) теперь следует обрабатывать сложнее: для этого
+        // пункта надо сделать ветвление на 2 варианта:
+        // если departuretime > текущего времени (которое следует брать из поля time): ОТЛОЖИТЬ, ЗВОНОК ИЗ
+        // ОФИСА
+        // если departuretime <= текущего времени (которое следует брать из поля time): ОТЛОЖИТЬ, ЗАКРЫТЬ,
+        // ЗВОНОК ИЗ ОФИСА
         if (order.get_departuretime() == null) {
             if (order.get_invitationtime() == null)
                 arrayList.add(this.getString(R.string.invite));
@@ -413,10 +449,17 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 return;
             if (order.get_driverstate() == 1) {
                 if (order.get_invitationtime() == null) {
-                    arrayList.add(this.getString(R.string.invite));
-                    // else
+
                     arrayList.add(this.getString(R.string.delay));
+                    if (order.get_servertime().after(order.get_departuretime())) {
+                        arrayList.add(this.getString(R.string.close));
+                    }
                     arrayList.add(this.getString(R.string.call_office));
+
+                    // arrayList.add(this.getString(R.string.invite));
+                    // else
+                    // arrayList.add(this.getString(R.string.delay));
+                    // arrayList.add(this.getString(R.string.call_office));
                 } else {
                     arrayList.add("Поторопить");
                     arrayList.add(this.getString(R.string.close));
@@ -470,18 +513,31 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 } else {
                     if (order.get_driverstate() == 1)
                         if (order.get_invitationtime() == null) {
-                            switch (item) {
-                                case 0:
-                                    inviteDialog();// ПОТОРОПИТЬ
-                                    break;
-                                case 1:
-                                    timeDialog();// ОТЛОЖИТЬ
-                                    break;
-                                case 2:
-                                    callbackDialog();// ЗВОНОК ИЗ ОФИСА
-                                    break;
-                                default:
-                                    break;
+                            if (order.get_servertime().after(order.get_departuretime())) {
+                                switch (item) {
+                                    case 0:
+                                        timeDialog();// ОТЛОЖИТЬ
+                                        break;
+                                    case 1:
+                                        priceDialog();
+                                        break;
+                                    case 2:
+                                        callbackDialog();// ЗВОНОК ИЗ ОФИСА
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            } else {
+                                switch (item) {
+                                    case 0:
+                                        timeDialog();// ОТЛОЖИТЬ
+                                        break;
+                                    case 1:
+                                        callbackDialog();// ЗВОНОК ИЗ ОФИСА
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         } else {
                             switch (item) {
@@ -602,7 +658,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     }
 
     private void timerInit() {
-        long diffInMs = currentTimer.getTime() - new Date().getTime();
+        long diffInMs = currentTimer.getTime() - order.get_servertime().getTime();
         if (timer != null)
             timer.cancel();
         timer = new CountDownTimer(diffInMs, 1000) {
@@ -613,7 +669,8 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 if (seconds <= 9)
                     secondsStr = "0" + seconds;
 
-                counterView.setText("Время до приглашения: "+((int) millisUntilFinished / 1000) / 60 + ":" + secondsStr);
+                counterView.setText("Время до приглашения: " + ((int) millisUntilFinished / 1000) / 60 + ":"
+                        + secondsStr);
                 if ((((int) millisUntilFinished / 1000) / 60) == 1
                         && (((int) millisUntilFinished / 1000) % 60) == 0) {
                     initDelayOrInviteDialog();
@@ -622,10 +679,10 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 }
             }
 
-
             public void onFinish() {
-                counterView.setText("Время до приглашения: "+MyOrderItemActivity.this.getString(R.string.ended_timer));
-                //timeDialog();
+                counterView.setText("Время до приглашения: "
+                        + MyOrderItemActivity.this.getString(R.string.ended_timer));
+                // timeDialog();
             }
         }.start();
     }
@@ -633,18 +690,19 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     private void initDelayOrInviteDialog() {
         final AlertDialog dialog = new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Действие")
                 .setMessage("Через минуту приглашаем клиентов")
-                .setPositiveButton("Отсрочить", new DialogInterface.OnClickListener(){
+                .setPositiveButton("Отсрочить", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         timeDialog();
-                    }})
-                .setNegativeButton("Пригласить",  new DialogInterface.OnClickListener(){
+                    }
+                }).setNegativeButton("Пригласить", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         inviteDialog();
-                    }}).show();
+                    }
+                }).show();
         new Handler().postDelayed(new Runnable() {
 
             public void run() {
@@ -652,6 +710,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             }
         }, 15000);
     }
+
     // private void alertDelay() {
     // AlertDialog.Builder alert = new
     // AlertDialog.Builder(MyOrderItemActivity.this);

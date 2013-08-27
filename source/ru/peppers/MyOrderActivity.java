@@ -65,12 +65,12 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
 
 
 //        Driver driver = TaxiApplication.getDriver();
-//        // if driver.order == null // else driver.setOrderWithIndex // or get date from server
+        // if driver.order == null // else driver.setOrderWithIndex // or get date from server
 //       ArrayList<Order> orders = new ArrayList<Order>();
 //       Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
 //       calendar.add(Calendar.MINUTE, 5);
 //       System.out.println(calendar.getTime());
-//       orders.add(new MyCostOrder(this, "asdas", "", "", 1, "", "", 1, null, calendar.getTime(), calendar.getTime(), 1));
+//       orders.add(new MyCostOrder(this, "asdas", "", "", 1, "", "", 1, null, calendar.getTime(), calendar.getTime(), 1,new Date()));
 //        TaxiApplication.getDriver().setOrders(orders);
 //
 //        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
@@ -124,6 +124,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
+        Node servertimeNode = doc.getElementsByTagName("time").item(0);
         orders.clear();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element item = (Element) nodeList.item(i);
@@ -156,6 +157,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             String addressarrival = null;
             String orderId = null;
             Date invitationtime = null;
+            Date servertime = null;
 
             // if(departuretime==null)
             // //TODO:не предварительный
@@ -163,6 +165,9 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             // //TODO:предварительный
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+            if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
+                servertime = format.parse(servertimeNode.getTextContent());
 
             if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
             	driverstate = Integer.valueOf(driverstateNode.getTextContent());
@@ -198,7 +203,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
                 accepttime = format.parse(accepttimeNode.getTextContent());
 
             orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate));
+                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate,servertime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();

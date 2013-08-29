@@ -98,6 +98,8 @@ final public class PhpData {
                 public void onFinish() {tag.show();}
 
             }.start();
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(str);
         }
         // new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
         // .setMessage(context.getString(R.string.error_message) + " " + str)

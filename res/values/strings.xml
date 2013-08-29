@@ -61,7 +61,7 @@
     <string name="sorry_exit">Вы действительно хотите выйти? В случае выхода вы не сможете принимать заказы.</string>
     <string name="cancel">Отменить</string>
     <string name="invite">Пригласить</string>
-    <string name="delay">Отложить</string>
+    <string name="delay">Опаздываю</string>
     <string name="wait_call">Ваш звонок принят. Ожидайте звонка.</string>
     <string name="invite_sended">Приглашение отправлено.</string>
     <string name="order_delayed">Заказ отложен</string>

@@ -22,18 +22,20 @@ public class MyCostOrder extends Order {
     private Date _invitationtime;
     private Date _departuretime;
     private Date _accepttime;
+    private Date _orderedtime;
     private Date _servertime;
     private Integer _driverstate;
 
     public MyCostOrder(Context context, String index, String nominalcost,
                        String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
-                       Date invitationtime, Date departuretime, Date accepttime, Integer driverstate,Date servertime) {
+                       Date invitationtime, Date departuretime, Date accepttime, Integer driverstate,Date servertime,Date orderedtime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
         // TODO:wrong index
         set_invitationtime(invitationtime);
         set_departuretime(departuretime);
         _accepttime = accepttime;
         _driverstate = driverstate;
+        set_orderedtime(orderedtime);
         set_servertime(servertime);
 
     }
@@ -118,6 +120,14 @@ public class MyCostOrder extends Order {
 
     public void set_servertime(Date _servertime) {
         this._servertime = _servertime;
+    }
+
+    public Date get_orderedtime() {
+        return _orderedtime;
+    }
+
+    public void set_orderedtime(Date _orderedtime) {
+        this._orderedtime = _orderedtime;
     }
 
 }

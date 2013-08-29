@@ -270,7 +270,7 @@ public class CandidateOrderActivity extends BalanceActivity {
             orderId = orderIdNode.getTextContent();
 
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype,null , departuretime, null, null,null);
+                addressarrival, paymenttype,null , departuretime, null, null,null,null);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();

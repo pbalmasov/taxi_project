@@ -142,6 +142,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
             Node accepttimeNode = item.getElementsByTagName("accepttime").item(0);
             Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
+            Node orderedtimeNode = item.getElementsByTagName("orderedtime").item(0);
 
 
             Integer driverstate = null;
@@ -158,6 +159,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             String orderId = null;
             Date invitationtime = null;
             Date servertime = null;
+            Date orderedtime = null;
 
             // if(departuretime==null)
             // //TODO:не предварительный
@@ -202,8 +204,11 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
                 accepttime = format.parse(accepttimeNode.getTextContent());
 
+            if (!orderedtimeNode.getTextContent().equalsIgnoreCase(""))
+                orderedtime = format.parse(orderedtimeNode.getTextContent());
+
             orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate,servertime));
+                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate,servertime,orderedtime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();

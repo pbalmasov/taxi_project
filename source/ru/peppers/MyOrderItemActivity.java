@@ -75,13 +75,13 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             tv.append("\n");
         }
 
-//        if (order.get_departuretime() != null) {
-//            if (order.get_servertime().before(order.get_departuretime())
-//                    && order.get_invitationtime() == null) {
-//                currentTimer = order.get_departuretime();
-//                timerInit();
-//            }
-//        }
+        // if (order.get_departuretime() != null) {
+        // if (order.get_servertime().before(order.get_departuretime())
+        // && order.get_invitationtime() == null) {
+        // currentTimer = order.get_departuretime();
+        // timerInit();
+        // }
+        // }
 
         Button button = (Button) findViewById(R.id.button1);
         button.setText(this.getString(R.string.choose_action));
@@ -161,6 +161,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // item.getElementsByTagName("accepttime").item(0);
         Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
         Node servertimeNode = doc.getElementsByTagName("time").item(0);
+        Node ordertimeNode = doc.getElementsByTagName("orderedtime").item(0);
 
         Integer driverstate = null;
         Date accepttime = null;
@@ -175,6 +176,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         Date invitationtime = null;
         Date servertime = null;
         String addressarrival = null;
+        Date ordertime = null;
         String orderId = null;
 
         // if(departuretime==null)
@@ -221,12 +223,14 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         if (!invitationNode.getTextContent().equalsIgnoreCase(""))
             invitationtime = format.parse(invitationNode.getTextContent());
 
+        if (!ordertimeNode.getTextContent().equalsIgnoreCase(""))
+            ordertime = format.parse(ordertimeNode.getTextContent());
         // if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
         // accepttime = format.parse(accepttimeNode.getTextContent());
 
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
                 addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
-                servertime);
+                servertime, ordertime);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();
@@ -312,7 +316,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     @Override
     protected void onPause() {
         super.onPause();
-        //myTimer.cancel();
+        // myTimer.cancel();
         Log.d("My_tag", "pause");
     }
 
@@ -321,11 +325,12 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         super.onResume();
         Log.d("My_tag", "resume");
         if (order.get_departuretime() != null) {
-            if (order.get_servertime().before(order.get_departuretime())
-                    && order.get_invitationtime() == null) {
-                currentTimer = order.get_departuretime();
-                timerInit();
-            }
+            if (order.get_servertime() != null)
+                if (order.get_servertime().before(order.get_departuretime())
+                        && order.get_invitationtime() == null) {
+                    currentTimer = order.get_departuretime();
+                    timerInit();
+                }
         }
     }
 
@@ -333,7 +338,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     protected void onStop() {
         super.onStop();
         myTimer.cancel();
-        if(timer!=null)
+        if (timer != null)
             timer.cancel();
         Log.d("My_tag", "stop");
     }
@@ -434,45 +439,68 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // ОФИСА
         // если departuretime <= текущего времени (которое следует брать из поля time): ОТЛОЖИТЬ, ЗАКРЫТЬ,
         // ЗВОНОК ИЗ ОФИСА
-        if (order.get_departuretime() == null) {
-            if (order.get_invitationtime() == null)
-                arrayList.add(this.getString(R.string.invite));
-            else
-                arrayList.add("Поторопить");
-            arrayList.add(this.getString(R.string.close));
-            arrayList.add(this.getString(R.string.call_office));
-
-            if (order.get_invitationtime() == null)
-                arrayList.add(this.getString(R.string.delay));
-        } else {
-            if (order.get_driverstate() == null)
-                return;
-            if (order.get_driverstate() == 1) {
-                if (order.get_invitationtime() == null) {
-
-                    arrayList.add(this.getString(R.string.delay));
-                    if (order.get_servertime().after(order.get_departuretime())) {
+        if (order.get_driverstate() == null)
+            return;
+        if (order.get_driverstate() == 1) {
+            if (order.get_orderedtime() == null) {
+                if (order.get_servertime().after(order.get_departuretime())) {
+                    if (order.get_invitationtime() == null) {
+                        arrayList.add(this.getString(R.string.invite));
+                        arrayList.add(this.getString(R.string.delay));// опаздываю
                         arrayList.add(this.getString(R.string.close));
-                    }
-                    arrayList.add(this.getString(R.string.call_office));
+                        arrayList.add(this.getString(R.string.call_office));
+                    } else {
+                        arrayList.add("Поторопить");
+                        arrayList.add(this.getString(R.string.close));
+                        arrayList.add(this.getString(R.string.call_office));
 
-                    // arrayList.add(this.getString(R.string.invite));
-                    // else
-                    // arrayList.add(this.getString(R.string.delay));
-                    // arrayList.add(this.getString(R.string.call_office));
+                    }
+                } else {
+                    if (order.get_invitationtime() == null) {
+                        arrayList.add(this.getString(R.string.invite));
+                        arrayList.add(this.getString(R.string.close));
+                        arrayList.add(this.getString(R.string.call_office));
+                    } else {
+                        arrayList.add("Поторопить");
+                        arrayList.add(this.getString(R.string.close));
+                        arrayList.add(this.getString(R.string.call_office));
+
+                    }
+                }
+            } else {
+                if (order.get_servertime().after(order.get_departuretime())) {
+                    arrayList.add(this.getString(R.string.delay));// опаздываю
+                    arrayList.add(this.getString(R.string.call_office));
                 } else {
                     arrayList.add("Поторопить");
                     arrayList.add(this.getString(R.string.close));
                     arrayList.add(this.getString(R.string.call_office));
-
                 }
-            } else if (order.get_driverstate() == 2) {
-                arrayList.add(this.getString(R.string.call_office));
-                arrayList.add("Отказаться");
-            } else if (order.get_driverstate() == 3) {
-                arrayList.add("Принять");
-                arrayList.add("Отказаться");
             }
+            // if (order.get_invitationtime() == null) {
+            //
+            // arrayList.add(this.getString(R.string.delay));
+            // if (order.get_servertime().after(order.get_departuretime())) {
+            // arrayList.add(this.getString(R.string.close));
+            // }
+            // arrayList.add(this.getString(R.string.call_office));
+            //
+            // // arrayList.add(this.getString(R.string.invite));
+            // // else
+            // // arrayList.add(this.getString(R.string.delay));
+            // // arrayList.add(this.getString(R.string.call_office));
+            // } else {
+            // arrayList.add("Поторопить");
+            // arrayList.add(this.getString(R.string.close));
+            // arrayList.add(this.getString(R.string.call_office));
+            //
+            // }
+        } else if (order.get_driverstate() == 2) {
+            arrayList.add(this.getString(R.string.call_office));
+            arrayList.add("Отказаться");
+        } else if (order.get_driverstate() == 3) {
+            arrayList.add("Принять");
+            arrayList.add("Отказаться");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -493,33 +521,49 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 // если driverstate=2: ЗВОНОК ИЗ ОФИСА, ОТКАЗАТЬСЯ
                 // если driverstate=3: ПРИНЯТЬ, ОТКЛОНИТЬ
                 dialog.dismiss();
-                if (order.get_departuretime() == null) {
-                    switch (item) {
-                        case 0:
-                            inviteDialog();// ПОТОРОПИТЬ
-                            break;
-                        case 1:
-                            priceDialog();// ЗАКРЫТЬ
-                            break;
-                        case 2:
-                            callbackDialog();// ЗВОНОК ИЗ ОФИСА
-                            break;
-                        case 3:
-                            timeDialog();// ОТЛОЖИТЬ
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    if (order.get_driverstate() == 1)
-                        if (order.get_invitationtime() == null) {
-                            if (order.get_servertime().after(order.get_departuretime())) {
+                if (order.get_driverstate() == 1) {
+                    if (order.get_orderedtime() == null) {
+                        if (order.get_servertime().after(order.get_departuretime())) {
+                            if (order.get_invitationtime() == null) {
                                 switch (item) {
                                     case 0:
-                                        timeDialog();// ОТЛОЖИТЬ
+                                        inviteDialog();
                                         break;
                                     case 1:
-                                        priceDialog();
+                                        timeDialog();
+                                        break;
+                                    case 2:
+                                        closeDialog();
+                                        break;
+                                    case 3:
+                                        callbackDialog();// ЗВОНОК ИЗ ОФИСА
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            } else {
+                                switch (item) {
+                                    case 0:
+                                        inviteDialog();
+                                        break;
+                                    case 1:
+                                        closeDialog();
+                                        break;
+                                    case 2:
+                                        callbackDialog();// ЗВОНОК ИЗ ОФИСА
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        } else {
+                            if (order.get_invitationtime() == null) { // дублирование
+                                switch (item) {
+                                    case 0:
+                                        inviteDialog();
+                                        break;
+                                    case 1:
+                                        closeDialog();
                                         break;
                                     case 2:
                                         callbackDialog();// ЗВОНОК ИЗ ОФИСА
@@ -530,22 +574,38 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                             } else {
                                 switch (item) {
                                     case 0:
-                                        timeDialog();// ОТЛОЖИТЬ
+                                        inviteDialog();
                                         break;
                                     case 1:
+                                        closeDialog();
+                                        break;
+                                    case 2:
                                         callbackDialog();// ЗВОНОК ИЗ ОФИСА
                                         break;
                                     default:
                                         break;
                                 }
                             }
+                        }
+                    } else {
+                        if (order.get_servertime().after(order.get_departuretime())) {
+                            switch (item) {
+                                case 0:
+                                    timeDialog();
+                                    break;
+                                case 1:
+                                    callbackDialog();// ЗВОНОК ИЗ ОФИСА
+                                    break;
+                                default:
+                                    break;
+                            }
                         } else {
                             switch (item) {
                                 case 0:
-                                    inviteDialog();// ПОТОРОПИТЬ
+                                    inviteDialog();
                                     break;
                                 case 1:
-                                    priceDialog();// ЗАКРЫТЬ
+                                    closeDialog();// ЗВОНОК ИЗ ОФИСА
                                     break;
                                 case 2:
                                     callbackDialog();// ЗВОНОК ИЗ ОФИСА
@@ -554,29 +614,29 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                                     break;
                             }
                         }
-                    if (order.get_driverstate() == 2)
-                        switch (item) {
-                            case 0:
-                                callbackDialog();// ЗВОНОК ИЗ ОФИСА
-                                break;
-                            case 1:
-                                cancelDialog();
-                                break;
-                            default:
-                                break;
-                        }
-                    if (order.get_driverstate() == 3)
-                        switch (item) {
-                            case 0:
-                                acceptDialog();
-                                break;
-                            case 1:
-                                cancelDialog();
-                                break;
-                            default:
-                                break;
-                        }
-                }
+                    }
+                } else if (order.get_driverstate() == 2)
+                    switch (item) {
+                        case 0:
+                            callbackDialog();// ЗВОНОК ИЗ ОФИСА
+                            break;
+                        case 1:
+                            cancelDialog();
+                            break;
+                        default:
+                            break;
+                    }
+                else if (order.get_driverstate() == 3)
+                    switch (item) {
+                        case 0:
+                            acceptDialog();
+                            break;
+                        case 1:
+                            cancelDialog();
+                            break;
+                        default:
+                            break;
+                    }
             }
 
         };
@@ -753,7 +813,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     // alert.show();
     // }
 
-    private void priceDialog() {
+    private void closeDialog() {
 
         // View view = getLayoutInflater().inflate(R.layout.custom_dialog,
         // null);

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,7 +34,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.SocketTimeoutException;
 import java.security.KeyStore;
 import java.util.List;
@@ -78,16 +81,24 @@ final public class PhpData {
     }
 
     static public void errorHandler(Context context, Exception e) {
+        String str = "";
         if (e != null) {
             e.printStackTrace();
-            Log.d("My_tag", e.toString());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            str = sw.toString();
         }
-        String str = "";
-        if (e != null)
-            str = e.toString();
-        if (context != null)
-            Toast.makeText(context, context.getString(R.string.error_message) + " " + str, Toast.LENGTH_LONG)
-                    .show();
+        if (context != null){
+            final Toast tag = Toast.makeText(context, context.getString(R.string.error_message) + " " + str, Toast.LENGTH_LONG);
+            new CountDownTimer(9000, 1000)
+            {
+
+                public void onTick(long millisUntilFinished) {tag.show();}
+                public void onFinish() {tag.show();}
+
+            }.start();
+        }
         // new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
         // .setMessage(context.getString(R.string.error_message) + " " + str)
         // .setNeutralButton(context.getString(R.string.close), null).show();

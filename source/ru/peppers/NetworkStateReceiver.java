@@ -36,17 +36,17 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             NetworkInfo ni = (NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
             if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
                 if (dced)
-                    if (TaxiApplication.getDriver() != null) {
+                    if (TaxiApplication.getDriver(null) != null) {
                         dced = false;
                         // if(TaxiApplication.getDriver().getStatus()!=3)
-                        TaxiApplication.getDriver().setStatus(1);
+                        TaxiApplication.getDriver(null).setStatus(1);
 
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                         nameValuePairs.add(new BasicNameValuePair("action", "status"));
                         //nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(TaxiApplication
                          //       .getDriverId())));
                         nameValuePairs.add(new BasicNameValuePair("status", String.valueOf(TaxiApplication
-                                .getDriver().getStatus())));
+                                .getDriver(null).getStatus())));
 
                         HttpClient httpclient = new DefaultHttpClient();
                         HttpPost httppost = new HttpPost(

@@ -30,7 +30,7 @@ public class DistrictListItemActivity extends BalanceActivity {
 
         Bundle bundle = getIntent().getExtras();
         int index = bundle.getInt("index");
-        order = (CostOrder) TaxiApplication.getDriver().get_districtOrders().get(index);
+        order = (CostOrder) TaxiApplication.getDriver(this).get_districtOrders().get(index);
 
         TextView tv = (TextView) findViewById(R.id.textView1);
 

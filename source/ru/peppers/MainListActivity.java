@@ -119,7 +119,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
 
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
-        Driver driver = TaxiApplication.getDriver();
+        Driver driver = TaxiApplication.getDriver(this);
         driver.setStatus(status);
         driver.setClassAuto(classid);
         driver.setDistrict(district);
@@ -131,7 +131,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     }
 
     private void initMainList() {
-        final Driver driver = TaxiApplication.getDriver();
+        final Driver driver = TaxiApplication.getDriver(this);
         if (driver != null) {
             itemsList = new ArrayList<Map<String, String>>();
             itemsList.add(createItem("item", this.getString(R.string.my_orders)));// +
@@ -287,7 +287,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (TaxiApplication.getDriver().getStatus() != 3)
+                if (TaxiApplication.getDriver(MainListActivity.this).getStatus() != 3)
                     new AlertDialog.Builder(MainListActivity.this).setTitle("Смена")
                             .setMessage("Закончить смену?")
                             .setPositiveButton("Да", onExitLineClickListener())

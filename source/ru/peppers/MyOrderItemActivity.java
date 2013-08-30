@@ -65,7 +65,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
 
         counterView = (TextView) findViewById(R.id.textView1);
         tv = (TextView) findViewById(R.id.textView2);
-        order = (MyCostOrder) TaxiApplication.getDriver().getOrder(index);
+        order = (MyCostOrder) TaxiApplication.getDriver(this).getOrder(index);
 
         ArrayList<String> orderList = order.toArrayList();
 

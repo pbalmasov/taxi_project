@@ -117,7 +117,7 @@ public class CandidateOrderActivity extends BalanceActivity {
                         myTimer.cancel();
                     ArrayList<Order> arrayList = new ArrayList<Order>();
                     arrayList.add(order);
-                    TaxiApplication.getDriver().setOrders(arrayList);
+                    TaxiApplication.getDriver(this).setOrders(arrayList);
                     Intent intent = new Intent(this, MyOrderItemActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("index", 0);

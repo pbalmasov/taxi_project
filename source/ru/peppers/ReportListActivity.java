@@ -234,7 +234,7 @@ public class ReportListActivity extends BalanceActivity implements AsyncTaskComp
             }
         }
 
-        Driver driver = TaxiApplication.getDriver();
+        Driver driver = TaxiApplication.getDriver(this);
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server
         driver.setReports(orders);
         // driver = new Driver(status, carClass, ordersCount, district, subdistrict);

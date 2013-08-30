@@ -221,7 +221,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
         }
 
 
-        Driver driver = TaxiApplication.getDriver();
+        Driver driver = TaxiApplication.getDriver(this);
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server
         driver.setOrders(orders);
         arrayAdapter.notifyDataSetChanged();

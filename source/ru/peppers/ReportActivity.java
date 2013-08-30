@@ -52,7 +52,7 @@ public class ReportActivity extends BalanceActivity {
         if (requestCode == REQUEST_GET) {
             if (resultCode == RESULT_OK) {
                 if(itemsList!=null){
-                    itemsList.set(itemsList.size()-1, "Жду заказа: " + TaxiApplication.getDriver().getWaitString());
+                    itemsList.set(itemsList.size()-1, "Жду заказа: " + TaxiApplication.getDriver(this).getWaitString());
                     simpleAdpt.notifyDataSetChanged();
                 }
             }
@@ -60,7 +60,7 @@ public class ReportActivity extends BalanceActivity {
     }
 
     public void initList() {
-        final Driver driver = TaxiApplication.getDriver();
+        final Driver driver = TaxiApplication.getDriver(this);
         itemsList = new ArrayList<String>();
 
         try {
@@ -72,7 +72,7 @@ public class ReportActivity extends BalanceActivity {
         itemsList.add("Класс: " + driver.getClassAutoString());
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if(settings.getString("pozivnoidata", "").equalsIgnoreCase("500"))
-            itemsList.add("Жду заказа: " + TaxiApplication.getDriver().getWaitString());
+            itemsList.add("Жду заказа: " + TaxiApplication.getDriver(this).getWaitString());
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
 
@@ -131,7 +131,7 @@ public class ReportActivity extends BalanceActivity {
     private OnClickListener onStatusContextMenuItemListener(final int position) {
         return new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                Driver driver = TaxiApplication.getDriver();
+                Driver driver = TaxiApplication.getDriver(ReportActivity.this);
 
 
                 int[] statusArray = { 0, 2, 3 };
@@ -172,7 +172,7 @@ public class ReportActivity extends BalanceActivity {
     private OnClickListener onClassContextMenuItemListener(final int position) {
         return new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                Driver driver = TaxiApplication.getDriver();
+                Driver driver = TaxiApplication.getDriver(ReportActivity.this);
                 if (item != driver.getClassAuto()) {
 
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);

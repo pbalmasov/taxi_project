@@ -46,7 +46,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 final public class PhpData {
     // static final String NEWURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";;
-    static boolean withDebug = true;
+    static boolean withDebug = false;
     static final String newURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";
     private static final String PREFS_NAME = "MyNamePrefs1";
     static HttpClient httpclient = getNewHttpClient();
@@ -84,22 +84,34 @@ final public class PhpData {
         String str = "";
         if (e != null) {
             e.printStackTrace();
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            str = sw.toString();
+            if (withDebug) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                str = sw.toString();
+            } else
+                str = e.toString();
         }
-        if (context != null){
-            final Toast tag = Toast.makeText(context, context.getString(R.string.error_message) + " " + str, Toast.LENGTH_LONG);
-            new CountDownTimer(9000, 1000)
-            {
+        if (context != null) {
+            final Toast tag = Toast.makeText(context, context.getString(R.string.error_message) + " " + str,
+                    Toast.LENGTH_LONG);
+            if (withDebug) {
+                new CountDownTimer(9000, 1000) {
 
-                public void onTick(long millisUntilFinished) {tag.show();}
-                public void onFinish() {tag.show();}
+                    public void onTick(long millisUntilFinished) {
+                        tag.show();
+                    }
 
-            }.start();
-            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setText(str);
+                    public void onFinish() {
+                        tag.show();
+                    }
+
+                }.start();
+                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setText(str);
+            } else
+                tag.show();
         }
         // new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
         // .setMessage(context.getString(R.string.error_message) + " " + str)
@@ -113,21 +125,24 @@ final public class PhpData {
         // .setMessage(errorNode.getTextContent())
         // .setNeutralButton(context.getString(R.string.close), null).show();
     }
-    static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url,boolean asyncTask){
+
+    static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url,
+            boolean asyncTask) {
         SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
         String sessionid = settings.getString("sessionid", null);
-        return postData(activity, nameValuePairs, url, sessionid,asyncTask);
+        return postData(activity, nameValuePairs, url, sessionid, asyncTask);
 
     }
+
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url) {
         SharedPreferences settings = activity.getSharedPreferences(PREFS_NAME, 0);
         String sessionid = settings.getString("sessionid", null);
-        return postData(activity, nameValuePairs, url, sessionid,false);
+        return postData(activity, nameValuePairs, url, sessionid, false);
     }
 
     static public Document postData(Context activity, List<NameValuePair> nameValuePairs, String url,
-            String sessionidvar,boolean asyncTask) {
-        if (isNetworkAvailable(activity,asyncTask)) {
+            String sessionidvar, boolean asyncTask) {
+        if (isNetworkAvailable(activity, asyncTask)) {
             // Create a new HttpClient and Post Header
             HttpGet httppost = new HttpGet(url + "?" + URLEncodedUtils.format(nameValuePairs, "utf-8"));
             // http://sandbox.peppers-studio.ru/dell/accelerometer/index.php
@@ -192,16 +207,17 @@ final public class PhpData {
                 .setNeutralButton(context.getString(R.string.close), null).show();
     }
 
-//    static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
-//
-//        return postData(activity, nameValuePairs,
-//                "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
-//
-//    }
-    public static boolean isNetworkAvailable(Context context){
+    // static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
+    //
+    // return postData(activity, nameValuePairs,
+    // "http://sandbox.peppers-studio.ru/dell/accelerometer/index.php");
+    //
+    // }
+    public static boolean isNetworkAvailable(Context context) {
         return isNetworkAvailable(context, false);
     }
-    public static boolean isNetworkAvailable(Context context,boolean asyncTask) {
+
+    public static boolean isNetworkAvailable(Context context, boolean asyncTask) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

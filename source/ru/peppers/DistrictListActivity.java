@@ -148,7 +148,7 @@ public class DistrictListActivity extends BalanceActivity implements AsyncTaskCo
             }
         }
 
-        Driver driver = TaxiApplication.getDriver();
+        Driver driver = TaxiApplication.getDriver(this);
         driver.set_districtOrders(orders);
 
         ListView lv = (ListView) findViewById(R.id.mainListView);

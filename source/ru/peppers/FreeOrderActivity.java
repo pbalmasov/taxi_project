@@ -203,7 +203,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             }
         }
 
-        Driver driver = TaxiApplication.getDriver();
+        Driver driver = TaxiApplication.getDriver(this);
         driver.setFreeOrders(orders);
         arrayAdapter.notifyDataSetChanged();
 

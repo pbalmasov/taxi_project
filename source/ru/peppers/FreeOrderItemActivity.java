@@ -35,7 +35,7 @@ public class FreeOrderItemActivity extends BalanceActivity {
         // int id = bundle.getInt("id");
         int index = bundle.getInt("index");
 
-        order = (CostOrder) TaxiApplication.getDriver().getFreeOrders().get(index);
+        order = (CostOrder) TaxiApplication.getDriver(this).getFreeOrders().get(index);
 
         TextView tv = (TextView) findViewById(R.id.textView1);
 

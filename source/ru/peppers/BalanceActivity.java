@@ -47,8 +47,8 @@ public class BalanceActivity extends Activity {
         String pozivnoidata = settings.getString("pozivnoidata", "");
         if (pozivnoidata.length() != 0)
             pozivnoi.setText("Позывной: " + pozivnoidata);
-        if (TaxiApplication.getDriver() != null)
-            pozivnoi.append(", Баланс: " + TaxiApplication.getDriver().getBalance());
+        if (TaxiApplication.getDriver(this) != null)
+            pozivnoi.append(", Баланс: " + TaxiApplication.getDriver(this).getBalance());
     }
 
     @Override

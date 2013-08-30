@@ -15,7 +15,7 @@ public class ReportListItemActivity extends BalanceActivity{
 
         Bundle bundle = getIntent().getExtras();
         int index = bundle.getInt("index");
-        Order report = TaxiApplication.getDriver().getReport(index);
+        Order report = TaxiApplication.getDriver(this).getReport(index);
 
         TextView tv = (TextView) findViewById(R.id.textView1);
 

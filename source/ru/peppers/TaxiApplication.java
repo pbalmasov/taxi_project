@@ -1,6 +1,7 @@
 package ru.peppers;
 
 import model.Driver;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -35,7 +36,9 @@ public class TaxiApplication extends Application {
 //        }, 2000);
     }
 
-    public static Driver getDriver() {
+    public static Driver getDriver(Activity context) {
+        if(driver==null)
+            return new Driver(context, 0, 0, "", "");
         return driver;
     }
 

@@ -443,7 +443,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             return;
         if (order.get_driverstate() == 1) {
             if (order.get_orderedtime() == null) {
-                if (order.get_servertime().after(order.get_departuretime())) {
+                if (order.get_servertime().before(order.get_departuretime())) {
                     if (order.get_invitationtime() == null) {
                         arrayList.add(this.getString(R.string.invite));
                         arrayList.add(this.getString(R.string.delay));// опаздываю
@@ -468,7 +468,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                     }
                 }
             } else {
-                if (order.get_servertime().after(order.get_departuretime())) {
+                if (order.get_servertime().before(order.get_departuretime())) {
                     arrayList.add(this.getString(R.string.delay));// опаздываю
                     arrayList.add(this.getString(R.string.call_office));
                 } else {
@@ -477,24 +477,6 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                     arrayList.add(this.getString(R.string.call_office));
                 }
             }
-            // if (order.get_invitationtime() == null) {
-            //
-            // arrayList.add(this.getString(R.string.delay));
-            // if (order.get_servertime().after(order.get_departuretime())) {
-            // arrayList.add(this.getString(R.string.close));
-            // }
-            // arrayList.add(this.getString(R.string.call_office));
-            //
-            // // arrayList.add(this.getString(R.string.invite));
-            // // else
-            // // arrayList.add(this.getString(R.string.delay));
-            // // arrayList.add(this.getString(R.string.call_office));
-            // } else {
-            // arrayList.add("Поторопить");
-            // arrayList.add(this.getString(R.string.close));
-            // arrayList.add(this.getString(R.string.call_office));
-            //
-            // }
         } else if (order.get_driverstate() == 2) {
             arrayList.add(this.getString(R.string.call_office));
             arrayList.add("Отказаться");
@@ -502,6 +484,27 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             arrayList.add("Принять");
             arrayList.add("Отказаться");
         }
+
+
+        // if (order.get_invitationtime() == null) {
+        //
+        // arrayList.add(this.getString(R.string.delay));
+        // if (order.get_servertime().after(order.get_departuretime())) {
+        // arrayList.add(this.getString(R.string.close));
+        // }
+        // arrayList.add(this.getString(R.string.call_office));
+        //
+        // // arrayList.add(this.getString(R.string.invite));
+        // // else
+        // // arrayList.add(this.getString(R.string.delay));
+        // // arrayList.add(this.getString(R.string.call_office));
+        // } else {
+        // arrayList.add("Поторопить");
+        // arrayList.add(this.getString(R.string.close));
+        // arrayList.add(this.getString(R.string.call_office));
+        //
+        // }
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(this.getString(R.string.choose_action));
@@ -523,7 +526,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 dialog.dismiss();
                 if (order.get_driverstate() == 1) {
                     if (order.get_orderedtime() == null) {
-                        if (order.get_servertime().after(order.get_departuretime())) {
+                        if (order.get_servertime().before(order.get_departuretime())) {
                             if (order.get_invitationtime() == null) {
                                 switch (item) {
                                     case 0:
@@ -588,7 +591,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                             }
                         }
                     } else {
-                        if (order.get_servertime().after(order.get_departuretime())) {
+                        if (order.get_servertime().before(order.get_departuretime())) {
                             switch (item) {
                                 case 0:
                                     timeDialog();

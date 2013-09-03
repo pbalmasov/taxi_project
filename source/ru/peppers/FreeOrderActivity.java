@@ -21,23 +21,29 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document>{
+public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     protected static final int REQUEST_EXIT = 0;
     private ArrayList<Order> orders = new ArrayList<Order>();
     private Timer myTimer = new Timer();
     private ArrayAdapter<Order> arrayAdapter;
     private Integer refreshperiod = null;
     private boolean start = false;
+    private PhpService myService;
+    private boolean bound;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,24 +68,44 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
 
-                if(PhpData.isNetworkAvailable(FreeOrderActivity.this))
-                startActivityForResult(intent, REQUEST_EXIT);
+                if (PhpData.isNetworkAvailable(FreeOrderActivity.this))
+                    startActivityForResult(intent, REQUEST_EXIT);
             }
         });
 
-        getOrders();
+    }
 
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
 
-        // TODO:нету заказов
-        /*
-         * new AlertDialog.Builder(this).setTitle(this.getString(R.string.info)).
-         * setMessage(this.getString(R.string.noOrders)) .setNeutralButton(this.getString(R.string.close), new
-         * OnClickListener() {
-         * @Override public void onClick(DialogInterface dialog, int which) { // Bundle extras =
-         * getIntent().getExtras(); // int id = extras.getInt("id"); Intent intent = new
-         * Intent(FreeOrderActivity.this, MainListActivity.class); // Bundle bundle = new Bundle(); //
-         * bundle.putInt("id", id); // intent.putExtras(bundle); startActivity(intent); } }).show();
-         */
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+
+            myService = null;
+            bound = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName arg0, IBinder service) {
+
+            myService = ((PhpService.ServiceBinder) service).getService();
+            bound = true;
+        }
+    };
+
+    void doBindService() {
+
+        boolean bound = bindService(new Intent(this, PhpService.class), serviceConnection,
+                Context.BIND_AUTO_CREATE);
+        if (bound) {
+            Log.d("My_tag", "Successfully bound to service");
+        } else {
+
+            Log.d("My_tag", "Failed to bind service");
+        }
+    }
+
+    void doUnbindService() {
+        unbindService(serviceConnection);
     }
 
     @Override
@@ -274,9 +300,18 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        myTimer.cancel();
+    protected void onStop() {
+        super.onStop();
+        doUnbindService();
+        if (myTimer != null)
+            myTimer.cancel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        doBindService();
+        getOrders();
     }
 
     @Override
@@ -288,6 +323,5 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             }
         }
     }
-
 
 }

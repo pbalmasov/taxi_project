@@ -15,15 +15,23 @@ import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import model.Driver;
+import model.Order;
+import myorders.MyCostOrder;
 
 public class MainListActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     private ListView lv;
@@ -80,7 +88,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
-
 
     }
 
@@ -160,7 +167,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
                     if (!PhpData.isNetworkAvailable(MainListActivity.this))
                         return;
-                    Bundle extras = getIntent().getExtras();
                     // //int id = extras.getInt("id");
                     Intent intent;
                     switch (position) {
@@ -175,10 +181,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                         case 2:
                             if (driver.getStatus() != null) {
                                 if (driver.getStatus() == 1) {
-                                    Toast.makeText(MainListActivity.this, "Вы на заказе", Toast.LENGTH_SHORT)
-                                            .show();
-                                    // intent = new Intent(MainListActivity.this, MyOrderActivity.class);
-                                    // startActivity(intent);
+                                    startMyOrderItemActivity();
                                     return;
                                 }
                                 if (driver.getStatus() != 3) {
@@ -203,8 +206,9 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                             break;
                         case 4:
                             new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
-                            .setMessage("Вы действительно хотите заказать обратный звонок?").setNegativeButton("Нет", null)
-                            .setPositiveButton("Да", onCallbackClickListener()).show();
+                                    .setMessage("Вы действительно хотите заказать обратный звонок?")
+                                    .setNegativeButton("Нет", null)
+                                    .setPositiveButton("Да", onCallbackClickListener()).show();
                             break;
                         case 5:
                             intent = new Intent(MainListActivity.this, SettingsActivity.class);
@@ -231,6 +235,147 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
         }
     }
 
+    private void startMyOrderItemActivity() {
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "my"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
+
+        Document doc = PhpData.postData(MainListActivity.this, nameValuePairs, PhpData.newURL);
+        if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(MainListActivity.this, errorNode);
+            else {
+                try {
+                    getLastIndex(doc);
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        }
+
+
+
+
+
+
+        Driver driver = TaxiApplication.getDriver(this);
+        Bundle extras = getIntent().getExtras();
+        Intent intent;
+        if (driver.getOrders() != null)
+            if (driver.getOrders().size() > 0)
+                extras.putInt("index", 0);
+        intent = new Intent(MainListActivity.this, MyOrderActivity.class);
+        intent.putExtras(extras);
+        startActivity(intent);
+    }
+
+
+    private int getLastIndex(Document doc) throws DOMException, ParseException {
+        NodeList nodeList = doc.getElementsByTagName("item");
+        Node servertimeNode = doc.getElementsByTagName("time").item(0);
+        ArrayList<Order> orders = new ArrayList<Order>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element item = (Element) nodeList.item(i);
+
+            Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
+            Node classNode = item.getElementsByTagName("classid").item(0);
+            Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
+            Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
+            Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
+            Node quantityNode = item.getElementsByTagName("quantity").item(0);
+            Node commentNode = item.getElementsByTagName("comment").item(0);
+            Node nicknameNode = item.getElementsByTagName("nickname").item(0);
+            Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
+            Node orderIdNode = item.getElementsByTagName("orderid").item(0);
+            Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
+            Node accepttimeNode = item.getElementsByTagName("accepttime").item(0);
+            Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
+            Node orderedtimeNode = item.getElementsByTagName("orderedtime").item(0);
+
+
+            Integer driverstate = null;
+            Date accepttime = null;
+            String nominalcost = null;
+            Integer carClass = 0;
+            String addressdeparture = null;
+            Date departuretime = null;
+            Integer paymenttype = null;
+            Integer quantity = null;
+            String comment = null;
+            String nickname = null;
+            String addressarrival = null;
+            String orderId = null;
+            Date invitationtime = null;
+            Date servertime = null;
+            Date orderedtime = null;
+
+            // if(departuretime==null)
+            // //TODO:не предварительный
+            // else
+            // //TODO:предварительный
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+            if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
+                servertime = format.parse(servertimeNode.getTextContent());
+
+            if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
+                driverstate = Integer.valueOf(driverstateNode.getTextContent());
+
+            if (!classNode.getTextContent().equalsIgnoreCase(""))
+                carClass = Integer.valueOf(classNode.getTextContent());
+
+            if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
+                nominalcost = nominalcostNode.getTextContent();
+
+            if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
+                addressdeparture = addressdepartureNode.getTextContent();
+
+            if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
+                addressarrival = addressarrivalNode.getTextContent();
+
+            if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
+                paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
+
+            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
+                departuretime = format.parse(departuretimeNode.getTextContent());
+
+            if (!commentNode.getTextContent().equalsIgnoreCase(""))
+                comment = commentNode.getTextContent();
+
+            if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
+                orderId = orderIdNode.getTextContent();
+
+            if (!invitationNode.getTextContent().equalsIgnoreCase(""))
+                invitationtime = format.parse(invitationNode.getTextContent());
+
+            if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
+                accepttime = format.parse(accepttimeNode.getTextContent());
+
+            if (!orderedtimeNode.getTextContent().equalsIgnoreCase(""))
+                orderedtime = format.parse(orderedtimeNode.getTextContent());
+
+            orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
+                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate,servertime,orderedtime));
+
+            if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
+                nickname = nicknameNode.getTextContent();
+
+                if (!quantityNode.getTextContent().equalsIgnoreCase(""))
+                    quantity = Integer.parseInt(quantityNode.getTextContent());
+                orders.get(i).setAbonent(nickname);
+                orders.get(i).setRides(quantity);
+            }
+        }
+        //TODO:get index
+        return 0;
+    }
 
     private OnClickListener onCallbackClickListener() {
         return new DialogInterface.OnClickListener() {
@@ -258,7 +403,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
             }
         };
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

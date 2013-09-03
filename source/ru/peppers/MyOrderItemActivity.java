@@ -93,7 +93,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             }
 
         });
-        getOrder();
+        // getOrder();
 
     }
 
@@ -324,6 +324,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     protected void onResume() {
         super.onResume();
         Log.d("My_tag", "resume");
+        getOrder();
         if (order.get_departuretime() != null) {
             if (order.get_servertime() != null)
                 if (order.get_servertime().before(order.get_departuretime())
@@ -337,7 +338,8 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     @Override
     protected void onStop() {
         super.onStop();
-        myTimer.cancel();
+        if (myTimer != null)
+            myTimer.cancel();
         if (timer != null)
             timer.cancel();
         Log.d("My_tag", "stop");
@@ -485,7 +487,6 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             arrayList.add("Отказаться");
         }
 
-
         // if (order.get_invitationtime() == null) {
         //
         // arrayList.add(this.getString(R.string.delay));
@@ -504,7 +505,6 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // arrayList.add(this.getString(R.string.call_office));
         //
         // }
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(this.getString(R.string.choose_action));

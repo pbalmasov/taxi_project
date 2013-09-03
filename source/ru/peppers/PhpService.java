@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -34,6 +35,26 @@ import model.Order;
 public class PhpService extends Service {
     NotificationManager nm;
     String candidateId = "";
+    boolean isStop = false;
+    private final IBinder binder = new ServiceBinder();
+
+    public class ServiceBinder extends Binder {
+
+        public PhpService getService() {
+
+            return PhpService.this;
+        }
+    }
+
+    public void setStop(boolean a) {
+        this.isStop = a;
+    }
+
+    @Override
+    public IBinder onBind( Intent intent ) {
+
+        return binder;
+    }
 
     @Override
     public void onCreate() {
@@ -45,8 +66,7 @@ public class PhpService extends Service {
         // intent.putExtra("id", String.valueOf(TaxiApplication.getDriverId()));
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        Notification notif = new Notification(R.drawable.icon2,
-                this.getString(R.string.service_started),
+        Notification notif = new Notification(R.drawable.icon2, this.getString(R.string.service_started),
                 System.currentTimeMillis());
         notif.setLatestEventInfo(this, this.getString(R.string.service),
                 this.getString(R.string.service_started), pIntent);
@@ -56,7 +76,6 @@ public class PhpService extends Service {
         startForeground(0, notif);
 
     }
-
 
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         // Notification notif = new Notification(R.drawable.ic_launcher,
@@ -78,7 +97,8 @@ public class PhpService extends Service {
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        getStatus();
+                        if (isStop)
+                            getStatus();
                     }
                 });
             }
@@ -86,13 +106,12 @@ public class PhpService extends Service {
 
         myTimer.schedule(timerTask, 0L, 1000 * 60);
 
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {;nm.cancelAll();
-//            }
-//        }, 1000*(new Random()).nextInt(10));
-
+        // final Handler handler = new Handler();
+        // handler.postDelayed(new Runnable() {
+        // @Override
+        // public void run() {;nm.cancelAll();
+        // }
+        // }, 1000*(new Random()).nextInt(10));
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -149,14 +168,10 @@ public class PhpService extends Service {
             boolean isRead = true;
             if (item.getElementsByTagName("readdate").item(0) == null)
                 isRead = false;
-            int index = Integer.valueOf(item.getElementsByTagName("messageid")
-                    .item(0).getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat(
-                    "yyyy-MM-dd'T'HH:mmZ");
-            Date date = format.parse(item.getElementsByTagName("postdate")
-                    .item(0).getTextContent());
-            String text = item.getElementsByTagName("message").item(0)
-                    .getTextContent();
+            int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
+            String text = item.getElementsByTagName("message").item(0).getTextContent();
 
             Message message = new Message(text, date, isRead, index);
             if (!isRead) {
@@ -169,22 +184,16 @@ public class PhpService extends Service {
 
             Log.d("My_tag", all.get(i).getText());
             Intent intent = new Intent(this, MessageFromServiceActivity.class);
-            intent.putExtra(MessageFromServiceActivity.TITLE, all.get(i)
-                    .getDate().toGMTString());
-            intent.putExtra(MessageFromServiceActivity.MESSAGE, all.get(i)
-                    .getText());
-            PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent,
-                    0);
-            Notification notif = new Notification(R.drawable.icon2,
-                    this.getString(R.string.new_message),
+            intent.putExtra(MessageFromServiceActivity.TITLE, all.get(i).getDate().toGMTString());
+            intent.putExtra(MessageFromServiceActivity.MESSAGE, all.get(i).getText());
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            Notification notif = new Notification(R.drawable.icon2, this.getString(R.string.new_message),
                     System.currentTimeMillis());
-            notif.setLatestEventInfo(this, this.getString(R.string.message),
-                    all.get(i).getText(), pIntent);
+            notif.setLatestEventInfo(this, this.getString(R.string.message), all.get(i).getText(), pIntent);
 
             // ставим флаг, чтобы уведомление пропало после нажатия
             notif.flags |= Notification.FLAG_AUTO_CANCEL;
-            notif.sound = Uri.parse("android.resource://ru.peppers/"
-                    + R.raw.sound);
+            notif.sound = Uri.parse("android.resource://ru.peppers/" + R.raw.sound);
 
             notif.defaults |= Notification.DEFAULT_VIBRATE;
             notif.defaults |= Notification.DEFAULT_LIGHTS;
@@ -220,44 +229,35 @@ public class PhpService extends Service {
 
     }
 
-    private ArrayList<Order> getOrders(Document doc) throws DOMException,
-            ParseException {
+    private ArrayList<Order> getOrders(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("order");
         ArrayList<Order> orders = new ArrayList<Order>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             NamedNodeMap attributes = nodeList.item(i).getAttributes();
 
-            int index = Integer.parseInt(attributes.getNamedItem("index")
-                    .getTextContent());
-            int type = Integer.parseInt(attributes.getNamedItem("type")
-                    .getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat(
-                    "yyyy-MM-dd'T'HH:mm:ssZ");
-            Date date = format.parse(attributes.getNamedItem("date")
-                    .getTextContent());
+            int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
+            int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            Date date = format.parse(attributes.getNamedItem("date").getTextContent());
             String carClass = attributes.getNamedItem("class").getTextContent();
             String adress = attributes.getNamedItem("adress").getTextContent();
             String where = attributes.getNamedItem("where").getTextContent();
-            int costOrder = Integer.parseInt(attributes.getNamedItem(
-                    "costOrder").getTextContent());
+            int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
 
             Intent intent = new Intent(this, FreeOrderItemActivity.class);
             // intent.putExtra("id", TaxiApplication.getDriverId());
             intent.putExtra("orderindex", index);
             intent.putExtra("service", true);
             intent.putExtra("type", type);
-            intent.putExtra("date", attributes.getNamedItem("date")
-                    .getTextContent());
+            intent.putExtra("date", attributes.getNamedItem("date").getTextContent());
             intent.putExtra("class", carClass);
             intent.putExtra("adress", adress);
             intent.putExtra("where", where);
             intent.putExtra("costOrder", costOrder);
 
             if (type == 0) {
-                int cost = Integer.parseInt(attributes.getNamedItem("cost")
-                        .getTextContent());
-                String costType = attributes.getNamedItem("costType")
-                        .getTextContent();
+                int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
+                String costType = attributes.getNamedItem("costType").getTextContent();
                 String text = nodeList.item(i).getTextContent();
                 intent.putExtra("cost", cost);
                 intent.putExtra("costType", costType);
@@ -305,9 +305,5 @@ public class PhpService extends Service {
 
     }
 
-
-    public IBinder onBind(Intent arg0) {
-        return null;
-    }
 
 }

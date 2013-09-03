@@ -47,7 +47,7 @@
                 android:label="Кандидатский заказ"
                 android:name=".CandidateOrderActivity"></activity>
 
-        <service android:name=".PhpService" android:process=":process"></service>
+        <service android:name=".PhpService"/><!--  //android:process=":process"></service> -->
         <receiver android:name=".NetworkStateReceiver">
              <intent-filter>
                   <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

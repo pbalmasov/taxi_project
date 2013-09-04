@@ -44,6 +44,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     private boolean start = false;
     private PhpService myService;
     private boolean bound;
+    private String candidateId = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
         public void onServiceConnected(ComponentName arg0, IBinder service) {
 
             myService = ((PhpService.ServiceBinder) service).getService();
+            myService.isStop = false;
             bound = true;
         }
     };
@@ -105,6 +107,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     }
 
     void doUnbindService() {
+        myService.isStop = true;
         unbindService(serviceConnection);
     }
 
@@ -228,6 +231,22 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 orders.get(i).setRides(quantity);
             }
         }
+
+        Node candidateNode = doc.getElementsByTagName("candidateorderid").item(0);
+        String candidate = "";
+        if (!candidateNode.getTextContent().equalsIgnoreCase(""))
+            candidate = candidateNode.getTextContent();
+        Log.d("My_tag", candidate + " " + candidateId);
+        if (candidate != "" && !candidateId.equalsIgnoreCase(candidate)) {
+            candidateId = candidate;
+            Intent intent = new Intent(this, CandidateOrderActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle bundle = new Bundle();
+            bundle.putString("id", candidate);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+
 
         Driver driver = TaxiApplication.getDriver(this);
         driver.setFreeOrders(orders);

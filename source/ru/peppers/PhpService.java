@@ -35,7 +35,12 @@ import model.Order;
 public class PhpService extends Service {
     NotificationManager nm;
     String candidateId = "";
-    boolean isStop = false;
+    boolean isStop = true;
+
+    private Timer myTimer = new Timer();
+    private Integer refreshperiod = null;
+    private boolean start = false;
+
     private final IBinder binder = new ServiceBinder();
 
     public class ServiceBinder extends Binder {
@@ -87,24 +92,24 @@ public class PhpService extends Service {
         // // ставим флаг, чтобы уведомление пропало после нажатия
         // notif.flags |= Notification.FLAG_AUTO_CANCEL;
         // startForeground(2, notif);
-
-        final Timer myTimer = new Timer(); // Создаем таймер
-        final Handler uiHandler = new Handler();
-
-        final TimerTask timerTask = new TimerTask() { // Определяем задачу
-            @Override
-            public void run() {
-                uiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isStop)
-                            getStatus();
-                    }
-                });
-            }
-        };
-
-        myTimer.schedule(timerTask, 0L, 1000 * 60);
+        getStatus();
+//        final Timer myTimer = new Timer(); // Создаем таймер
+//        final Handler uiHandler = new Handler();
+//
+//        final TimerTask timerTask = new TimerTask() { // Определяем задачу
+//            @Override
+//            public void run() {
+//                uiHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (isStop)
+//                            getStatus();
+//                    }
+//                });
+//            }
+//        };
+//
+//        myTimer.schedule(timerTask, 0L, 1000 * 60);
 
         // final Handler handler = new Handler();
         // handler.postDelayed(new Runnable() {
@@ -156,6 +161,50 @@ public class PhpService extends Service {
             intent.putExtras(bundle);
             startActivity(intent);
         }
+
+        Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
+        Integer newrefreshperiod = null;
+        if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
+            newrefreshperiod = Integer.valueOf(refreshperiodNode.getTextContent());
+
+        boolean update = false;
+
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
+
+        if (newrefreshperiod != null) {
+            if (refreshperiod != newrefreshperiod) {
+                refreshperiod = newrefreshperiod;
+                update = true;
+            }
+        }
+
+        Log.d("My_tag", refreshperiod + " " + newrefreshperiod + " " + update);
+
+        if (update && refreshperiod != null) {
+            if (start) {
+                myTimer.cancel();
+                start = true;
+                Log.d("My_tag", "cancel timer");
+            }
+            final Handler uiHandler = new Handler();
+
+            TimerTask timerTask = new TimerTask() { // Определяем задачу
+                @Override
+                public void run() {
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isStop)
+                                getStatus();
+                        }
+                    });
+                }
+            };
+
+            myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
+        }
+
+
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {

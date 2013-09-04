@@ -181,7 +181,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                         case 2:
                             if (driver.getStatus() != null) {
                                 if (driver.getStatus() == 1) {
-                                    startMyOrderItemActivity();
+                                    //startMyOrderItemActivity();
                                     return;
                                 }
                                 if (driver.getStatus() != 3) {

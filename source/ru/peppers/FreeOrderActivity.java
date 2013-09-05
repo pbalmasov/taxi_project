@@ -108,6 +108,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
 
     void doUnbindService() {
         myService.isStop = true;
+        myService.candidateId = candidateId;
         unbindService(serviceConnection);
     }
 

@@ -123,6 +123,7 @@ public class CandidateOrderActivity extends BalanceActivity {
                     bundle.putInt("index", 0);
                     intent.putExtras(bundle);
                     startActivity(intent);
+                    setResult(RESULT_OK);
                     finish();
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
@@ -149,6 +150,7 @@ public class CandidateOrderActivity extends BalanceActivity {
                 try {
                     if(myTimer!=null)
                         myTimer.cancel();
+                    setResult(RESULT_OK);
                     finish();
                     // initOrder(doc);
                 } catch (Exception e) {

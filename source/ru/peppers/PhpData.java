@@ -46,7 +46,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 final public class PhpData {
     // static final String NEWURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";;
-    static boolean withDebug = false;
+    static boolean withDebug = true;
     static final String newURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";
     private static final String PREFS_NAME = "MyNamePrefs1";
     static HttpClient httpclient = getNewHttpClient();

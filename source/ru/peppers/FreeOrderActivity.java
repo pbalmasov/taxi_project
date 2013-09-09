@@ -73,6 +73,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                     startActivityForResult(intent, REQUEST_EXIT);
             }
         });
+        doBindService();
 
     }
 
@@ -90,6 +91,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
 
             myService = ((PhpService.ServiceBinder) service).getService();
             myService.isStop = false;
+            candidateId = myService.candidateId;
             bound = true;
         }
     };
@@ -233,21 +235,25 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             }
         }
 
-        Node candidateNode = doc.getElementsByTagName("candidateorderid").item(0);
-        String candidate = "";
-        if (!candidateNode.getTextContent().equalsIgnoreCase(""))
-            candidate = candidateNode.getTextContent();
-        Log.d("My_tag", candidate + " " + candidateId);
-        if (candidate != "" && !candidateId.equalsIgnoreCase(candidate)) {
-            candidateId = candidate;
-            Intent intent = new Intent(this, CandidateOrderActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Bundle bundle = new Bundle();
-            bundle.putString("id", candidate);
-            intent.putExtras(bundle);
-            startActivity(intent);
+        if (myService != null) {
+            Node candidateNode = doc.getElementsByTagName("candidateorderid").item(0);
+            String candidate = "";
+            if (!candidateNode.getTextContent().equalsIgnoreCase(""))
+                candidate = candidateNode.getTextContent();
+            Log.d("My_tag", candidate + " " + candidateId);
+            if (candidate != "" && !candidateId.equalsIgnoreCase(candidate)) {
+                candidateId = candidate;
+                Intent intent = new Intent(this, CandidateOrderActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", candidate);
+                intent.putExtras(bundle);
+                if (myTimer != null)
+                    myTimer.cancel();
+                startActivityForResult(intent,REQUEST_EXIT);
+                //startActivityForResult
+            }
         }
-
 
         Driver driver = TaxiApplication.getDriver(this);
         driver.setFreeOrders(orders);
@@ -289,6 +295,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             if (refreshperiod != newrefreshperiod) {
                 refreshperiod = newrefreshperiod;
                 update = true;
+                myTimer = new Timer();
             }
         }
 
@@ -322,6 +329,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d("My_tag","stop free order");
         doUnbindService();
         if (myTimer != null)
             myTimer.cancel();
@@ -330,7 +338,8 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     @Override
     protected void onResume() {
         super.onResume();
-        doBindService();
+        Log.d("My_tag","resume free order");
+        refreshperiod = null;
         getOrders();
     }
 

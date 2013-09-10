@@ -92,10 +92,7 @@ public class FreeOrderItemActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-
-                    Intent intent = new Intent(this, MyOrderActivity.class);
                     setResult(RESULT_OK);
-                    startActivity(intent);
                     finish();
                     // TODO:заканчивать парент активити
                 } catch (Exception e) {

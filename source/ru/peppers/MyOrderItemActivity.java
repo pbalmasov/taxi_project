@@ -55,6 +55,8 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     private Integer refreshperiod = null;
     private boolean start = false;
 
+    private String order_index;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +67,19 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
 
         counterView = (TextView) findViewById(R.id.textView1);
         tv = (TextView) findViewById(R.id.textView2);
-        order = (MyCostOrder) TaxiApplication.getDriver(this).getOrder(index);
+        try {
+            order = (MyCostOrder) TaxiApplication.getDriver(this).getOrder(index);
+            order_index = order.get_index();
+            ArrayList<String> orderList = order.toArrayList();
 
-        ArrayList<String> orderList = order.toArrayList();
-
-        int arraySize = orderList.size();
-        for (int i = 0; i < arraySize; i++) {
-            tv.append(orderList.get(i));
-            tv.append("\n");
+            int arraySize = orderList.size();
+            for (int i = 0; i < arraySize; i++) {
+                tv.append(orderList.get(i));
+                tv.append("\n");
+            }
+        } catch (IndexOutOfBoundsException e) {
+            Log.d("My_tag", "error index");
+            order_index = String.valueOf(index);
         }
 
         // if (order.get_departuretime() != null) {
@@ -121,7 +128,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         nameValuePairs.add(new BasicNameValuePair("mode", "available"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
-        nameValuePairs.add(new BasicNameValuePair("orderid", order.get_index()));
+        nameValuePairs.add(new BasicNameValuePair("orderid", order_index));
 
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Loading...");

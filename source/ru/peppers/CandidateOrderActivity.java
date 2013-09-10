@@ -113,16 +113,6 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-                    if(myTimer!=null)
-                        myTimer.cancel();
-                    ArrayList<Order> arrayList = new ArrayList<Order>();
-                    arrayList.add(order);
-                    TaxiApplication.getDriver(this).setOrders(arrayList);
-                    Intent intent = new Intent(this, MyOrderItemActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("index", 0);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
                     setResult(RESULT_OK);
                     finish();
                 } catch (Exception e) {
@@ -336,8 +326,8 @@ public class CandidateOrderActivity extends BalanceActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if(myTimer!=null)
             myTimer.cancel();
     }

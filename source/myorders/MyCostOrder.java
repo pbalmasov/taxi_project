@@ -33,7 +33,7 @@ public class MyCostOrder extends Order {
         // TODO:wrong index
         set_invitationtime(invitationtime);
         set_departuretime(departuretime);
-        _accepttime = accepttime;
+        set_accepttime(accepttime);
         _driverstate = driverstate;
         set_orderedtime(orderedtime);
         set_servertime(servertime);
@@ -77,8 +77,8 @@ public class MyCostOrder extends Order {
         if (get_nominalcost() != null)
             array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " " + _context.getString(R.string.currency));
 
-        if (_accepttime != null)
-            array.add("Время приглашения:" + " " + getTimeString(_accepttime));
+        if (get_accepttime() != null)
+            array.add("Время приглашения:" + " " + getTimeString(get_accepttime()));
 
         if (_comment != null)
             array.add(_context.getString(R.string.description) + " " + _comment);
@@ -128,6 +128,14 @@ public class MyCostOrder extends Order {
 
     public void set_orderedtime(Date _orderedtime) {
         this._orderedtime = _orderedtime;
+    }
+
+    public Date get_accepttime() {
+        return _accepttime;
+    }
+
+    public void set_accepttime(Date _accepttime) {
+        this._accepttime = _accepttime;
     }
 
 }

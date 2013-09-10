@@ -74,6 +74,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             }
         });
         doBindService();
+        Log.d("My_tag","create");
 
     }
 
@@ -244,12 +245,9 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             if (candidate != "" && !candidateId.equalsIgnoreCase(candidate)) {
                 candidateId = candidate;
                 Intent intent = new Intent(this, CandidateOrderActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Bundle bundle = new Bundle();
                 bundle.putString("id", candidate);
                 intent.putExtras(bundle);
-                if (myTimer != null)
-                    myTimer.cancel();
                 startActivityForResult(intent,REQUEST_EXIT);
                 //startActivityForResult
             }
@@ -295,6 +293,8 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             if (refreshperiod != newrefreshperiod) {
                 refreshperiod = newrefreshperiod;
                 update = true;
+                if(myTimer!=null)
+                    myTimer.cancel();
                 myTimer = new Timer();
             }
         }
@@ -330,6 +330,15 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     protected void onStop() {
         super.onStop();
         Log.d("My_tag","stop free order");
+      //  doUnbindService();
+        if (myTimer != null)
+            myTimer.cancel();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("My_tag","destroy free order");
         doUnbindService();
         if (myTimer != null)
             myTimer.cancel();
@@ -348,6 +357,9 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
 
         if (requestCode == REQUEST_EXIT) {
             if (resultCode == RESULT_OK) {
+                Log.d("My_tag","on result");
+                Intent intent = new Intent(this, MyOrderActivity.class);
+                startActivity(intent);
                 this.finish();
             }
         }

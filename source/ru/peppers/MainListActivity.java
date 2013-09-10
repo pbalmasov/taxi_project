@@ -24,6 +24,8 @@ import org.w3c.dom.NodeList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -181,7 +183,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                         case 2:
                             if (driver.getStatus() != null) {
                                 if (driver.getStatus() == 1) {
-                                    //startMyOrderItemActivity();
+                                    startMyOrderItemActivity();
                                     return;
                                 }
                                 if (driver.getStatus() != 3) {
@@ -252,32 +254,35 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 PhpData.errorFromServer(MainListActivity.this, errorNode);
             else {
                 try {
-                    getLastIndex(doc);
+                    int index = getLastIndex(doc);
+                    if (index != -1) {
+                        Intent intent = new Intent(MainListActivity.this, MyOrderItemActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("index", index);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
                 }
             }
         }
 
-
-
-
-
-
-        Driver driver = TaxiApplication.getDriver(this);
-        Bundle extras = getIntent().getExtras();
-        Intent intent;
-        if (driver.getOrders() != null)
-            if (driver.getOrders().size() > 0)
-                extras.putInt("index", 0);
-        intent = new Intent(MainListActivity.this, MyOrderActivity.class);
-        intent.putExtras(extras);
-        startActivity(intent);
+        // Driver driver = TaxiApplication.getDriver(this);
+        // Bundle extras = getIntent().getExtras();
+        // Intent intent;
+        // if (driver.getOrders() != null)
+        // if (driver.getOrders().size() > 0)
+        // extras.putInt("index", 0);
+        // intent = new Intent(MainListActivity.this, MyOrderActivity.class);
+        // intent.putExtras(extras);
+        // startActivity(intent);
     }
-
 
     private int getLastIndex(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
+        if (nodeList.getLength() == 0)
+            return -1;
         Node servertimeNode = doc.getElementsByTagName("time").item(0);
         ArrayList<Order> orders = new ArrayList<Order>();
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -373,8 +378,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 orders.get(i).setRides(quantity);
             }
         }
-        //TODO:get index
-        return 0;
+        return Integer.valueOf(orders.get(0).get_index());
     }
 
     private OnClickListener onCallbackClickListener() {

@@ -169,6 +169,9 @@ public class Driver {
     }
 
     public String getClassAutoString() {
+        if(_carClass==null)
+            return "";
+
         Resources res = _context.getResources();
         String[] carClass = res.getStringArray(R.array.class_array);
         Log.d("My_tag", String.valueOf(getCarId()));

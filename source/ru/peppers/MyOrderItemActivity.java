@@ -77,7 +77,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 tv.append(orderList.get(i));
                 tv.append("\n");
             }
-        } catch (IndexOutOfBoundsException e) {
+        } catch (Exception e) {
             Log.d("My_tag", "error index");
             order_index = String.valueOf(index);
         }
@@ -332,6 +332,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         super.onResume();
         Log.d("My_tag", "resume");
         getOrder();
+        if(order!=null)
         if (order.get_departuretime() != null) {
             if (order.get_servertime() != null)
                 if (order.get_servertime().before(order.get_departuretime())

@@ -140,7 +140,6 @@ public class CandidateOrderActivity extends BalanceActivity {
                 try {
                     if(myTimer!=null)
                         myTimer.cancel();
-                    setResult(RESULT_OK);
                     finish();
                     // initOrder(doc);
                 } catch (Exception e) {

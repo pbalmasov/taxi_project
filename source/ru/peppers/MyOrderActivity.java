@@ -1,9 +1,13 @@
 package ru.peppers;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,6 +42,9 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
     private ArrayAdapter<Order> arrayAdapter;
     private Integer refreshperiod = null;
     private boolean start = false;
+    private PhpService myService;
+    private boolean bound;
+    private String candidateId = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,8 +88,48 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
 //        if(PhpData.isNetworkAvailable(MyOrderActivity.this))
 //        startActivityForResult(intent, REQUEST_EXIT);
 
-        getOrders();
+        doBindService();
+        Log.d("My_tag","create");
     }
+
+
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+
+            myService = null;
+            bound = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName arg0, IBinder service) {
+
+            myService = ((PhpService.ServiceBinder) service).getService();
+            myService.isStop = false;
+            candidateId = myService.candidateId;
+            bound = true;
+        }
+    };
+
+    void doBindService() {
+
+        boolean bound = bindService(new Intent(this, PhpService.class), serviceConnection,
+                Context.BIND_AUTO_CREATE);
+        if (bound) {
+            Log.d("My_tag", "Successfully bound to service");
+        } else {
+
+            Log.d("My_tag", "Failed to bind service");
+        }
+    }
+
+    void doUnbindService() {
+        myService.isStop = true;
+        myService.candidateId = candidateId;
+        unbindService(serviceConnection);
+    }
+
 
     @Override
     public void onTaskComplete(Document doc) {
@@ -114,13 +161,6 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        myTimer.cancel();
-    }
-
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
@@ -239,6 +279,27 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
         // itemsList.add(createItem("item", "Отчет"));
         // itemsList.add(createItem("item", "Звонок из офиса"));
         // itemsList.add(createItem("item", "Настройки"));
+
+        if (myService != null) {
+            Node candidateNode = doc.getElementsByTagName("candidateorderid").item(0);
+            String candidate = "";
+            if (!candidateNode.getTextContent().equalsIgnoreCase(""))
+                candidate = candidateNode.getTextContent();
+            Log.d("My_tag", candidate + " " + candidateId);
+            if (candidate != "" && !candidateId.equalsIgnoreCase(candidate)) {
+                candidateId = candidate;
+                Intent intent = new Intent(this, CandidateOrderActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", candidate);
+                intent.putExtras(bundle);
+                startActivityForResult(intent,REQUEST_EXIT);
+                //startActivityForResult
+            }
+        }
+
+
+
+
         Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
         Integer newrefreshperiod = null;
         if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
@@ -253,6 +314,9 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             if (refreshperiod != newrefreshperiod) {
                 refreshperiod = newrefreshperiod;
                 update = true;
+                if(myTimer!=null)
+                    myTimer.cancel();
+                myTimer = new Timer();
             }
         }
 
@@ -284,10 +348,37 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("My_tag","stop free order");
+      //  doUnbindService();
+        if (myTimer != null)
+            myTimer.cancel();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("My_tag","destroy free order");
+        doUnbindService();
+        if (myTimer != null)
+            myTimer.cancel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("My_tag","resume free order");
+        refreshperiod = null;
+        getOrders();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_EXIT) {
             if (resultCode == RESULT_OK) {
+                Log.d("My_tag","on result");
                 this.finish();
             }
         }

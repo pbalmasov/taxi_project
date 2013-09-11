@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -284,7 +285,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
         if (nodeList.getLength() == 0)
             return -1;
         Node servertimeNode = doc.getElementsByTagName("time").item(0);
-        ArrayList<Order> orders = new ArrayList<Order>();
+        ArrayList<MyCostOrder> orders = new ArrayList<MyCostOrder>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element item = (Element) nodeList.item(i);
 
@@ -378,6 +379,15 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 orders.get(i).setRides(quantity);
             }
         }
+        Log.d("My_tag",orders.toString());
+        Collections.sort(orders,new Comparator<MyCostOrder>() {
+
+            @Override
+            public int compare(MyCostOrder lhs, MyCostOrder rhs) {
+                return lhs.get_accepttime().compareTo(rhs.get_accepttime());
+            }
+        });
+        Log.d("My_tag",orders.toString());
         return Integer.valueOf(orders.get(0).get_index());
     }
 

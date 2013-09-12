@@ -69,8 +69,11 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
 
-                if (PhpData.isNetworkAvailable(FreeOrderActivity.this))
+                if (PhpData.isNetworkAvailable(FreeOrderActivity.this)){
+                    if (myTimer != null)
+                        myTimer.cancel();
                     startActivityForResult(intent, REQUEST_EXIT);
+                }
             }
         });
         doBindService();
@@ -248,6 +251,8 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 Bundle bundle = new Bundle();
                 bundle.putString("id", candidate);
                 intent.putExtras(bundle);
+                if (myTimer != null)
+                    myTimer.cancel();
                 startActivityForResult(intent,REQUEST_EXIT);
                 //startActivityForResult
             }
@@ -331,8 +336,6 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
         super.onStop();
         Log.d("My_tag","stop free order");
       //  doUnbindService();
-        if (myTimer != null)
-            myTimer.cancel();
     }
 
     @Override

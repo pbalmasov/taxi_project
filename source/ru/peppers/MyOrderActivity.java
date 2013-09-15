@@ -35,8 +35,9 @@ import model.Driver;
 import model.Order;
 import myorders.MyCostOrder;
 
-public class MyOrderActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document>{
+public class MyOrderActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     private static final int REQUEST_EXIT = 0;
+    private static final int REQUEST_CLOSE = 1;
     private ArrayList<Order> orders = new ArrayList<Order>();
     private Timer myTimer = new Timer();
     private ArrayAdapter<Order> arrayAdapter;
@@ -65,33 +66,33 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
                 // bundle.putInt("id", id);
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
-                if(PhpData.isNetworkAvailable(MyOrderActivity.this))
-                startActivityForResult(intent, REQUEST_EXIT);
+                if (PhpData.isNetworkAvailable(MyOrderActivity.this))
+                    startActivityForResult(intent, REQUEST_EXIT);
             }
         });
 
-
-//        Driver driver = TaxiApplication.getDriver();
+        // Driver driver = TaxiApplication.getDriver();
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server
-//       ArrayList<Order> orders = new ArrayList<Order>();
-//       Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
-//       calendar.add(Calendar.MINUTE, 5);
-//       System.out.println(calendar.getTime());
-//       orders.add(new MyCostOrder(this, "asdas", "", "", 1, "", "", 1, null, calendar.getTime(), calendar.getTime(), 1,new Date()));
-//        TaxiApplication.getDriver().setOrders(orders);
-//
-//        Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
-//        Bundle bundle = new Bundle();
-//        // bundle.putInt("id", id);
-//        bundle.putInt("index", 0);
-//        intent.putExtras(bundle);
-//        if(PhpData.isNetworkAvailable(MyOrderActivity.this))
-//        startActivityForResult(intent, REQUEST_EXIT);
+        // ArrayList<Order> orders = new ArrayList<Order>();
+        // Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and
+        // locale.
+        // calendar.add(Calendar.MINUTE, 5);
+        // System.out.println(calendar.getTime());
+        // orders.add(new MyCostOrder(this, "asdas", "", "", 1, "", "", 1, null, calendar.getTime(),
+        // calendar.getTime(), 1,new Date()));
+        // TaxiApplication.getDriver().setOrders(orders);
+        //
+        // Intent intent = new Intent(MyOrderActivity.this, MyOrderItemActivity.class);
+        // Bundle bundle = new Bundle();
+        // // bundle.putInt("id", id);
+        // bundle.putInt("index", 0);
+        // intent.putExtras(bundle);
+        // if(PhpData.isNetworkAvailable(MyOrderActivity.this))
+        // startActivityForResult(intent, REQUEST_EXIT);
 
         doBindService();
-        Log.d("My_tag","create");
+        Log.d("My_tag", "create");
     }
-
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -129,7 +130,6 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
         myService.candidateId = candidateId;
         unbindService(serviceConnection);
     }
-
 
     @Override
     public void onTaskComplete(Document doc) {
@@ -184,7 +184,6 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
             Node orderedtimeNode = item.getElementsByTagName("orderedtime").item(0);
 
-
             Integer driverstate = null;
             Date accepttime = null;
             String nominalcost = null;
@@ -212,7 +211,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
                 servertime = format.parse(servertimeNode.getTextContent());
 
             if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
-            	driverstate = Integer.valueOf(driverstateNode.getTextContent());
+                driverstate = Integer.valueOf(driverstateNode.getTextContent());
 
             if (!classNode.getTextContent().equalsIgnoreCase(""))
                 carClass = Integer.valueOf(classNode.getTextContent());
@@ -248,7 +247,8 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
                 orderedtime = format.parse(orderedtimeNode.getTextContent());
 
             orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate,servertime,orderedtime));
+                    addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
+                    servertime, orderedtime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();
@@ -259,7 +259,6 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
                 orders.get(i).setRides(quantity);
             }
         }
-
 
         Driver driver = TaxiApplication.getDriver(this);
         // if driver.order == null // else driver.setOrderWithIndex // or get date from server
@@ -292,19 +291,15 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
                 Bundle bundle = new Bundle();
                 bundle.putString("id", candidate);
                 intent.putExtras(bundle);
-                startActivityForResult(intent,REQUEST_EXIT);
-                //startActivityForResult
+                startActivityForResult(intent, REQUEST_CLOSE);
+                // startActivityForResult
             }
         }
-
-
-
 
         Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
         Integer newrefreshperiod = null;
         if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
             newrefreshperiod = Integer.valueOf(refreshperiodNode.getTextContent());
-
 
         boolean update = false;
 
@@ -314,7 +309,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
             if (refreshperiod != newrefreshperiod) {
                 refreshperiod = newrefreshperiod;
                 update = true;
-                if(myTimer!=null)
+                if (myTimer != null)
                     myTimer.cancel();
                 myTimer = new Timer();
             }
@@ -350,8 +345,8 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("My_tag","stop free order");
-      //  doUnbindService();
+        Log.d("My_tag", "stop free order");
+        // doUnbindService();
         if (myTimer != null)
             myTimer.cancel();
     }
@@ -359,7 +354,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("My_tag","destroy free order");
+        Log.d("My_tag", "destroy free order");
         doUnbindService();
         if (myTimer != null)
             myTimer.cancel();
@@ -368,7 +363,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("My_tag","resume free order");
+        Log.d("My_tag", "resume free order");
         refreshperiod = null;
         getOrders();
     }
@@ -378,7 +373,16 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
 
         if (requestCode == REQUEST_EXIT) {
             if (resultCode == RESULT_OK) {
-                Log.d("My_tag","on result");
+                Log.d("My_tag", "on result");
+                this.finish();
+            }
+        } else if (requestCode == REQUEST_CLOSE) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent(this, MyOrderItemActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("index", 0);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 this.finish();
             }
         }

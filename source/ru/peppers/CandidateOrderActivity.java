@@ -123,6 +123,10 @@ public class CandidateOrderActivity extends BalanceActivity {
             else {
                 try {
                     setResult(RESULT_OK);
+
+                    ArrayList<Order> arrayList = new ArrayList<Order>();
+                    arrayList.add(order);
+                    TaxiApplication.getDriver(this).setOrders(arrayList);
                     finish();
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
@@ -147,7 +151,7 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-                    if(myTimer!=null)
+                    if (myTimer != null)
                         myTimer.cancel();
                     finish();
                     // initOrder(doc);
@@ -270,7 +274,7 @@ public class CandidateOrderActivity extends BalanceActivity {
             orderId = orderIdNode.getTextContent();
 
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype,null , departuretime, null, null,null,null);
+                addressarrival, paymenttype, null, departuretime, null, null, null, null);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();
@@ -336,7 +340,7 @@ public class CandidateOrderActivity extends BalanceActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(myTimer!=null)
+        if (myTimer != null)
             myTimer.cancel();
     }
 }

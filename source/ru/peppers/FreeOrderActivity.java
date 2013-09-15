@@ -361,9 +361,12 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
         if (requestCode == REQUEST_EXIT) {
             if (resultCode == RESULT_OK) {
                 Log.d("My_tag","on result");
-                Intent intent = new Intent(this, MyOrderActivity.class);
-                startActivity(intent);
                 this.finish();
+                Intent intent = new Intent(this, MyOrderItemActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("index", 0);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         }
     }

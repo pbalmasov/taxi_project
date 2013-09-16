@@ -46,6 +46,7 @@
         <activity
                 android:label="Кандидатский заказ"
                 android:name=".CandidateOrderActivity"></activity>
+        <activity android:label="Ошибка"  android:name=".CrashActivity"></activity>
 
         <service android:name=".PhpService" android:process=":process"></service>
         <receiver android:name=".NetworkStateReceiver">

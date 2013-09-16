@@ -78,9 +78,9 @@ public class ReportCostOrder extends Order {
 
         array.add("Расчетная стоимость:" + " " + costValue);
 
-        if (_comment == null)
-            _comment = "не указано";
-        array.add(_context.getString(R.string.description) + " " + _comment);
+        if (get_comment() == null)
+            set_comment("не указано");
+        array.add(_context.getString(R.string.description) + " " + get_comment());
         return array;
     }
 

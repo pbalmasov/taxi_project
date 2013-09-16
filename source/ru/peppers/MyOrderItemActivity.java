@@ -235,6 +235,13 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
         // accepttime = format.parse(accepttimeNode.getTextContent());
 
+        if(order!=null)
+            if(order.get_comment()==null && comment!=null){
+                MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
+                mp.start();
+            }
+
+
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
                 addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
                 servertime, ordertime);

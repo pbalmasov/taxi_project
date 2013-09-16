@@ -80,8 +80,8 @@ public class MyCostOrder extends Order {
         if (get_accepttime() != null)
             array.add("Время приглашения:" + " " + getTimeString(get_accepttime()));
 
-        if (_comment != null)
-            array.add(_context.getString(R.string.description) + " " + _comment);
+        if (get_comment() != null)
+            array.add(_context.getString(R.string.description) + " " + get_comment());
         return array;
     }
 

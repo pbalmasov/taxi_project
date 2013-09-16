@@ -62,8 +62,8 @@ public class CostOrder extends Order {
         if (get_nominalcost() != null)
             array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " " + _context.getString(R.string.currency));
 
-        if (_comment != null)
-            array.add(_context.getString(R.string.description) + " " + _comment);
+        if (get_comment() != null)
+            array.add(_context.getString(R.string.description) + " " + get_comment());
         return array;
     }
 

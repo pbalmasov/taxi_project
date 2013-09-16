@@ -18,7 +18,7 @@ public class Order implements OrderInterface {
 
     protected String _addressdeparture;
     protected Integer _carClass;
-    protected String _comment;
+    private String _comment;
     private String _addressarrival;
     protected String _index;
     private String _nominalcost;
@@ -34,7 +34,7 @@ public class Order implements OrderInterface {
         set_paymenttype(paymenttype);
         _addressdeparture = adress;
         _carClass = carClass;
-        _comment = orderText;
+        set_comment(orderText);
         set_addressarrival(where);
         _index = index;
         set_nominalcost(nominalcost);
@@ -120,5 +120,13 @@ public class Order implements OrderInterface {
 
     public void set_nominalcost(String _nominalcost) {
         this._nominalcost = _nominalcost;
+    }
+
+    public String get_comment() {
+        return _comment;
+    }
+
+    public void set_comment(String _comment) {
+        this._comment = _comment;
     }
 }

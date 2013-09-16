@@ -22,6 +22,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +54,26 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainlist);
         // init();
+
+        Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String str = sw.toString();
+
+                Intent crashedIntent = new Intent(MainListActivity.this, CrashActivity.class);
+                crashedIntent.putExtra("crash", str);
+                crashedIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                crashedIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(crashedIntent);
+                System.exit(0);
+            }
+        });
+
+
     }
 
     @Override
@@ -163,7 +186,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
 
             simpleAdpt = new SimpleAdapter(this, itemsList, android.R.layout.simple_list_item_1,
                     new String[] { "item" }, new int[] { android.R.id.text1 });
-
             lv.setAdapter(simpleAdpt);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

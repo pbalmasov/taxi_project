@@ -37,8 +37,6 @@ public class DistrictListActivity extends BalanceActivity implements AsyncTaskCo
 
         Bundle bundle = getIntent().getExtras();
         String districtid = bundle.getString("districtid");
-        String iasd = null;
-        iasd.charAt(0);
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));

@@ -44,7 +44,7 @@ public class TaxiApplication extends Application {
 
     public static Driver getDriver(Activity context) {
         if (driver == null)
-            return new Driver(context, 0, 0, "", "");
+            driver = new Driver(context, 0, 0, null, null);
         return driver;
     }
 

@@ -69,7 +69,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 crashedIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 crashedIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(crashedIntent);
-                System.exit(0);
+                System.exit(1);
             }
         });
 
@@ -118,6 +118,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     }
 
     private void parseMainList(Document doc) {
+        Log.d("My_tag","parse main");
         // int carClass =
         // Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
         Integer status = 3;

@@ -18,7 +18,7 @@ public class CrashActivity extends Activity {
 
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, new String[] { "coxe@post.ru" });
+        i.putExtra(Intent.EXTRA_EMAIL, new String[] { "shadrinov@ntechs.ru" });
         i.putExtra(Intent.EXTRA_SUBJECT, "Ошибка");
         i.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra("crash"));
         try {

@@ -56,7 +56,7 @@ public class PhpService extends Service {
     }
 
     @Override
-    public IBinder onBind( Intent intent ) {
+    public IBinder onBind(Intent intent) {
 
         return binder;
     }
@@ -93,23 +93,23 @@ public class PhpService extends Service {
         // notif.flags |= Notification.FLAG_AUTO_CANCEL;
         // startForeground(2, notif);
         getStatus();
-//        final Timer myTimer = new Timer(); // Создаем таймер
-//        final Handler uiHandler = new Handler();
-//
-//        final TimerTask timerTask = new TimerTask() { // Определяем задачу
-//            @Override
-//            public void run() {
-//                uiHandler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (isStop)
-//                            getStatus();
-//                    }
-//                });
-//            }
-//        };
-//
-//        myTimer.schedule(timerTask, 0L, 1000 * 60);
+        // final Timer myTimer = new Timer(); // Создаем таймер
+        // final Handler uiHandler = new Handler();
+        //
+        // final TimerTask timerTask = new TimerTask() { // Определяем задачу
+        // @Override
+        // public void run() {
+        // uiHandler.post(new Runnable() {
+        // @Override
+        // public void run() {
+        // if (isStop)
+        // getStatus();
+        // }
+        // });
+        // }
+        // };
+        //
+        // myTimer.schedule(timerTask, 0L, 1000 * 60);
 
         // final Handler handler = new Handler();
         // handler.postDelayed(new Runnable() {
@@ -194,9 +194,13 @@ public class PhpService extends Service {
                     uiHandler.post(new Runnable() {
                         @Override
                         public void run() {
+
+                            getMyOrders();
+
                             if (isStop)
                                 getStatus();
                         }
+
                     });
                 }
             };
@@ -204,6 +208,32 @@ public class PhpService extends Service {
             myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
         }
 
+    }
+
+    private void getMyOrders() {
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+        nameValuePairs.add(new BasicNameValuePair("action", "list"));
+        nameValuePairs.add(new BasicNameValuePair("mode", "my"));
+        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+        nameValuePairs.add(new BasicNameValuePair("object", "order"));
+        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
+        if (doc != null) {
+            Node responseNode = doc.getElementsByTagName("response").item(0);
+            Node errorNode = doc.getElementsByTagName("message").item(0);
+
+            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                PhpData.errorFromServer(this, errorNode);
+            else {
+                try {
+                    parseOrders(doc);
+                } catch (Exception e) {
+                    PhpData.errorHandler(this, e);
+                }
+            }
+        }
+    }
+
+    private void parseOrders(Document doc) {
 
     }
 
@@ -353,6 +383,5 @@ public class PhpService extends Service {
         return orders;
 
     }
-
 
 }

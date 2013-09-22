@@ -24,6 +24,7 @@ import org.w3c.dom.NodeList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -31,6 +32,7 @@ import java.util.TimerTask;
 
 import model.Message;
 import model.Order;
+import myorders.MyCostOrder;
 
 public class PhpService extends Service {
     NotificationManager nm;
@@ -233,8 +235,50 @@ public class PhpService extends Service {
         }
     }
 
-    private void parseOrders(Document doc) {
+    private void parseOrders(Document doc) throws DOMException, ParseException {
+        NodeList nodeList = doc.getElementsByTagName("item");
+        Node servertimeNode = doc.getElementsByTagName("time").item(0);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element item = (Element) nodeList.item(i);
 
+            Node orderIdNode = item.getElementsByTagName("orderid").item(0);
+            Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
+
+            Date departuretime = null;
+            Date servertime = null;
+            String orderId = null;
+            // if(departuretime==null)
+            // //TODO:не предварительный
+            // else
+            // //TODO:предварительный
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+            if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
+                servertime = format.parse(servertimeNode.getTextContent());
+
+            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
+                departuretime = format.parse(departuretimeNode.getTextContent());
+
+            if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
+                orderId = orderIdNode.getTextContent();
+
+            if (departuretime != null && servertime != null && orderId != null) {
+                Log.d("My_tag", departuretime.toGMTString()+" "+servertime.toGMTString());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(departuretime);
+                cal.add(Calendar.MINUTE, -1);
+                if (servertime.after(cal.getTime())) {
+                    Intent intent = new Intent(this, MyOrderItemActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", orderId);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+
+        }
     }
 
     private void initMainList(Document doc) throws DOMException, ParseException {

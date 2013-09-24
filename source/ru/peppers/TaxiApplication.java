@@ -23,6 +23,7 @@ public class TaxiApplication extends Application {
     /** The type list. */
     private static Driver driver;
     public static NetworkStateReceiver networkStateReceiver;
+    private PowerManager pm;
 
     @Override
     public void onCreate() {
@@ -40,6 +41,11 @@ public class TaxiApplication extends Application {
         // Toast.makeText(getApplicationContext(), "Run from timer", Toast.LENGTH_SHORT).show();
         // }
         // }, 2000);
+
+//        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Tag");
+//        wl.acquire();
+
     }
 
     public static Driver getDriver(Activity context) {

@@ -272,7 +272,7 @@ public class PhpService extends Service {
                     Intent intent = new Intent(this, MyOrderItemActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle bundle = new Bundle();
-                    bundle.putString("id", orderId);
+                    bundle.putString("index", orderId);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }

@@ -173,6 +173,10 @@ public class SubDistrictActivity extends BalanceActivity implements AsyncTaskCom
                         startActivityForResult(intent, REQUEST_CLOSE);
                         finish();
                     }
+                    else{
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                 }
 
                 dialog.dismiss();

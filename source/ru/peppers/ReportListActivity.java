@@ -60,6 +60,10 @@ public class ReportListActivity extends BalanceActivity implements AsyncTaskComp
                 intent.putExtras(bundle);
                 if (PhpData.isNetworkAvailable(ReportListActivity.this))
                     startActivity(intent);
+                else {
+                    setResult(RESULT_OK);
+                    finish();
+                }
             }
         });
 

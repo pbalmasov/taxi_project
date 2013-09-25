@@ -273,6 +273,7 @@ public class PhpService extends Service {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle bundle = new Bundle();
                     bundle.putString("index", orderId);
+                    bundle.putBoolean("initdialog", true);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }

@@ -69,15 +69,18 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 bundle.putInt("index", position);
                 intent.putExtras(bundle);
 
-                if (PhpData.isNetworkAvailable(FreeOrderActivity.this)){
+                if (PhpData.isNetworkAvailable(FreeOrderActivity.this)) {
                     if (myTimer != null)
                         myTimer.cancel();
                     startActivityForResult(intent, REQUEST_EXIT);
+                } else {
+                    setResult(RESULT_OK);
+                    finish();
                 }
             }
         });
         doBindService();
-        Log.d("My_tag","create");
+        Log.d("My_tag", "create");
 
     }
 
@@ -253,8 +256,8 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 intent.putExtras(bundle);
                 if (myTimer != null)
                     myTimer.cancel();
-                startActivityForResult(intent,REQUEST_EXIT);
-                //startActivityForResult
+                startActivityForResult(intent, REQUEST_EXIT);
+                // startActivityForResult
             }
         }
 
@@ -298,7 +301,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
             if (refreshperiod != newrefreshperiod) {
                 refreshperiod = newrefreshperiod;
                 update = true;
-                if(myTimer!=null)
+                if (myTimer != null)
                     myTimer.cancel();
                 myTimer = new Timer();
             }
@@ -334,14 +337,14 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("My_tag","stop free order");
-      //  doUnbindService();
+        Log.d("My_tag", "stop free order");
+        // doUnbindService();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("My_tag","destroy free order");
+        Log.d("My_tag", "destroy free order");
         doUnbindService();
         if (myTimer != null)
             myTimer.cancel();
@@ -350,7 +353,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("My_tag","resume free order");
+        Log.d("My_tag", "resume free order");
         refreshperiod = null;
         getOrders();
     }
@@ -360,7 +363,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
 
         if (requestCode == REQUEST_EXIT) {
             if (resultCode == RESULT_OK) {
-                Log.d("My_tag","on result");
+                Log.d("My_tag", "on result");
                 this.finish();
                 Intent intent = new Intent(this, MyOrderItemActivity.class);
                 Bundle bundle = new Bundle();

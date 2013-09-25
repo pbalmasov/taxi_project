@@ -51,8 +51,9 @@ public class ReportActivity extends BalanceActivity {
 
         if (requestCode == REQUEST_GET) {
             if (resultCode == RESULT_OK) {
-                if(itemsList!=null){
-                    itemsList.set(itemsList.size()-1, "Жду заказа: " + TaxiApplication.getDriver(this).getWaitString());
+                if (itemsList != null) {
+                    itemsList.set(itemsList.size() - 1, "Жду заказа: "
+                            + TaxiApplication.getDriver(this).getWaitString());
                     simpleAdpt.notifyDataSetChanged();
                 }
             }
@@ -71,7 +72,7 @@ public class ReportActivity extends BalanceActivity {
         itemsList.add("Статус: " + driver.getStatusString());
         itemsList.add("Класс: " + driver.getClassAutoString());
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if(settings.getString("pozivnoidata", "").equalsIgnoreCase("500"))
+        if (settings.getString("pozivnoidata", "").equalsIgnoreCase("500"))
             itemsList.add("Жду заказа: " + TaxiApplication.getDriver(this).getWaitString());
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
@@ -84,22 +85,25 @@ public class ReportActivity extends BalanceActivity {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
                 if (position == 3) {
                     Intent intent = new Intent(ReportActivity.this, WaitActivity.class);
-                    if(PhpData.isNetworkAvailable(ReportActivity.this))
-                    startActivityForResult(intent,REQUEST_GET);
-                } else if (position == 2 && driver.getCarId() != 1 && driver.getClassAuto()!=null) {
+                    if (PhpData.isNetworkAvailable(ReportActivity.this))
+                        startActivityForResult(intent, REQUEST_GET);
+                    else {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                } else if (position == 2 && driver.getCarId() != 1 && driver.getClassAuto() != null) {
                     Resources res = ReportActivity.this.getResources();
                     String[] classArray = res.getStringArray(R.array.class_array);
 
-//                    <item>Эконом</item> 0
-//                    <item>Стандарт</item> 1
-//                    <item>Базовый</item> 2
+                    // <item>Эконом</item> 0
+                    // <item>Стандарт</item> 1
+                    // <item>Базовый</item> 2
 
-//                  если classid=3 базовый=базовый   стандарт=стандарт,базовый   эконом=эконом,стандарт,базовый
-//                  если classid=2, базовый=нельзя   стандарт=стандарт   эконом=стандарт, эконом
+                    // если classid=3 базовый=базовый стандарт=стандарт,базовый эконом=эконом,стандарт,базовый
+                    // если classid=2, базовый=нельзя стандарт=стандарт эконом=стандарт, эконом
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(classArray));
                     if (driver.getCarId() == 2)
                         arrayList.remove(2);
-
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
                     builder.setTitle("Выбор статуса");
@@ -132,7 +136,6 @@ public class ReportActivity extends BalanceActivity {
         return new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Driver driver = TaxiApplication.getDriver(ReportActivity.this);
-
 
                 int[] statusArray = { 0, 2, 3 };
                 if (driver.getStatus() != null)
@@ -190,7 +193,7 @@ public class ReportActivity extends BalanceActivity {
                         if (responseNode.getTextContent().equalsIgnoreCase("failure"))
                             PhpData.errorFromServer(ReportActivity.this, errorNode);
                         else {
-                            driver.setClassAuto(item+1);
+                            driver.setClassAuto(item + 1);
                             itemsList.set(position, "Класс: " + driver.getClassAutoString());
                             simpleAdpt.notifyDataSetChanged();
                         }

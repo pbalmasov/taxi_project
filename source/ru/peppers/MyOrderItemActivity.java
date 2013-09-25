@@ -56,6 +56,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     private boolean start = false;
 
     private String order_index;
+    private boolean isDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         setContentView(R.layout.myorder);
         Bundle bundle = getIntent().getExtras();
         int index = bundle.getInt("index");
+        isDialog = bundle.getBoolean("initdialog");
 
         counterView = (TextView) findViewById(R.id.textView1);
         tv = (TextView) findViewById(R.id.textView2);
@@ -325,6 +327,8 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
         }
 
+        if(isDialog)
+            initActionDialog();
     }
 
     @Override
@@ -868,6 +872,11 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 intent.putExtra("close", true);
                 if (PhpData.isNetworkAvailable(MyOrderItemActivity.this))
                     startActivityForResult(intent, REQUEST_EXIT);
+                else
+                {
+                    setResult(RESULT_OK);
+                    finish();
+                }
             }
 
         });

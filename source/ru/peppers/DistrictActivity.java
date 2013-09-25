@@ -124,6 +124,8 @@ public class DistrictActivity extends BalanceActivity implements AsyncTaskComple
 					startActivityForResult(intent, REQUEST_CLOSE);
 				else
 					startActivityForResult(intent, REQUEST_EXIT);
+				}else{
+				    finish();
 				}
 			}
 

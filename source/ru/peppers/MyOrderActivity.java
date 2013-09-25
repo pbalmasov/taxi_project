@@ -68,6 +68,10 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
                 intent.putExtras(bundle);
                 if (PhpData.isNetworkAvailable(MyOrderActivity.this))
                     startActivityForResult(intent, REQUEST_EXIT);
+                else{
+                        setResult(RESULT_OK);
+                        finish();
+                    }
             }
         });
 

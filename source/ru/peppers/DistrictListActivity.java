@@ -167,6 +167,10 @@ public class DistrictListActivity extends BalanceActivity implements AsyncTaskCo
 
                 if (PhpData.isNetworkAvailable(DistrictListActivity.this))
                     startActivityForResult(intent, REQUEST_CLOSE);
+                else{
+                    setResult(RESULT_OK);
+                    finish();
+                }
             }
         });
     }

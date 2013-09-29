@@ -1,27 +1,5 @@
 package ru.peppers;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -36,14 +14,37 @@ import java.util.List;
 import java.util.Map;
 
 import model.Driver;
-import model.Order;
 import myorders.MyCostOrder;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+/**
+ * Главное активити
+ * @author p.balmasov
+ */
 public class MainListActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     private ListView lv;
     public SimpleAdapter simpleAdpt;
     public List<Map<String, String>> itemsList;
-    private static final String MY_TAG = "My_tag";
     private static final int REQUEST_EXIT = 0;
 
     /**
@@ -505,7 +506,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
         // Handle the back button
         if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
             // Ask the user if they want to quit
-            if (PhpData.errorHappen)
+            if (PhpData.errorHappen || !PhpData.isNetworkAvailable(this))
                 finishApp();
             return true;
         } else {
@@ -533,8 +534,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
             Node errorNode = doc.getElementsByTagName("message").item(0);
 
             if (responseNode.getTextContent().equalsIgnoreCase("failure")) {
-                finishApp();
-            } else {
                 finishApp();
             }
         } else {

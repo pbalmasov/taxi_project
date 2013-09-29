@@ -1,5 +1,25 @@
 package ru.peppers;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import model.Driver;
+import model.Message;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -16,27 +36,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import model.Driver;
-import model.Message;
-
+/**
+ * Начальное активити
+ * @author p.balmasov
+ */
 public class PozivnoiActivity extends BalanceActivity {
     private static final String URL_APK = "http://abs-taxi.ru/abs.apk";// "https://github.com/Icesman/taxi_project/blob/master/bin/TaxiProject.apk?raw=true";
     private static final String URL_MANIFEST = "http://abs-taxi.ru/AndroidManifest.xml";// "https://raw.github.com/Icesman/taxi_project/master/AndroidManifest.xml";

@@ -6,12 +6,9 @@ package model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
- *
- * @author papas
+ * Модель сообщения
+ * @author p.balmasov
  */
 public class Message implements Comparable<Message> {
 

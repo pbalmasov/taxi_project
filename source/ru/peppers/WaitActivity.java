@@ -2,15 +2,15 @@ package ru.peppers;
 
 import java.util.ArrayList;
 
-import model.District;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
+/**
+ * Недоделанная активити
+ * @author p.balmasov
+ */
 public class WaitActivity extends BalanceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -1,17 +1,5 @@
 package ru.peppers;
 
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +8,21 @@ import java.util.List;
 
 import model.Message;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+/**
+ * Сообщения активити
+ * @author p.balmasov
+ */
 public class MessageActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     @Override
     public void onCreate(Bundle savedInstanceState) {

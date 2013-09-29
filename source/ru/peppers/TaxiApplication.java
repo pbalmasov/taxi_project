@@ -1,29 +1,17 @@
 package ru.peppers;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.ObjectInputStream.GetField;
-import java.lang.Thread.UncaughtExceptionHandler;
-
 import model.Driver;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.os.PowerManager;
-import android.widget.Toast;
 
 /**
- * The Class ShopApplication.
+ * Класс приложения для хранения driver
+ * @author p.balmasov
  */
 public class TaxiApplication extends Application {
 
     /** The type list. */
     private static Driver driver;
-    public static NetworkStateReceiver networkStateReceiver;
-    private PowerManager pm;
 
     @Override
     public void onCreate() {

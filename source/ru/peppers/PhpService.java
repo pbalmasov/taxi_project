@@ -1,16 +1,15 @@
 package ru.peppers;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.util.Log;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import model.Order;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -21,19 +20,20 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import model.Message;
-import model.Order;
-import myorders.MyCostOrder;
-
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.util.Log;
+/**
+ * Сервис для отправки запроса каждые n секунд
+ * @author p.balmasov
+ */
 public class PhpService extends Service {
     NotificationManager nm;
     String candidateId = "";
@@ -267,7 +267,7 @@ public class PhpService extends Service {
                 Log.d("My_tag", departuretime.toGMTString()+" "+servertime.toGMTString());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(departuretime);
-                cal.add(Calendar.MINUTE, -1);
+                cal.add(Calendar.MINUTE, -2);
                 if (servertime.after(cal.getTime())) {
                     Intent intent = new Intent(this, MyOrderItemActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -282,76 +282,6 @@ public class PhpService extends Service {
         }
     }
 
-    private void initMainList(Document doc) throws DOMException, ParseException {
-        NodeList nodeList = doc.getElementsByTagName("item");
-        ArrayList<Message> all = new ArrayList<Message>();
-        // ArrayList<Message> readed = new ArrayList<Message>();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-
-            Element item = (Element) nodeList.item(i);
-            boolean isRead = true;
-            if (item.getElementsByTagName("readdate").item(0) == null)
-                isRead = false;
-            int index = Integer.valueOf(item.getElementsByTagName("messageid").item(0).getTextContent());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
-            Date date = format.parse(item.getElementsByTagName("postdate").item(0).getTextContent());
-            String text = item.getElementsByTagName("message").item(0).getTextContent();
-
-            Message message = new Message(text, date, isRead, index);
-            if (!isRead) {
-                all.add(message);
-            }
-
-        }
-
-        for (int i = 0; i < all.size(); i++) {
-
-            Log.d("My_tag", all.get(i).getText());
-            Intent intent = new Intent(this, MessageFromServiceActivity.class);
-            intent.putExtra(MessageFromServiceActivity.TITLE, all.get(i).getDate().toGMTString());
-            intent.putExtra(MessageFromServiceActivity.MESSAGE, all.get(i).getText());
-            PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            Notification notif = new Notification(R.drawable.icon2, this.getString(R.string.new_message),
-                    System.currentTimeMillis());
-            notif.setLatestEventInfo(this, this.getString(R.string.message), all.get(i).getText(), pIntent);
-
-            // ставим флаг, чтобы уведомление пропало после нажатия
-            notif.flags |= Notification.FLAG_AUTO_CANCEL;
-            notif.sound = Uri.parse("android.resource://ru.peppers/" + R.raw.sound);
-
-            notif.defaults |= Notification.DEFAULT_VIBRATE;
-            notif.defaults |= Notification.DEFAULT_LIGHTS;
-
-            notif.flags |= Notification.FLAG_NO_CLEAR;
-            // отправляем
-            nm.notify(i + 1, notif);
-        }
-
-    }
-
-    private void getMessages() {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-        nameValuePairs.add(new BasicNameValuePair("action", "list"));
-        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-        nameValuePairs.add(new BasicNameValuePair("object", "message"));
-
-        Document doc = PhpData.postData(this, nameValuePairs, PhpData.newURL);
-        if (doc != null) {
-            // Node errorNode = doc.getElementsByTagName("error").item(0);
-            //
-            // if (Integer.parseInt(errorNode.getTextContent()) == 1)
-            // new AlertDialog.Builder(this).setTitle("Ошибка")
-            // .setMessage("Ошибка на сервере. Перезапустите приложение.")
-            // .setNeutralButton("Закрыть", null).show();
-            // else {
-            try {
-                initMainList(doc);
-            } catch (Exception e) {
-                PhpData.errorHandler(null, e);
-            }
-        }
-
-    }
 
     private ArrayList<Order> getOrders(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("order");

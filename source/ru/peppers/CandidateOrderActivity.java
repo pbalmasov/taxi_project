@@ -1,34 +1,8 @@
 package ru.peppers;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.TextView;
-
-import orders.CostOrder;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -37,6 +11,29 @@ import java.util.TimerTask;
 import model.Order;
 import myorders.MyCostOrder;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
+import android.widget.TextView;
+/**
+ * Кандидатский заказ
+ * @author p.balmasov
+ */
 public class CandidateOrderActivity extends BalanceActivity {
 
     private TextView tv;

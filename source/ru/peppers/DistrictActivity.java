@@ -21,7 +21,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
+/**
+ * Список районов
+ * @author p.balmasov
+ */
 public class DistrictActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document>{
 	protected static final int REQUEST_EXIT = 0;
 	protected static final int REQUEST_CLOSE = 1;

@@ -18,7 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import orders.CostOrder;
-
+/**
+ * Подробно заказа из района
+ * @author p.balmasov
+ */
 public class DistrictListItemActivity extends BalanceActivity {
 
     private CostOrder order;

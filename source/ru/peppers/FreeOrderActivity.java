@@ -34,7 +34,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
+/**
+ * Свободные заказы, подключение сервиса и отключение
+ * @author p.balmasov
+ */
 public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     protected static final int REQUEST_EXIT = 0;
     private ArrayList<Order> orders = new ArrayList<Order>();

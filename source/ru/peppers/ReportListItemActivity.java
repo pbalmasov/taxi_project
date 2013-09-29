@@ -1,12 +1,12 @@
 package ru.peppers;
 
 import model.Order;
-import android.app.Activity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-
+/**
+ * Отчет подробно активити
+ * @author p.balmasov
+ */
 public class ReportListItemActivity extends BalanceActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {

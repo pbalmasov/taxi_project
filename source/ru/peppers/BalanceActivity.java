@@ -1,17 +1,15 @@
 package ru.peppers;
 
-import org.w3c.dom.Document;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
-
+/**
+ * Базовая активити от нее все наследуются, здесь устанавливаются баланс и позывной
+ * @author p.balmasov
+ */
 public class BalanceActivity extends Activity {
 
     public TextView title;

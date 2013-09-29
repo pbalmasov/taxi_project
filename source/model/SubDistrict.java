@@ -5,8 +5,8 @@
 package model;
 
 /**
- *
- * @author papas
+ * Модель подрайона
+ * @author p.balmasov
  */
 public class SubDistrict {
     private int _drivers;

@@ -3,18 +3,17 @@
  */
 package orders;
 
-import android.content.Context;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 import model.Order;
 import ru.peppers.R;
+import android.content.Context;
 
 /**
- * @author papas
+ * Заказ в отчет
+ * @author p.balmasov
  */
 public class ReportCostOrder extends Order {
 

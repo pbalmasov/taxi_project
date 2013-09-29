@@ -8,7 +8,7 @@ import java.util.Vector;
 
 /**
  *
- * @author papas
+ * @author p.balmasov
  */
 public class Util {
 

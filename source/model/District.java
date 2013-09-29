@@ -7,8 +7,8 @@ package model;
 import java.util.ArrayList;
 
 /**
- *
- * @author papas
+ * Модель района
+ * @author p.balmasov
  */
 public class District {
 

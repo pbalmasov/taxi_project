@@ -12,7 +12,8 @@ import java.util.Date;
 import ru.peppers.R;
 
 /**
- * @author papas
+ * Заказ
+ * @author p.balmasov
  */
 public class Order implements OrderInterface {
 

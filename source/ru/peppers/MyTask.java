@@ -6,9 +6,11 @@ import org.apache.http.NameValuePair;
 import org.w3c.dom.Document;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
-
+/**
+ * Асинхронное задание
+ * @author p.balmasov
+ */
 public class MyTask extends AsyncTask<List<NameValuePair>, Void, Document> {
 
     private ProgressDialog progress;

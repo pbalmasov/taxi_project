@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import ru.peppers.R;
 
 /**
- *
- * @author papas
+ * Модель водителя
+ * @author p.balmasov
  */
 public class Driver {
 
@@ -61,12 +61,10 @@ public class Driver {
         return getStatusString() + " " + _area + " " + _city + " " + getClassAuto();
     }
 
-    // naher ne nado
     public Message getMessage(int index) {
         return _messages.get(index);
     }
 
-    // naher ne nado
     public int reportsCount() {
         return _reports.size();
     }
@@ -75,27 +73,22 @@ public class Driver {
         return _reports.get(index);
     }
 
-    // naher ne nado
     public Order getFreeOrder(int index) {
         return _freeOrders.get(index);
     }
 
-    // naher ne nado
     public int ordersFreeCount() {
         return _freeOrders.size();
     }
 
-    // naher ne nado
     public Order getOrder(int index) {
         return getOrders().get(index);
     }
 
-    // naher ne nado
     public int ordersCount() {
         return _myOrders.size();
     }
 
-    // naher ne nado
     public int messagesCount() {
         return _messages.size();
     }

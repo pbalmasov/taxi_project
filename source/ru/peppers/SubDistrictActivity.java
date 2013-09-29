@@ -1,5 +1,19 @@
 package ru.peppers;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.SubDistrict;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -11,21 +25,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import model.SubDistrict;
-
+/**
+ * Список подрайонов активити
+ * @author p.balmasov
+ */
 public class SubDistrictActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
     public static final int REQUEST_CLOSE = 1;
     private String districtid;

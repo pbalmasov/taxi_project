@@ -15,7 +15,8 @@ import model.Order;
 import ru.peppers.R;
 
 /**
- * @author papas
+ * Мой заказ
+ * @author p.balmasov
  */
 public class MyCostOrder extends Order {
 

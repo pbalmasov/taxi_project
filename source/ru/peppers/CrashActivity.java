@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/**
+ * При ошибке
+ * @author p.balmasov
+ */
 public class CrashActivity extends Activity {
 
     @Override

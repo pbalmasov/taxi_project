@@ -7,8 +7,8 @@ package model;
 import java.util.ArrayList;
 
 /**
- *
- * @author papas
+ * Интерфейс для подробно
+ * @author p.balmasov
  */
 public interface OrderInterface {
 

@@ -1,14 +1,14 @@
 package ru.peppers;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.CountDownTimer;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.SocketTimeoutException;
+import java.security.KeyStore;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -34,16 +34,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.SocketTimeoutException;
-import java.security.KeyStore;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.CountDownTimer;
+import android.util.Log;
+import android.widget.Toast;
+/**
+ * Отсылка запросов на сервер основной метод postData
+ * @author p.balmasov
+ */
 final public class PhpData {
     // static final String NEWURL = "https://www.abs-taxi.ru/fcgi-bin/office/cman.fcgi";;
     static boolean withDebug = true;

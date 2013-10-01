@@ -37,6 +37,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 /**
  * Мой заказ подробно
  * @author p.balmasov
@@ -238,12 +239,11 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         // if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
         // accepttime = format.parse(accepttimeNode.getTextContent());
 
-        if(order!=null)
-            if(order.get_comment()==null && comment!=null){
+        if (order != null)
+            if (order.get_comment() == null && comment != null) {
                 MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
                 mp.start();
             }
-
 
         order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
                 addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
@@ -328,7 +328,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
         }
 
-        if(isDialog)
+        if (isDialog)
             initActionDialog();
     }
 
@@ -344,15 +344,15 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         super.onResume();
         Log.d("My_tag", "resume");
         getOrder();
-        if(order!=null)
-        if (order.get_departuretime() != null) {
-            if (order.get_servertime() != null)
-                if (order.get_servertime().before(order.get_departuretime())
-                        && order.get_invitationtime() == null) {
-                    currentTimer = order.get_departuretime();
-                    timerInit();
-                }
-        }
+        if (order != null)
+            if (order.get_departuretime() != null) {
+                if (order.get_servertime() != null)
+                    if (order.get_servertime().before(order.get_departuretime())
+                            && order.get_invitationtime() == null) {
+                        currentTimer = order.get_departuretime();
+                        timerInit();
+                    }
+            }
     }
 
     @Override
@@ -748,14 +748,13 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
 
             public void onTick(long millisUntilFinished) {
                 int seconds = ((int) millisUntilFinished / 1000) % 60;
+                int minutes = ((int) millisUntilFinished / 1000) / 60;
                 String secondsStr = String.valueOf(seconds);
                 if (seconds <= 9)
                     secondsStr = "0" + seconds;
 
-                counterView.setText("Время до приглашения: " + ((int) millisUntilFinished / 1000) / 60 + ":"
-                        + secondsStr);
-                if ((((int) millisUntilFinished / 1000) / 60) == 1
-                        && (((int) millisUntilFinished / 1000) % 60) == 0) {
+                counterView.setText("Время до приглашения: " + minutes + ":" + secondsStr);
+                if (minutes == 1 && seconds == 0) {
                     initDelayOrInviteDialog();
                     MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
                     mp.start();
@@ -873,8 +872,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                 intent.putExtra("close", true);
                 if (PhpData.isNetworkAvailable(MyOrderItemActivity.this))
                     startActivityForResult(intent, REQUEST_EXIT);
-                else
-                {
+                else {
                     setResult(RESULT_OK);
                     finish();
                 }

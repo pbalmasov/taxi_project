@@ -328,8 +328,10 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             myTimer.schedule(timerTask, 1000 * refreshperiod, 1000 * refreshperiod);
         }
 
-        if (isDialog)
-            initActionDialog();
+        if (isDialog){
+            isDialog = false;
+            initDelayOrInviteDialog();
+        }
     }
 
     @Override

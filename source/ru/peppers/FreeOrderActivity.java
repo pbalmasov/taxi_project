@@ -369,9 +369,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 Log.d("My_tag", "on result");
                 this.finish();
                 Intent intent = new Intent(this, MyOrderItemActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("index", 0);
-                intent.putExtras(bundle);
+                intent.putExtras(data.getExtras());
                 startActivity(intent);
             }
         }

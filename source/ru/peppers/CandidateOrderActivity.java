@@ -20,6 +20,7 @@ import org.w3c.dom.Node;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -119,11 +120,11 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-                    setResult(RESULT_OK);
-
-                    ArrayList<Order> arrayList = new ArrayList<Order>();
-                    arrayList.add(order);
-                    TaxiApplication.getDriver(this).setOrders(arrayList);
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("index", orderIndex);
+                    intent.putExtras(bundle);
+                    setResult(RESULT_OK,intent);
                     finish();
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);

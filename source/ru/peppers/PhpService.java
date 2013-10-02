@@ -267,7 +267,7 @@ public class PhpService extends Service {
                 Log.d("My_tag", departuretime.toGMTString()+" "+servertime.toGMTString());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(departuretime);
-                cal.add(Calendar.MINUTE, -2);
+                cal.add(Calendar.MINUTE, -1);
                 if (servertime.after(cal.getTime())) {
                     Intent intent = new Intent(this, MyOrderItemActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

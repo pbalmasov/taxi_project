@@ -8,6 +8,7 @@ import java.util.List;
 
 import model.Driver;
 import model.Order;
+import model.Util;
 import orders.CostOrder;
 
 import org.apache.http.NameValuePair;
@@ -90,65 +91,7 @@ public class DistrictListActivity extends BalanceActivity implements AsyncTaskCo
 
             Element item = (Element) nodeList.item(i);
 
-            Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
-            Node classNode = item.getElementsByTagName("classid").item(0);
-            Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
-            Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
-            Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
-            Node quantityNode = item.getElementsByTagName("quantity").item(0);
-            Node commentNode = item.getElementsByTagName("comment").item(0);
-            Node nicknameNode = item.getElementsByTagName("nickname").item(0);
-            Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
-            Node orderIdNode = item.getElementsByTagName("orderid").item(0);
-
-            String nominalcost = null;
-            Integer carClass = 0;
-            String addressdeparture = null;
-            Date departuretime = null;
-            Integer paymenttype = null;
-            Integer quantity = null;
-            String comment = null;
-            String nickname = null;
-            String addressarrival = null;
-            String orderId = null;
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-
-            if (!classNode.getTextContent().equalsIgnoreCase(""))
-                carClass = Integer.valueOf(classNode.getTextContent());
-
-            if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
-                nominalcost = nominalcostNode.getTextContent();
-
-            if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
-                addressdeparture = addressdepartureNode.getTextContent();
-
-            if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
-                addressarrival = addressarrivalNode.getTextContent();
-
-            if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
-                paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
-
-            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
-                departuretime = format.parse(departuretimeNode.getTextContent());
-
-            if (!commentNode.getTextContent().equalsIgnoreCase(""))
-                comment = commentNode.getTextContent();
-
-            if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
-                orderId = orderIdNode.getTextContent();
-
-            orders.add(new CostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, departuretime));
-
-            if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
-                nickname = nicknameNode.getTextContent();
-
-                if (!quantityNode.getTextContent().equalsIgnoreCase(""))
-                    quantity = Integer.parseInt(quantityNode.getTextContent());
-                orders.get(i).setAbonent(nickname);
-                orders.get(i).setRides(quantity);
-            }
+            orders.add(Util.parseCostOrder(item, this));
         }
 
         Driver driver = TaxiApplication.getDriver(this);

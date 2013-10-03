@@ -787,12 +787,12 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
                         inviteDialog();
                     }
                 }).show();
-        new Handler().postDelayed(new Runnable() {
-
-            public void run() {
-                dialog.dismiss();
-            }
-        }, 15000);
+//        new Handler().postDelayed(new Runnable() {
+//
+//            public void run() {
+//                dialog.dismiss();
+//            }
+//        }, 15000);
     }
 
     // private void alertDelay() {

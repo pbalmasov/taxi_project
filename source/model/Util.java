@@ -94,7 +94,7 @@ public class Util {
         // else
         // //TODO:предварительный
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
         if (!classNode.getTextContent().equalsIgnoreCase(""))
             carClass = Integer.valueOf(classNode.getTextContent());
@@ -188,7 +188,7 @@ public class Util {
         Date orderedtime = null;
 
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
         if(servertimeNode!=null)
         if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
@@ -268,7 +268,7 @@ public class Util {
         String addressarrival = null;
         String orderId = null;
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
         if (!classNode.getTextContent().equalsIgnoreCase(""))
             carClass = Integer.valueOf(classNode.getTextContent());

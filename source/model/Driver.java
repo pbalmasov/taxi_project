@@ -198,6 +198,8 @@ public class Driver {
      * @return the balance
      */
     public String getBalance() {
+        if(balance == null)
+            return "0";
         return balance;
     }
 

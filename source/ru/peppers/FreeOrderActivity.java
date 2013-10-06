@@ -1,9 +1,7 @@
 package ru.peppers;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,7 +9,6 @@ import java.util.TimerTask;
 import model.Driver;
 import model.Order;
 import model.Util;
-import orders.CostOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -47,6 +44,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
     private Integer refreshperiod = null;
     private boolean start = false;
     private PhpService myService;
+    @SuppressWarnings("unused")
     private boolean bound;
     private String candidateId = "";
 
@@ -143,6 +141,7 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void getOrders() {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
@@ -151,7 +150,6 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
 
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }
@@ -194,7 +192,6 @@ public class FreeOrderActivity extends BalanceActivity implements AsyncTaskCompl
                 if (myTimer != null)
                     myTimer.cancel();
                 startActivityForResult(intent, REQUEST_EXIT);
-                // startActivityForResult
             }
         }
 

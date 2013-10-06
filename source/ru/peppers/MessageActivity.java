@@ -19,11 +19,13 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 /**
  * Сообщения активити
  * @author p.balmasov
  */
 public class MessageActivity extends BalanceActivity implements AsyncTaskCompleteListener<Document> {
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,6 @@ public class MessageActivity extends BalanceActivity implements AsyncTaskComplet
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "message"));
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }
@@ -105,7 +106,6 @@ public class MessageActivity extends BalanceActivity implements AsyncTaskComplet
                 return false;
             }
         };
-        ;
 
         // final Driver driver = TaxiApplication.getDriver();
         // driver.setMessages(all);

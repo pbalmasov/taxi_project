@@ -1,15 +1,12 @@
 package ru.peppers;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import model.Driver;
 import model.Order;
 import model.Util;
-import orders.ReportCostOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -100,6 +97,7 @@ public class ReportListActivity extends BalanceActivity implements AsyncTaskComp
 
     }
 
+    @SuppressWarnings("unchecked")
     private void getPage() {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
@@ -108,7 +106,6 @@ public class ReportListActivity extends BalanceActivity implements AsyncTaskComp
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
         nameValuePairs.add(new BasicNameValuePair("page", String.valueOf(currentPage)));
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }
@@ -151,21 +148,7 @@ public class ReportListActivity extends BalanceActivity implements AsyncTaskComp
         }
 
         Driver driver = TaxiApplication.getDriver(this);
-        // if driver.order == null // else driver.setOrderWithIndex // or get date from server
         driver.setReports(orders);
-        // driver = new Driver(status, carClass, ordersCount, district, subdistrict);
-
-        // itemsList = new ArrayList<Map<String, String>>();
-        // itemsList.add(createItem("item", "Мои закакзы: " + driver.getOrdersCount()));
-        // itemsList.add(createItem("item", "Статус: " + driver.getStatusString()));
-        // itemsList.add(createItem("item", "Свободные заказы"));
-        // if (driver.getStatus() != 1)
-        // itemsList
-        // .add(createItem("item", "Район: " + driver.getDistrict() + "," + driver.getSubdistrict()));
-        // itemsList.add(createItem("item", "Класс: " + driver.getClassAutoString()));
-        // itemsList.add(createItem("item", "Отчет"));
-        // itemsList.add(createItem("item", "Звонок из офиса"));
-        // itemsList.add(createItem("item", "Настройки"));
 
         arrayAdapter.notifyDataSetChanged();
 

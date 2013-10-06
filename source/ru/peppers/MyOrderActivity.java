@@ -1,9 +1,7 @@
 package ru.peppers;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,7 +9,6 @@ import java.util.TimerTask;
 import model.Driver;
 import model.Order;
 import model.Util;
-import myorders.MyCostOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -47,6 +44,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
     private Integer refreshperiod = null;
     private boolean start = false;
     private PhpService myService;
+    @SuppressWarnings("unused")
     private boolean bound;
     private String candidateId = "";
 
@@ -156,6 +154,7 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void getOrders() {
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
@@ -164,7 +163,6 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
         nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }

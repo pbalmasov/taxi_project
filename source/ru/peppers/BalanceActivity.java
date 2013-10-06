@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
+
 /**
  * Базовая активити от нее все наследуются, здесь устанавливаются баланс и позывной
  * @author p.balmasov
@@ -43,28 +44,29 @@ public class BalanceActivity extends Activity {
     protected void updateData() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String pozivnoidata = settings.getString("pozivnoidata", "");
-        if (pozivnoidata.length() != 0)
+        if (pozivnoidata.length() != 0) {
             pozivnoi.setText("Позывной: " + pozivnoidata);
-        if (TaxiApplication.getDriver(this) != null)
-            pozivnoi.append(", Баланс: " + TaxiApplication.getDriver(this).getBalance());
+            if (TaxiApplication.getDriver(this) != null)
+                pozivnoi.append(", Баланс: " + TaxiApplication.getDriver(this).getBalance());
+        }
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        // Handle the back button
-//        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
-//            // Ask the user if they want to quit
-//            if (!PhpData.isNetworkAvailable(this)) {
-//                Log.d("My_tag", "on back");
-//                if (getClass().toString().equalsIgnoreCase("class ru.peppers.PozivnoiActivity"))
-//                    return super.onKeyDown(keyCode, event);
-//                return true;
-//            } else
-//                return super.onKeyDown(keyCode, event);
-//        } else {
-//            return super.onKeyDown(keyCode, event);
-//        }
-//
-//    }
+    // @Override
+    // public boolean onKeyDown(int keyCode, KeyEvent event) {
+    // // Handle the back button
+    // if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+    // // Ask the user if they want to quit
+    // if (!PhpData.isNetworkAvailable(this)) {
+    // Log.d("My_tag", "on back");
+    // if (getClass().toString().equalsIgnoreCase("class ru.peppers.PozivnoiActivity"))
+    // return super.onKeyDown(keyCode, event);
+    // return true;
+    // } else
+    // return super.onKeyDown(keyCode, event);
+    // } else {
+    // return super.onKeyDown(keyCode, event);
+    // }
+    //
+    // }
 
 }

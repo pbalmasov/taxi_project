@@ -1,15 +1,12 @@
 package ru.peppers;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import model.Driver;
 import model.Order;
 import model.Util;
-import orders.CostOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,6 +31,7 @@ public class DistrictListActivity extends BalanceActivity implements AsyncTaskCo
 
     public static final int REQUEST_CLOSE = 1;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +46,6 @@ public class DistrictListActivity extends BalanceActivity implements AsyncTaskCo
         nameValuePairs.add(new BasicNameValuePair("object", "order"));
         nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }

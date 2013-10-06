@@ -34,7 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -203,11 +202,11 @@ final public class PhpData {
         return null;
     }
 
-    private static void errorHandler(Context context) {
-        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
-                .setMessage(context.getString(R.string.error_message))
-                .setNeutralButton(context.getString(R.string.close), null).show();
-    }
+//    private static void errorHandler(Context context) {
+//        new AlertDialog.Builder(context).setTitle(context.getString(R.string.error_title))
+//                .setMessage(context.getString(R.string.error_message))
+//                .setNeutralButton(context.getString(R.string.close), null).show();
+//    }
 
     // static public Document postData(Activity activity, List<NameValuePair> nameValuePairs) {
     //

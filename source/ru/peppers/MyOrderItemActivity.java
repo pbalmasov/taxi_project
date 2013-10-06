@@ -1,13 +1,13 @@
 package ru.peppers;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import model.Util;
 import myorders.MyCostOrder;
 
 import org.apache.http.NameValuePair;
@@ -32,7 +32,6 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -126,6 +125,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void getOrder() {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
         nameValuePairs.add(new BasicNameValuePair("action", "get"));
@@ -135,129 +135,25 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         nameValuePairs.add(new BasicNameValuePair("orderid", order_index));
 
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }
 
     private void initOrder(Document doc) throws DOMException, ParseException {
         tv.setText("");
-        // nominalcost - рекомендуемая стоимость заказа
-        // class - класс автомобля (0 - все равно, 1 - Эконом, 2 - Стандарт,
-        // 3 - Базовый)
-        // addressdeparture - адрес подачи автомобиля
-        // departuretime - время подачи(если есть)
-        // paymenttype - форма оплаты (0 - наличные, 1 - безнал)
-        // invitationtime - время приглашения (если пригласили)
-        // quantity - количество заказов от этого клиента
-        // comment - примечание
-        // nickname - ник абонента (если есть)
-        // registrationtime - время регистрации заказа
-        // addressarrival - куда поедут
+
+        String oldComment = order.get_comment();
 
         Element item = (Element) doc.getElementsByTagName("order").item(0);
-
-        Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
-        Node classNode = item.getElementsByTagName("classid").item(0);
-        Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
-        Node departuretimeNode = item.getElementsByTagName("departuretime").item(0);
-        Node paymenttypeNode = item.getElementsByTagName("paymenttype").item(0);
-        Node quantityNode = item.getElementsByTagName("quantity").item(0);
-        Node commentNode = item.getElementsByTagName("comment").item(0);
-        Node nicknameNode = item.getElementsByTagName("nickname").item(0);
-        Node addressarrivalNode = item.getElementsByTagName("addressarrival").item(0);
-        Node orderIdNode = item.getElementsByTagName("orderid").item(0);
-        Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
-        // Node accepttimeNode =
-        // item.getElementsByTagName("accepttime").item(0);
-        Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
-        Node servertimeNode = doc.getElementsByTagName("time").item(0);
-        Node ordertimeNode = doc.getElementsByTagName("orderedtime").item(0);
-
-        Integer driverstate = null;
-        Date accepttime = null;
-        String nominalcost = null;
-        Integer carClass = 0;
-        String addressdeparture = null;
-        Date departuretime = null;
-        Integer paymenttype = null;
-        Integer quantity = null;
-        String comment = null;
-        String nickname = null;
-        Date invitationtime = null;
-        Date servertime = null;
-        String addressarrival = null;
-        Date ordertime = null;
-        String orderId = null;
-
-        // if(departuretime==null)
-        // //TODO:не предварительный
-        // else
-        // //TODO:предварительный
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-
-        if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
-            driverstate = Integer.valueOf(driverstateNode.getTextContent());
-
-        if (!classNode.getTextContent().equalsIgnoreCase(""))
-            carClass = Integer.valueOf(classNode.getTextContent());
-
-        if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
-            nominalcost = nominalcostNode.getTextContent();
-
-        if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
-            servertime = format.parse(servertimeNode.getTextContent());
-
-        // if (!registrationtimeNode.getTextContent().equalsIgnoreCase(""))
-        // registrationtime =
-        // format.parse(registrationtimeNode.getTextContent());
-
-        if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
-            addressdeparture = addressdepartureNode.getTextContent();
-
-        if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
-            addressarrival = addressarrivalNode.getTextContent();
-
-        if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
-            paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
-
-        if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
-            departuretime = format.parse(departuretimeNode.getTextContent());
-
-        if (!commentNode.getTextContent().equalsIgnoreCase(""))
-            comment = commentNode.getTextContent();
-
-        if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
-            orderId = orderIdNode.getTextContent();
-
-        if (!invitationNode.getTextContent().equalsIgnoreCase(""))
-            invitationtime = format.parse(invitationNode.getTextContent());
-
-        if (!ordertimeNode.getTextContent().equalsIgnoreCase(""))
-            ordertime = format.parse(ordertimeNode.getTextContent());
-        // if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
-        // accepttime = format.parse(accepttimeNode.getTextContent());
-
+        order = Util.parseMyCostOrder(item, this);
         if (order != null)
-            if (order.get_comment() == null && comment != null) {
+            //если появился комментарий
+            if (oldComment == null && order.get_comment() != null) {
                 MediaPlayer mp = MediaPlayer.create(getBaseContext(), (R.raw.sound));
                 mp.start();
             }
 
-        order = new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
-                servertime, ordertime);
-
-        if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
-            nickname = nicknameNode.getTextContent();
-
-            if (!quantityNode.getTextContent().equalsIgnoreCase(""))
-                quantity = Integer.parseInt(quantityNode.getTextContent());
-            order.setAbonent(nickname);
-            order.setRides(quantity);
-        }
-
+        //таймер и т.д
         if (currentTimer != null) {
             if (!order.get_departuretime().equals(currentTimer) && order.get_invitationtime() == null) {
                 currentTimer = order.get_departuretime();
@@ -286,7 +182,6 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
             tv.append("\n");
         }
 
-        // TODO:UPDATE ORDER
         Node refreshperiodNode = doc.getElementsByTagName("refreshperiod").item(0);
         Integer newrefreshperiod = null;
         if (!refreshperiodNode.getTextContent().equalsIgnoreCase(""))
@@ -772,7 +667,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
     }
 
     private void initDelayOrInviteDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Действие")
+        new AlertDialog.Builder(MyOrderItemActivity.this).setTitle("Действие")
                 .setMessage("Через минуту приглашаем клиентов")
                 .setPositiveButton("Отсрочить", new DialogInterface.OnClickListener() {
 
@@ -862,7 +757,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         if (order.getAbonent() != null && order.get_paymenttype() == 0)
             ((TextView) dialog.findViewById(R.id.textView2)).setText("Сдача");
 
-        final CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkBox1);
+//        final CheckBox cb = (CheckBox) dialog.findViewById(R.id.checkBox1);
         final TextView tv = (TextView) dialog.findViewById(R.id.textView3);
         Button btn1 = (Button) dialog.findViewById(R.id.button2);
         Button btn2 = (Button) dialog.findViewById(R.id.button3);

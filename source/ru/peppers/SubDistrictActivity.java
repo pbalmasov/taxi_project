@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 /**
  * Список подрайонов активити
  * @author p.balmasov
@@ -35,6 +36,7 @@ public class SubDistrictActivity extends BalanceActivity implements AsyncTaskCom
     private int districtdrivers;
     private boolean close;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,6 @@ public class SubDistrictActivity extends BalanceActivity implements AsyncTaskCom
         nameValuePairs.add(new BasicNameValuePair("action", "list"));
         nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
     }
 
@@ -138,52 +139,48 @@ public class SubDistrictActivity extends BalanceActivity implements AsyncTaskCom
     private OnClickListener onContextMenuItemListener(final String subdistrictId) {
         return new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+                        int array_size = (subdistrictId != null) ? 6 : 5;
+                        Log.d("My_tag", String.valueOf(array_size));
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(array_size);
+                        nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
+                        nameValuePairs.add(new BasicNameValuePair("object", "driver"));
+                        nameValuePairs.add(new BasicNameValuePair("action", "set"));
+                        nameValuePairs.add(new BasicNameValuePair("mode", "location"));
+                        nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
+                        if (subdistrictId != null)
+                            nameValuePairs.add(new BasicNameValuePair("subdistrictid", subdistrictId));
+                        Document doc = PhpData.postData(SubDistrictActivity.this, nameValuePairs,
+                                PhpData.newURL);
+                        if (doc != null) {
 
-                if (item == 0) {
+                            Node responseNode = doc.getElementsByTagName("response").item(0);
+                            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-                    // TODO:send request
-                    int array_size = (subdistrictId != null) ? 6 : 5;
-                    Log.d("My_tag", String.valueOf(array_size));
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(array_size);
-                    nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
-                    nameValuePairs.add(new BasicNameValuePair("object", "driver"));
-                    nameValuePairs.add(new BasicNameValuePair("action", "set"));
-                    nameValuePairs.add(new BasicNameValuePair("mode", "location"));
-                    nameValuePairs.add(new BasicNameValuePair("districtid", districtid));
-                    if (subdistrictId != null)
-                        nameValuePairs.add(new BasicNameValuePair("subdistrictid", subdistrictId));
-                    Document doc = PhpData.postData(SubDistrictActivity.this, nameValuePairs, PhpData.newURL);
-                    if (doc != null) {
-
-                        Node responseNode = doc.getElementsByTagName("response").item(0);
-                        Node errorNode = doc.getElementsByTagName("message").item(0);
-
-                        if (responseNode.getTextContent().equalsIgnoreCase("failure"))
-                            PhpData.errorFromServer(SubDistrictActivity.this, errorNode);
-                        else {
+                            if (responseNode.getTextContent().equalsIgnoreCase("failure"))
+                                PhpData.errorFromServer(SubDistrictActivity.this, errorNode);
+                            else {
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        }
+                        break;
+                    case 1:
+                        Intent intent = new Intent(SubDistrictActivity.this, DistrictListActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("districtid", districtid);
+                        intent.putExtras(bundle);
+                        if (PhpData.isNetworkAvailable(SubDistrictActivity.this)) {
+                            startActivityForResult(intent, REQUEST_CLOSE);
+                            finish();
+                        } else {
                             setResult(RESULT_OK);
                             finish();
                         }
-                    }
+                        break;
                 }
-
-                if (item == 1) {
-                    Intent intent = new Intent(SubDistrictActivity.this, DistrictListActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("districtid", districtid);
-                    intent.putExtras(bundle);
-                    if (PhpData.isNetworkAvailable(SubDistrictActivity.this)) {
-                        startActivityForResult(intent, REQUEST_CLOSE);
-                        finish();
-                    }
-                    else{
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                }
-
                 dialog.dismiss();
-
             }
         };
     }

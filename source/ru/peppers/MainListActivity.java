@@ -103,6 +103,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
         init();
     }
 
+    @SuppressWarnings("unchecked")
     private void init() {
         // Bundle bundle = getIntent().getExtras();
         // int id = bundle.getInt("id");
@@ -113,7 +114,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
         nameValuePairs.add(new BasicNameValuePair("mode", "status"));
         nameValuePairs.add(new BasicNameValuePair("object", "driver"));
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
     }
@@ -530,12 +530,10 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
 
         Document doc = PhpData.postData(MainListActivity.this, nameValuePairs, PhpData.newURL);
         if (doc != null) {
-            Node responseNode = doc.getElementsByTagName("response").item(0);
-            Node errorNode = doc.getElementsByTagName("message").item(0);
+//            Node responseNode = doc.getElementsByTagName("response").item(0);
+//            Node errorNode = doc.getElementsByTagName("message").item(0);
 
-            if (responseNode.getTextContent().equalsIgnoreCase("failure")) {
-                finishApp();
-            }
+            finishApp();
         } else {
             finishApp();
         }

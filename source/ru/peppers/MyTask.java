@@ -19,6 +19,7 @@ public class MyTask extends AsyncTask<List<NameValuePair>, Void, Document> {
 
     public MyTask(BalanceActivity activity, ProgressDialog progress,
             AsyncTaskCompleteListener<Document> callback) {
+        progress.setMessage(activity.getString(R.string.load_text));
         this.progress = progress;
         this.activity = activity;
         this.callback = callback;

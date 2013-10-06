@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+
 /**
  * Активити с паролем
  * @author p.balmasov
@@ -32,7 +33,7 @@ public class PasswordActivity extends BalanceActivity {
                 EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
                 if (settings.getString("passwordApp", "").equals(passwordEditText.getText().toString())) {
-                    Bundle extras = getIntent().getExtras();
+                    // Bundle extras = getIntent().getExtras();
                     // int id = extras.getInt("id");
 
                     Intent intent = new Intent(PasswordActivity.this, MainListActivity.class);
@@ -65,8 +66,9 @@ public class PasswordActivity extends BalanceActivity {
                     if (!event.isShiftPressed() && passwordEditText.getText().toString().length() != 0) {
                         SharedPreferences settings = getSharedPreferences(PozivnoiActivity.PREFS_NAME, 0);
                         Log.d("My_tag", settings.getString("passwordApp", ""));
-                        if (settings.getString("passwordApp", "").equals(passwordEditText.getText().toString())) {
-                            Bundle extras = getIntent().getExtras();
+                        if (settings.getString("passwordApp", "").equals(
+                                passwordEditText.getText().toString())) {
+                            // Bundle extras = getIntent().getExtras();
                             // int id = extras.getInt("id");
 
                             Intent intent = new Intent(PasswordActivity.this, MainListActivity.class);

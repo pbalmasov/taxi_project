@@ -66,7 +66,8 @@ public class DistrictActivity extends BalanceActivity implements AsyncTaskComple
         }
     }
 
-	private void init() {
+	@SuppressWarnings("unchecked")
+    private void init() {
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
@@ -74,7 +75,6 @@ public class DistrictActivity extends BalanceActivity implements AsyncTaskComple
 		nameValuePairs.add(new BasicNameValuePair("action", "list"));
 
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
         new MyTask(this, progress, this).execute(nameValuePairs);
 
 	}

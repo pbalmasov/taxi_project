@@ -66,7 +66,7 @@ public class MyCostOrder extends Order {
         if (_invitationtime != null)
             array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_invitationtime));
         else
-            array.add(_context.getString(R.string.date_invite) + " " + "не приглашены");
+            array.add(_context.getString(R.string.date_invite) + " " + _context.getString(R.string.not_invited));
 
 
         array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
@@ -79,7 +79,7 @@ public class MyCostOrder extends Order {
             array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " " + _context.getString(R.string.currency));
 
         if (get_accepttime() != null)
-            array.add("Время приглашения:" + " " + getTimeString(get_accepttime()));
+            array.add(_context.getString(R.string.date_invite) + " " + getTimeString(get_accepttime()));
 
         if (get_comment() != null)
             array.add(_context.getString(R.string.description) + " " + get_comment());

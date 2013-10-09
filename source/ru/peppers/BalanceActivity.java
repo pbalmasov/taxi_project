@@ -45,9 +45,10 @@ public class BalanceActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String pozivnoidata = settings.getString("pozivnoidata", "");
         if (pozivnoidata.length() != 0) {
-            pozivnoi.setText("Позывной: " + pozivnoidata);
+            pozivnoi.setText(this.getString(R.string.pozivnoi) + ": " + pozivnoidata);
             if (TaxiApplication.getDriver(this) != null)
-                pozivnoi.append(", Баланс: " + TaxiApplication.getDriver(this).getBalance());
+                pozivnoi.append(", " + this.getString(R.string.balance) + ": "
+                        + TaxiApplication.getDriver(this).getBalance());
         }
     }
 

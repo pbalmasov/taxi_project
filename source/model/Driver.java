@@ -155,7 +155,7 @@ public class Driver {
 
     public String getStatusString() {
         if (_status == null)
-            return "не указан";
+            return _context.getString(R.string.no_status);
         Resources res = _context.getResources();
         String[] status = res.getStringArray(R.array.status_array);
         return status[_status].toLowerCase();
@@ -289,7 +289,7 @@ public class Driver {
 
     public String getWaitString() {
         if (waitString == null)
-            return "отсутсвует";
+            return _context.getString(R.string.no_wait);
         return waitString;
     }
 

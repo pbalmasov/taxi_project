@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="close_cost">Стоимость закрытия:</string>
+    <string name="cost_disp">Оплата диспетчерской:</string>
+    <string name="ras_cost">Расчетная стоимость:</string>
+    <string name="no_data">не указано</string>
+    <string name="not_invited">не приглашены</string>
+    <string name="no_wait">отсутсвует</string>
+    <string name="no_status">не указан</string>
     <string name="load_text">Загрузка…</string>
     <string name="app_name">АБС Такси</string>
     <string name="pozivnoi">Позывной</string>
+    <string name="balance">Баланс</string>
     <string name="password">Пароль</string>
     <string name="select">Выбор</string>
     <string name="noOrders">На линии достаточно машин</string>
@@ -36,6 +43,7 @@
     <string name="cost_type">Оплата:</string>
     <string name="cost">Сумма:</string>
     <string name="cost_ride">Стоимость поездки:</string>
+    <string name="result">Результат:</string>
     <string name="abonent">Абонент:</string>
     <string name="rides">Кол-во поездок:</string>
     <string name="currency">р</string>

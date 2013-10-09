@@ -51,7 +51,7 @@ public class ReportCostOrder extends Order {
         ArrayList<String> array = new ArrayList<String>();
         array.addAll(getAbonentArray());
 
-        String departureTimeValue = "не указано";
+        String departureTimeValue = _context.getString(R.string.no_data);
         if (_orderDate != null)
             departureTimeValue = getTimeString(_orderDate);
         array.add(_context.getString(R.string.date) + " " + departureTimeValue);
@@ -63,22 +63,22 @@ public class ReportCostOrder extends Order {
         array.add(_context.getString(R.string.cost_type) + " " + getPayment());
 
         if (_accepttime != null)
-            array.add("Время приглашения:" + " " + getTimeString(_accepttime));
-        array.add("Результат:" + " " + _result);
+            array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_accepttime));
+        array.add(_context.getString(R.string.result) + " " + _result);
 
         String costValue = "не указано";
         if (get_nominalcost() != null)
             costValue = String.valueOf(get_nominalcost()) + " " + _context.getString(R.string.currency);
 
         if (_drivercost != null)
-            array.add("Стоимость закрытия:" + " " + _actualcost + " " + _context.getString(R.string.currency) );
+            array.add(_context.getString(R.string.close_cost) + " " + _actualcost + " " + _context.getString(R.string.currency) );
         if (_actualcost != null)
-            array.add("Оплата диспетчерской:" + " " + _drivercost + " " + _context.getString(R.string.currency));
+            array.add(_context.getString(R.string.cost_disp) + " " + _drivercost + " " + _context.getString(R.string.currency));
 
-        array.add("Расчетная стоимость:" + " " + costValue);
+        array.add(_context.getString(R.string.ras_cost) + " " + costValue);
 
         if (get_comment() == null)
-            set_comment("не указано");
+            set_comment(_context.getString(R.string.no_data));
         array.add(_context.getString(R.string.description) + " " + get_comment());
         return array;
     }

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="session">Смена</string>
+    <string name="session_question">Закончить смену?</string>
+    <string name="call">Звонок</string>
+    <string name="call_question">Вы действительно хотите заказать обратный звонок?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="no_status_available">Статус не указан</string>
     <string name="close_cost">Стоимость закрытия:</string>
     <string name="cost_disp">Оплата диспетчерской:</string>
     <string name="ras_cost">Расчетная стоимость:</string>

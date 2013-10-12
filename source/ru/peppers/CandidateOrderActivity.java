@@ -29,6 +29,7 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
+
 /**
  * Кандидатский заказ
  * @author p.balmasov
@@ -41,6 +42,7 @@ public class CandidateOrderActivity extends BalanceActivity {
     private Integer refreshperiod = null;
     private boolean start = false;
     private String orderIndex;
+    private boolean fromService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class CandidateOrderActivity extends BalanceActivity {
         final String index = bundle.getString("id");
         orderIndex = index;
         tv = (TextView) findViewById(R.id.textView1);
-
+        fromService = bundle.getBoolean("isService");
         Button button = (Button) findViewById(R.id.button1);
         button.setText("Принять");
         button.setOnClickListener(new Button.OnClickListener() {
@@ -118,11 +120,19 @@ public class CandidateOrderActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-                    Intent intent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putString("index", orderIndex);
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK,intent);
+
+                    if (fromService) {
+                        Intent intent = new Intent(this, MyOrderItemActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtras(bundle);
+                        setResult(RESULT_OK, intent);
+                    }
+
                     finish();
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
@@ -209,7 +219,6 @@ public class CandidateOrderActivity extends BalanceActivity {
         // nickname - ник абонента (если есть)
         // registrationtime - время регистрации заказа
         // addressarrival - куда поедут
-
 
         Element item = (Element) doc.getElementsByTagName("order").item(0);
 

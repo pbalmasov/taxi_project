@@ -219,7 +219,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                                     startActivity(intent);
                                 }
                             } else {
-                                Toast.makeText(MainListActivity.this, "Статус не указан", Toast.LENGTH_SHORT)
+                                Toast.makeText(MainListActivity.this, MainListActivity.this.getString(R.string.no_status_available), Toast.LENGTH_SHORT)
                                         .show();
                             }
                             break;
@@ -232,10 +232,10 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                                 }
                             break;
                         case 4:
-                            new AlertDialog.Builder(MainListActivity.this).setTitle("Звонок")
-                                    .setMessage("Вы действительно хотите заказать обратный звонок?")
-                                    .setNegativeButton("Нет", null)
-                                    .setPositiveButton("Да", onCallbackClickListener()).show();
+                            new AlertDialog.Builder(MainListActivity.this).setTitle(MainListActivity.this.getString(R.string.call))
+                                    .setMessage(MainListActivity.this.getString(R.string.call_question))
+                                    .setNegativeButton(MainListActivity.this.getString(R.string.no), null)
+                                    .setPositiveButton(MainListActivity.this.getString(R.string.yes), onCallbackClickListener()).show();
                             break;
                         case 5:
                             intent = new Intent(MainListActivity.this, SettingsActivity.class);
@@ -461,7 +461,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     private void exitDialog() {
         new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
                 .setMessage(this.getString(R.string.sorry_exit))
-                .setPositiveButton("Да", onExitClickListener()).setNegativeButton("Нет", null).show();
+                .setPositiveButton(this.getString(R.string.yes), onExitClickListener()).setNegativeButton(this.getString(R.string.no), null).show();
     }
 
     private OnClickListener onExitClickListener() {
@@ -470,10 +470,10 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (TaxiApplication.getDriver(MainListActivity.this).getStatus() != 3)
-                    new AlertDialog.Builder(MainListActivity.this).setTitle("Смена")
-                            .setMessage("Закончить смену?")
-                            .setPositiveButton("Да", onExitLineClickListener())
-                            .setNegativeButton("Нет", onFinishClickListener()).show();
+                    new AlertDialog.Builder(MainListActivity.this).setTitle(MainListActivity.this.getString(R.string.session))
+                            .setMessage(MainListActivity.this.getString(R.string.session_question))
+                            .setPositiveButton(MainListActivity.this.getString(R.string.yes), onExitLineClickListener())
+                            .setNegativeButton(MainListActivity.this.getString(R.string.no), onFinishClickListener()).show();
                 else {
                     finishApp();
                 }

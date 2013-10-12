@@ -157,6 +157,7 @@ public class PhpService extends Service {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
             bundle.putString("id", candidate);
+            bundle.putBoolean("isService", true);
             intent.putExtras(bundle);
             startActivity(intent);
         }

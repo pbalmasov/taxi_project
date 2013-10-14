@@ -28,6 +28,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
 /**
  * Главное активити
  * @author p.balmasov
@@ -73,7 +75,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 System.exit(1);
             }
         });
-
 
     }
 
@@ -119,7 +120,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     }
 
     private void parseMainList(Document doc) {
-        Log.d("My_tag","parse main");
+        Log.d("My_tag", "parse main");
         // int carClass =
         // Integer.valueOf(doc.getElementsByTagName("carClass").item(0).getTextContent());
         Integer status = 3;
@@ -183,6 +184,7 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
             itemsList.add(createItem("item", this.getString(R.string.messages)));
             itemsList.add(createItem("item", "Архив"));
             itemsList.add(createItem("item", this.getString(R.string.exit)));
+            itemsList.add(createItem("item", "О программе"));
 
             lv = (ListView) findViewById(R.id.mainListView);
 
@@ -219,8 +221,9 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                                     startActivity(intent);
                                 }
                             } else {
-                                Toast.makeText(MainListActivity.this, MainListActivity.this.getString(R.string.no_status_available), Toast.LENGTH_SHORT)
-                                        .show();
+                                Toast.makeText(MainListActivity.this,
+                                        MainListActivity.this.getString(R.string.no_status_available),
+                                        Toast.LENGTH_SHORT).show();
                             }
                             break;
                         case 3:
@@ -232,10 +235,12 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                                 }
                             break;
                         case 4:
-                            new AlertDialog.Builder(MainListActivity.this).setTitle(MainListActivity.this.getString(R.string.call))
+                            new AlertDialog.Builder(MainListActivity.this)
+                                    .setTitle(MainListActivity.this.getString(R.string.call))
                                     .setMessage(MainListActivity.this.getString(R.string.call_question))
                                     .setNegativeButton(MainListActivity.this.getString(R.string.no), null)
-                                    .setPositiveButton(MainListActivity.this.getString(R.string.yes), onCallbackClickListener()).show();
+                                    .setPositiveButton(MainListActivity.this.getString(R.string.yes),
+                                            onCallbackClickListener()).show();
                             break;
                         case 5:
                             intent = new Intent(MainListActivity.this, SettingsActivity.class);
@@ -328,7 +333,6 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
             Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
             Node orderedtimeNode = item.getElementsByTagName("orderedtime").item(0);
 
-
             Integer driverstate = null;
             Date accepttime = null;
             String nominalcost = null;
@@ -392,7 +396,8 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 orderedtime = format.parse(orderedtimeNode.getTextContent());
 
             orders.add(new MyCostOrder(this, orderId, nominalcost, addressdeparture, carClass, comment,
-                    addressarrival, paymenttype, invitationtime, departuretime,accepttime,driverstate,servertime,orderedtime));
+                    addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
+                    servertime, orderedtime));
 
             if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
                 nickname = nicknameNode.getTextContent();
@@ -403,15 +408,15 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                 orders.get(i).setRides(quantity);
             }
         }
-        Log.d("My_tag",orders.toString());
-        Collections.sort(orders,new Comparator<MyCostOrder>() {
+        Log.d("My_tag", orders.toString());
+        Collections.sort(orders, new Comparator<MyCostOrder>() {
 
             @Override
             public int compare(MyCostOrder lhs, MyCostOrder rhs) {
                 return lhs.get_accepttime().compareTo(rhs.get_accepttime());
             }
         });
-        Log.d("My_tag",orders.toString());
+        Log.d("My_tag", orders.toString());
         return Integer.valueOf(orders.get(0).get_index());
     }
 
@@ -461,7 +466,8 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
     private void exitDialog() {
         new AlertDialog.Builder(MainListActivity.this).setTitle(this.getString(R.string.orders))
                 .setMessage(this.getString(R.string.sorry_exit))
-                .setPositiveButton(this.getString(R.string.yes), onExitClickListener()).setNegativeButton(this.getString(R.string.no), null).show();
+                .setPositiveButton(this.getString(R.string.yes), onExitClickListener())
+                .setNegativeButton(this.getString(R.string.no), null).show();
     }
 
     private OnClickListener onExitClickListener() {
@@ -470,10 +476,13 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (TaxiApplication.getDriver(MainListActivity.this).getStatus() != 3)
-                    new AlertDialog.Builder(MainListActivity.this).setTitle(MainListActivity.this.getString(R.string.session))
+                    new AlertDialog.Builder(MainListActivity.this)
+                            .setTitle(MainListActivity.this.getString(R.string.session))
                             .setMessage(MainListActivity.this.getString(R.string.session_question))
-                            .setPositiveButton(MainListActivity.this.getString(R.string.yes), onExitLineClickListener())
-                            .setNegativeButton(MainListActivity.this.getString(R.string.no), onFinishClickListener()).show();
+                            .setPositiveButton(MainListActivity.this.getString(R.string.yes),
+                                    onExitLineClickListener())
+                            .setNegativeButton(MainListActivity.this.getString(R.string.no),
+                                    onFinishClickListener()).show();
                 else {
                     finishApp();
                 }
@@ -530,8 +539,8 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
 
         Document doc = PhpData.postData(MainListActivity.this, nameValuePairs, PhpData.newURL);
         if (doc != null) {
-//            Node responseNode = doc.getElementsByTagName("response").item(0);
-//            Node errorNode = doc.getElementsByTagName("message").item(0);
+            // Node responseNode = doc.getElementsByTagName("response").item(0);
+            // Node errorNode = doc.getElementsByTagName("message").item(0);
 
             finishApp();
         } else {

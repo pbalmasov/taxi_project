@@ -16,7 +16,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -59,11 +58,7 @@ public class ReportActivity extends BalanceActivity {
         final Driver driver = TaxiApplication.getDriver(this);
         itemsList = new ArrayList<String>();
 
-        try {
-            itemsList.add("Версия программы: "
-                    + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
-        } catch (NameNotFoundException e) {
-        }
+
         itemsList.add("Статус: " + driver.getStatusString());
         itemsList.add("Класс: " + driver.getClassAutoString());
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -78,7 +73,7 @@ public class ReportActivity extends BalanceActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long index) {
-                if (position == 3) {
+                if (position == 2) {
                     Intent intent = new Intent(ReportActivity.this, WaitActivity.class);
                     if (PhpData.isNetworkAvailable(ReportActivity.this))
                         startActivityForResult(intent, REQUEST_GET);
@@ -86,7 +81,7 @@ public class ReportActivity extends BalanceActivity {
                         setResult(RESULT_OK);
                         finish();
                     }
-                } else if (position == 2 && driver.getCarId() != 1 && driver.getClassAuto() != null) {
+                } else if (position == 1 && driver.getCarId() != 1 && driver.getClassAuto() != null) {
                     Resources res = ReportActivity.this.getResources();
                     String[] classArray = res.getStringArray(R.array.class_array);
 
@@ -106,7 +101,7 @@ public class ReportActivity extends BalanceActivity {
                             driver.getClassAuto(), onClassContextMenuItemListener(position));
                     AlertDialog alert = builder.create();
                     alert.show();
-                } else if (position == 1) {
+                } else if (position == 0) {
                     Resources res = ReportActivity.this.getResources();
                     String[] statusArray = res.getStringArray(R.array.status_array);
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(statusArray));

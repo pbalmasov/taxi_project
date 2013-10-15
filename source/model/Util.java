@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in the editor.
  */
 package model;
 
@@ -13,6 +12,7 @@ import orders.CostOrder;
 import orders.ReportCostOrder;
 
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -24,31 +24,32 @@ import android.content.Context;
  */
 public class Util {
 
-//    public static String[] split(String original, String separator) {
-//        Vector nodes = new Vector();
-//        // Parse nodes into vector
-//        int index = original.indexOf(separator);
-//        while (index >= 0) {
-//            nodes.addElement(original.substring(0, index));
-//            original = original.substring(index + separator.length());
-//            index = original.indexOf(separator);
-//        }
-//        // Get the last node
-//        nodes.addElement(original);
-//
-//        // Create split string array
-//        String[] result = new String[nodes.size()];
-//        if (nodes.size() > 0) {
-//            for (int loop = 0; loop < nodes.size(); loop++) {
-//                result[loop] = (String) nodes.elementAt(loop);
-//                //System.out.println(result[loop]);
-//            }
-//
-//        }
-//        return result;
-//    }
+    // public static String[] split(String original, String separator) {
+    // Vector nodes = new Vector();
+    // // Parse nodes into vector
+    // int index = original.indexOf(separator);
+    // while (index >= 0) {
+    // nodes.addElement(original.substring(0, index));
+    // original = original.substring(index + separator.length());
+    // index = original.indexOf(separator);
+    // }
+    // // Get the last node
+    // nodes.addElement(original);
+    //
+    // // Create split string array
+    // String[] result = new String[nodes.size()];
+    // if (nodes.size() > 0) {
+    // for (int loop = 0; loop < nodes.size(); loop++) {
+    // result[loop] = (String) nodes.elementAt(loop);
+    // //System.out.println(result[loop]);
+    // }
+    //
+    // }
+    // return result;
+    // }
 
-    public static ReportCostOrder parseReportOrder(Element item,Context context) throws DOMException, ParseException{
+    public static ReportCostOrder parseReportOrder(Element item, Context context) throws DOMException,
+            ParseException {
         Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
         Node classNode = item.getElementsByTagName("classid").item(0);
         Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);
@@ -126,8 +127,9 @@ public class Util {
         // if (!invitationNode.getTextContent().equalsIgnoreCase(""))
         // invitationtime = format.parse(invitationNode.getTextContent());
 
-        ReportCostOrder order = new ReportCostOrder(context, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype, orderdate, result, drivercost, actualcost, accepttime);
+        ReportCostOrder order = new ReportCostOrder(context, orderId, nominalcost, addressdeparture,
+                carClass, comment, addressarrival, paymenttype, orderdate, result, drivercost, actualcost,
+                accepttime);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
             nickname = nicknameNode.getTextContent();
@@ -140,12 +142,13 @@ public class Util {
         return order;
     }
 
-
-    public static MyCostOrder parseMyCostOrder(Element item,Context context) throws DOMException, ParseException{
-        return parseMyCostOrder(item, context,null);
+    public static MyCostOrder parseMyCostOrder(Element item, Context context) throws DOMException,
+            ParseException {
+        return parseMyCostOrder(item, context, null);
     }
 
-    public static MyCostOrder parseMyCostOrder(Element item,Context context,Node servertimeNode) throws DOMException, ParseException{
+    public static MyCostOrder parseMyCostOrder(Element item, Context context, Document doc)
+            throws DOMException, ParseException {
 
         Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
         Node classNode = item.getElementsByTagName("classid").item(0);
@@ -160,7 +163,8 @@ public class Util {
         Node invitationNode = item.getElementsByTagName("invitationtime").item(0);
         Node accepttimeNode = item.getElementsByTagName("accepttime").item(0);
         Node driverstateNode = item.getElementsByTagName("driverstate").item(0);
-        Node orderedtimeNode = item.getElementsByTagName("orderedtime").item(0);
+        Node orderedtimeNode = doc.getElementsByTagName("orderedtime").item(0);
+        Node servertimeNode = doc.getElementsByTagName("time").item(0);
 
         Integer driverstate = null;
         Date accepttime = null;
@@ -178,51 +182,62 @@ public class Util {
         Date servertime = null;
         Date orderedtime = null;
 
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-        if(servertimeNode!=null)
-        if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
-            servertime = format.parse(servertimeNode.getTextContent());
+        if (servertimeNode != null)
+            if (!servertimeNode.getTextContent().equalsIgnoreCase(""))
+                servertime = format.parse(servertimeNode.getTextContent());
 
-        if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
-            driverstate = Integer.valueOf(driverstateNode.getTextContent());
+        if (driverstateNode != null)
+            if (!driverstateNode.getTextContent().equalsIgnoreCase(""))
+                driverstate = Integer.valueOf(driverstateNode.getTextContent());
 
-        if (!classNode.getTextContent().equalsIgnoreCase(""))
-            carClass = Integer.valueOf(classNode.getTextContent());
+        if (classNode != null)
+            if (!classNode.getTextContent().equalsIgnoreCase(""))
+                carClass = Integer.valueOf(classNode.getTextContent());
 
-        if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
-            nominalcost = nominalcostNode.getTextContent();
+        if (nominalcostNode != null)
+            if (!nominalcostNode.getTextContent().equalsIgnoreCase(""))
+                nominalcost = nominalcostNode.getTextContent();
 
-        if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
-            addressdeparture = addressdepartureNode.getTextContent();
+        if (addressdepartureNode != null)
+            if (!addressdepartureNode.getTextContent().equalsIgnoreCase(""))
+                addressdeparture = addressdepartureNode.getTextContent();
 
-        if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
-            addressarrival = addressarrivalNode.getTextContent();
+        if (addressarrivalNode != null)
+            if (!addressarrivalNode.getTextContent().equalsIgnoreCase(""))
+                addressarrival = addressarrivalNode.getTextContent();
 
-        if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
-            paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
+        if (paymenttypeNode != null)
+            if (!paymenttypeNode.getTextContent().equalsIgnoreCase(""))
+                paymenttype = Integer.parseInt(paymenttypeNode.getTextContent());
 
-        if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
-            departuretime = format.parse(departuretimeNode.getTextContent());
+        if (departuretimeNode != null)
+            if (!departuretimeNode.getTextContent().equalsIgnoreCase(""))
+                departuretime = format.parse(departuretimeNode.getTextContent());
 
-        if (!commentNode.getTextContent().equalsIgnoreCase(""))
-            comment = commentNode.getTextContent();
+        if (commentNode != null)
+            if (!commentNode.getTextContent().equalsIgnoreCase(""))
+                comment = commentNode.getTextContent();
 
-        if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
-            orderId = orderIdNode.getTextContent();
+        if (orderIdNode != null)
+            if (!orderIdNode.getTextContent().equalsIgnoreCase(""))
+                orderId = orderIdNode.getTextContent();
 
-        if (!invitationNode.getTextContent().equalsIgnoreCase(""))
-            invitationtime = format.parse(invitationNode.getTextContent());
+        if (invitationNode != null)
+            if (!invitationNode.getTextContent().equalsIgnoreCase(""))
+                invitationtime = format.parse(invitationNode.getTextContent());
 
-        if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
-            accepttime = format.parse(accepttimeNode.getTextContent());
+        if (accepttimeNode != null)
+            if (!accepttimeNode.getTextContent().equalsIgnoreCase(""))
+                accepttime = format.parse(accepttimeNode.getTextContent());
 
-        if (!orderedtimeNode.getTextContent().equalsIgnoreCase(""))
-            orderedtime = format.parse(orderedtimeNode.getTextContent());
+        if (orderedtimeNode != null)
+            if (!orderedtimeNode.getTextContent().equalsIgnoreCase(""))
+                orderedtime = format.parse(orderedtimeNode.getTextContent());
 
-        MyCostOrder order = new MyCostOrder(context, orderId, nominalcost, addressdeparture, carClass, comment,
-                addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
+        MyCostOrder order = new MyCostOrder(context, orderId, nominalcost, addressdeparture, carClass,
+                comment, addressarrival, paymenttype, invitationtime, departuretime, accepttime, driverstate,
                 servertime, orderedtime);
 
         if (!nicknameNode.getTextContent().equalsIgnoreCase("")) {
@@ -236,7 +251,7 @@ public class Util {
         return order;
     }
 
-    public static CostOrder parseCostOrder(Element item,Context context) throws DOMException, ParseException{
+    public static CostOrder parseCostOrder(Element item, Context context) throws DOMException, ParseException {
         Node nominalcostNode = item.getElementsByTagName("nominalcost").item(0);
         Node classNode = item.getElementsByTagName("classid").item(0);
         Node addressdepartureNode = item.getElementsByTagName("addressdeparture").item(0);

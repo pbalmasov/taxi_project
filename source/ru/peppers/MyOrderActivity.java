@@ -169,12 +169,11 @@ public class MyOrderActivity extends BalanceActivity implements AsyncTaskComplet
 
     private void initMainList(Document doc) throws DOMException, ParseException {
         NodeList nodeList = doc.getElementsByTagName("item");
-        Node servertimeNode = doc.getElementsByTagName("time").item(0);
         orders.clear();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element item = (Element) nodeList.item(i);
 
-           orders.add(Util.parseMyCostOrder(item, this,servertimeNode));
+           orders.add(Util.parseMyCostOrder(item, this,doc));
         }
 
         Driver driver = TaxiApplication.getDriver(this);

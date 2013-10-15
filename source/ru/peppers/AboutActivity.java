@@ -30,15 +30,14 @@ public class AboutActivity extends BalanceActivity {
     }
 
     public void initList() {
-        final Driver driver = TaxiApplication.getDriver(this);
         itemsList = new ArrayList<String>();
+        itemsList.add("АБС-Такси: Водитель");
         try {
             itemsList.add("Статус: " + "Версия программы: "
                     + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        itemsList.add("Класс: " + driver.getClassAutoString());
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
 

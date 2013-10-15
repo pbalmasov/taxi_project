@@ -103,6 +103,10 @@
             android:name=".CrashActivity"
             android:label="Ошибка" >
         </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="О программе" >
+        </activity>
 
         <service android:name=".PhpService" />
  <!-- //android:process=":process"></service> -->

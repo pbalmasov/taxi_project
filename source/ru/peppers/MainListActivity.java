@@ -257,6 +257,10 @@ public class MainListActivity extends BalanceActivity implements AsyncTaskComple
                         case 8:
                             exitDialog();
                             break;
+                        case 9:
+                            intent = new Intent(MainListActivity.this, AboutActivity.class);
+                            startActivity(intent);
+                            break;
 
                         default:
                             break;

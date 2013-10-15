@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -402,6 +403,11 @@ public class PozivnoiActivity extends BalanceActivity {
             nameValuePairs.add(new BasicNameValuePair("module", "mobile"));
             nameValuePairs.add(new BasicNameValuePair("object", "session"));
             nameValuePairs.add(new BasicNameValuePair("login", settings.getString("login", "")));
+//            try {
+//                nameValuePairs.add(new BasicNameValuePair("version", String.valueOf((this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode))));
+//            } catch (NameNotFoundException e) {
+//                e.printStackTrace();
+//            }
             Log.d("My_tag", settings.getString("login", ""));
             Log.d("My_tag", settings.getString("password", ""));
             nameValuePairs.add(new BasicNameValuePair("password", settings.getString("password", "")));

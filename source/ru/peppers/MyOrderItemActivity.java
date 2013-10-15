@@ -145,7 +145,7 @@ public class MyOrderItemActivity extends BalanceActivity implements AsyncTaskCom
         String oldComment = order.get_comment();
 
         Element item = (Element) doc.getElementsByTagName("order").item(0);
-        order = Util.parseMyCostOrder(item, this);
+        order = Util.parseMyCostOrder(item, this,doc);
         if (order != null)
             //если появился комментарий
             if (oldComment == null && order.get_comment() != null) {

@@ -39,7 +39,7 @@ public class PhpService extends Service {
     private Timer myTimer = new Timer();
     private Integer refreshperiod = null;
     private boolean start = false;
-
+    private String orderId;
     private final IBinder binder = new ServiceBinder();
 
     public class ServiceBinder extends Binder {
@@ -195,7 +195,7 @@ public class PhpService extends Service {
                         @Override
                         public void run() {
 
-                            getMyOrders();
+                          //  getMyOrders();
 
                             if (isStop)
                                 getStatus();

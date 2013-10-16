@@ -21,9 +21,8 @@ public class CostOrder extends Order {
 
     private Date _departuretime;
 
-    public CostOrder(Context context, String index, String nominalcost,
-                     String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
-                     Date departuretime) {
+    public CostOrder(Context context, String index, String nominalcost, String addressdeparture,
+            Integer carClass, String comment, String addressarrival, Integer paymenttype, Date departuretime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
         set_departuretime(departuretime);
     }
@@ -35,14 +34,13 @@ public class CostOrder extends Order {
 
         String over = "";
         if (get_nominalcost() != null)
-            over = " = "+ get_nominalcost() + " " + _context.getString(R.string.currency);
+            over = " = " + get_nominalcost() + " " + _context.getString(R.string.currency);
         String adressdeparture = _context.getString(R.string.no_data);
         String addressarrival = _context.getString(R.string.no_data);
-        if(_addressdeparture!=null)
+        if (_addressdeparture != null)
             adressdeparture = _addressdeparture.trim();
-        if(get_addressarrival()!=null)
+        if (get_addressarrival() != null)
             addressarrival = get_addressarrival().trim();
-
 
         return pred + adressdeparture + " >> " + addressarrival + over;
     }
@@ -54,14 +52,31 @@ public class CostOrder extends Order {
         if (get_departuretime() != null)
             array.add(_context.getString(R.string.date) + " " + getTimeString(get_departuretime()));
 
-        array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
-        array.add(_context.getString(R.string.where) + " " + get_addressarrival());
+        if (_addressdeparture != null)
+            array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
+        else
+            array.add(_context.getString(R.string.adress) + " не указан");
 
-        array.add(_context.getString(R.string.car_class) + " " + getCarClass());
-        array.add(_context.getString(R.string.cost_type) + " " + getPayment());
+        if (get_addressarrival() != null)
+            array.add(_context.getString(R.string.where) + " " + get_addressarrival());
+        else
+            array.add(_context.getString(R.string.where) + " не указан");
+
+        if (getCarClass() != null)
+            array.add(_context.getString(R.string.car_class) + " " + getCarClass());
+        else
+            array.add(_context.getString(R.string.car_class) + " не указан");
+
+        if (getPayment() != null)
+            array.add(_context.getString(R.string.cost_type) + " " + getPayment());
+        else
+            array.add(_context.getString(R.string.cost_type) + " не указано");
 
         if (get_nominalcost() != null)
-            array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " " + _context.getString(R.string.currency));
+            array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " "
+                    + _context.getString(R.string.currency));
+        else
+            array.add(_context.getString(R.string.cost_ride) + " не указано");
 
         if (get_comment() != null)
             array.add(_context.getString(R.string.description) + " " + get_comment());

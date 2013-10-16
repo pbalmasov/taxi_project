@@ -35,7 +35,6 @@ public class ReportCostOrder extends Order {
 
     }
 
-
     public String toString() {
         String pred = "";
         if (_orderDate != null)
@@ -54,26 +53,49 @@ public class ReportCostOrder extends Order {
         String departureTimeValue = _context.getString(R.string.no_data);
         if (_orderDate != null)
             departureTimeValue = getTimeString(_orderDate);
+
         array.add(_context.getString(R.string.date) + " " + departureTimeValue);
 
-        array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
-        array.add(_context.getString(R.string.where) + " " + get_addressarrival());
+        if (_addressdeparture != null)
+            array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
+        else
+            array.add(_context.getString(R.string.adress) + " не указан");
 
-        array.add(_context.getString(R.string.car_class) + " " + getCarClass());
-        array.add(_context.getString(R.string.cost_type) + " " + getPayment());
+        if (get_addressarrival() != null)
+            array.add(_context.getString(R.string.where) + " " + get_addressarrival());
+        else
+            array.add(_context.getString(R.string.where) + " не указан");
+
+        if (getCarClass() != null)
+            array.add(_context.getString(R.string.car_class) + " " + getCarClass());
+        else
+            array.add(_context.getString(R.string.car_class) + " не указано");
+
+        if (getPayment() != null)
+            array.add(_context.getString(R.string.cost_type) + " " + getPayment());
+        else
+            array.add(_context.getString(R.string.cost_type) + " не указано");
 
         if (_accepttime != null)
             array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_accepttime));
-        array.add(_context.getString(R.string.result) + " " + _result);
+        else
+            array.add(_context.getString(R.string.date_invite) + " не указано");
+
+        if (_result != null)
+            array.add(_context.getString(R.string.result) + " " + _result);
+        else
+            array.add(_context.getString(R.string.result)  + " не указано");
 
         String costValue = "не указано";
         if (get_nominalcost() != null)
             costValue = String.valueOf(get_nominalcost()) + " " + _context.getString(R.string.currency);
 
         if (_drivercost != null)
-            array.add(_context.getString(R.string.close_cost) + " " + _actualcost + " " + _context.getString(R.string.currency) );
+            array.add(_context.getString(R.string.close_cost) + " " + _actualcost + " "
+                    + _context.getString(R.string.currency));
         if (_actualcost != null)
-            array.add(_context.getString(R.string.cost_disp) + " " + _drivercost + " " + _context.getString(R.string.currency));
+            array.add(_context.getString(R.string.cost_disp) + " " + _drivercost + " "
+                    + _context.getString(R.string.currency));
 
         array.add(_context.getString(R.string.ras_cost) + " " + costValue);
 

@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in the editor.
  */
 package myorders;
 
@@ -27,9 +26,10 @@ public class MyCostOrder extends Order {
     private Date _servertime;
     private Integer _driverstate;
 
-    public MyCostOrder(Context context, String index, String nominalcost,
-                       String addressdeparture, Integer carClass, String comment, String addressarrival, Integer paymenttype,
-                       Date invitationtime, Date departuretime, Date accepttime, Integer driverstate,Date servertime,Date orderedtime) {
+    public MyCostOrder(Context context, String index, String nominalcost, String addressdeparture,
+            Integer carClass, String comment, String addressarrival, Integer paymenttype,
+            Date invitationtime, Date departuretime, Date accepttime, Integer driverstate, Date servertime,
+            Date orderedtime) {
         super(context, nominalcost, addressdeparture, carClass, comment, addressarrival, paymenttype, index);
         // TODO:wrong index
         set_invitationtime(invitationtime);
@@ -45,38 +45,53 @@ public class MyCostOrder extends Order {
         String pred = "";
         if (get_departuretime() != null)
             pred = getTimeString(get_departuretime()) + ", ";
-//		else
-//			pred = getTimeString(_registrationtime) + ", ";
+        // else
+        // pred = getTimeString(_registrationtime) + ", ";
 
         String over = "";
         if (get_nominalcost() != null)
             over = ", " + get_nominalcost() + " " + _context.getString(R.string.currency);
 
-        return /*"К " +*/ pred + _addressdeparture + over;
+        return /* "К " + */pred + _addressdeparture + over;
     }
 
     public ArrayList<String> toArrayList() {
         ArrayList<String> array = new ArrayList<String>();
         array.addAll(getAbonentArray());
 
-        //String departureTimeValue = "не указано";
+        // String departureTimeValue = "не указано";
         if (get_departuretime() != null) {
             array.add(_context.getString(R.string.date) + " " + getTimeString(get_departuretime()));
         }
         if (_invitationtime != null)
             array.add(_context.getString(R.string.date_invite) + " " + getTimeString(_invitationtime));
         else
-            array.add(_context.getString(R.string.date_invite) + " " + _context.getString(R.string.not_invited));
+            array.add(_context.getString(R.string.date_invite) + " "
+                    + _context.getString(R.string.not_invited));
 
+        if (_addressdeparture != null)
+            array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
+        else
+            array.add(_context.getString(R.string.adress) + " не указан");
 
-        array.add(_context.getString(R.string.adress) + " " + _addressdeparture);
-        array.add(_context.getString(R.string.where) + " " + get_addressarrival());
+        if (get_addressarrival() != null)
+            array.add(_context.getString(R.string.where) + " " + get_addressarrival());
+        else
+            array.add(_context.getString(R.string.where) + " не указан");
 
-        array.add(_context.getString(R.string.car_class) + " " + getCarClass());
-        array.add(_context.getString(R.string.cost_type) + " " + getPayment());
+        if (getCarClass() != null)
+            array.add(_context.getString(R.string.car_class) + " " + getCarClass());
+        else
+            array.add(_context.getString(R.string.car_class) + " не указано");
+
+        if (getPayment() != null)
+            array.add(_context.getString(R.string.cost_type) + " " + getPayment());
+        else
+            array.add(_context.getString(R.string.cost_type) + " не указано");
 
         if (get_nominalcost() != null)
-            array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " " + _context.getString(R.string.currency));
+            array.add(_context.getString(R.string.cost_ride) + " " + get_nominalcost() + " "
+                    + _context.getString(R.string.currency));
 
         if (get_accepttime() != null)
             array.add(_context.getString(R.string.date_invite) + " " + getTimeString(get_accepttime()));
@@ -103,17 +118,17 @@ public class MyCostOrder extends Order {
         this._invitationtime = _invitationtime;
     }
 
-	public Integer get_driverstate() {
-		return _driverstate;
-	}
+    public Integer get_driverstate() {
+        return _driverstate;
+    }
 
-	public Date get_departuretime() {
-		return _departuretime;
-	}
+    public Date get_departuretime() {
+        return _departuretime;
+    }
 
-	public void set_departuretime(Date _departuretime) {
-		this._departuretime = _departuretime;
-	}
+    public void set_departuretime(Date _departuretime) {
+        this._departuretime = _departuretime;
+    }
 
     public Date get_servertime() {
         return _servertime;

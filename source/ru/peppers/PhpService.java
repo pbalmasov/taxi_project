@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+
 /**
  * Сервис для отправки запроса каждые n секунд
  * @author p.balmasov
@@ -37,6 +38,7 @@ public class PhpService extends Service {
     boolean isStop = true;
 
     private Timer myTimer = new Timer();
+    private TimerTask timerTask;
     private Integer refreshperiod = null;
     private boolean start = false;
     private String orderId;
@@ -79,6 +81,16 @@ public class PhpService extends Service {
         notif.flags |= Notification.FLAG_AUTO_CANCEL;
         startForeground(0, notif);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (myTimer != null)
+            myTimer.cancel();
+        if (timerTask != null)
+            timerTask.cancel();
+        Log.d("My_tag", "DESTROYED SERVICE");
     }
 
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
@@ -188,14 +200,14 @@ public class PhpService extends Service {
             }
             final Handler uiHandler = new Handler();
 
-            TimerTask timerTask = new TimerTask() { // Определяем задачу
+            timerTask = new TimerTask() { // Определяем задачу
                 @Override
                 public void run() {
                     uiHandler.post(new Runnable() {
                         @Override
                         public void run() {
 
-                          //  getMyOrders();
+                            // getMyOrders();
 
                             if (isStop)
                                 getStatus();
@@ -258,7 +270,7 @@ public class PhpService extends Service {
                 orderId = orderIdNode.getTextContent();
 
             if (departuretime != null && servertime != null && orderId != null) {
-                Log.d("My_tag", departuretime.toGMTString()+" "+servertime.toGMTString());
+                Log.d("My_tag", departuretime.toGMTString() + " " + servertime.toGMTString());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(departuretime);
                 cal.add(Calendar.MINUTE, -1);
@@ -276,81 +288,80 @@ public class PhpService extends Service {
         }
     }
 
-
-//    private ArrayList<Order> getOrders(Document doc) throws DOMException, ParseException {
-//        NodeList nodeList = doc.getElementsByTagName("order");
-//        ArrayList<Order> orders = new ArrayList<Order>();
-//        for (int i = 0; i < nodeList.getLength(); i++) {
-//            NamedNodeMap attributes = nodeList.item(i).getAttributes();
-//
-//            int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
-//            int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
-//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-//            Date date = format.parse(attributes.getNamedItem("date").getTextContent());
-//            String carClass = attributes.getNamedItem("class").getTextContent();
-//            String adress = attributes.getNamedItem("adress").getTextContent();
-//            String where = attributes.getNamedItem("where").getTextContent();
-//            int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
-//
-//            Intent intent = new Intent(this, FreeOrderItemActivity.class);
-//            // intent.putExtra("id", TaxiApplication.getDriverId());
-//            intent.putExtra("orderindex", index);
-//            intent.putExtra("service", true);
-//            intent.putExtra("type", type);
-//            intent.putExtra("date", attributes.getNamedItem("date").getTextContent());
-//            intent.putExtra("class", carClass);
-//            intent.putExtra("adress", adress);
-//            intent.putExtra("where", where);
-//            intent.putExtra("costOrder", costOrder);
-//
-//            if (type == 0) {
-//                int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
-//                String costType = attributes.getNamedItem("costType").getTextContent();
-//                String text = nodeList.item(i).getTextContent();
-//                intent.putExtra("cost", cost);
-//                intent.putExtra("costType", costType);
-//                intent.putExtra("text", text);
-//                // orders.add(new CostOrder(this,costOrder, index, date, adress,
-//                // carClass, text, where, cost,
-//                // costType));
-//            }
-//            if (type == 1) {
-//                String text = nodeList.item(i).getTextContent();
-//                intent.putExtra("text", text);
-//                // orders.add(new NoCostOrder(this,costOrder, index, date,
-//                // adress, carClass, text, where));
-//            }
-//            if (type == 2) {
-//                String text = nodeList.item(i).getTextContent();
-//                intent.putExtra("text", text);
-//                // orders.add(new PreliminaryOrder(this,costOrder, index, date,
-//                // adress, carClass, text, where));
-//            }
-//
-//            // PendingIntent pIntent = PendingIntent.getActivity(this, 0,
-//            // intent, 0);
-//            // Notification notif = new Notification(R.drawable.icon,
-//            // this.getString(R.string.new_order), System.currentTimeMillis());
-//            // notif.setLatestEventInfo(this, "Заказ", orders.get(i).toString(),
-//            // pIntent);
-//            //
-//            // // ставим флаг, чтобы уведомление пропало после нажатия
-//            // notif.flags |= Notification.FLAG_AUTO_CANCEL;
-//            // notif.sound = Uri.parse("android.resource://ru.peppers/" +
-//            // R.raw.sound);
-//            //
-//            // notif.defaults |= Notification.DEFAULT_VIBRATE;
-//            // notif.defaults |= Notification.DEFAULT_LIGHTS;
-//            //
-//            // notif.flags |= Notification.FLAG_NO_CLEAR;
-//            // // отправляем
-//            // NodeList nodeList1 = doc.getElementsByTagName("message");
-//            // nm.notify(nodeList1.getLength() + i + 1, notif);
-//
-//        }
-//
-//        return orders;
-//
-//    }
+    // private ArrayList<Order> getOrders(Document doc) throws DOMException, ParseException {
+    // NodeList nodeList = doc.getElementsByTagName("order");
+    // ArrayList<Order> orders = new ArrayList<Order>();
+    // for (int i = 0; i < nodeList.getLength(); i++) {
+    // NamedNodeMap attributes = nodeList.item(i).getAttributes();
+    //
+    // int index = Integer.parseInt(attributes.getNamedItem("index").getTextContent());
+    // int type = Integer.parseInt(attributes.getNamedItem("type").getTextContent());
+    // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    // Date date = format.parse(attributes.getNamedItem("date").getTextContent());
+    // String carClass = attributes.getNamedItem("class").getTextContent();
+    // String adress = attributes.getNamedItem("adress").getTextContent();
+    // String where = attributes.getNamedItem("where").getTextContent();
+    // int costOrder = Integer.parseInt(attributes.getNamedItem("costOrder").getTextContent());
+    //
+    // Intent intent = new Intent(this, FreeOrderItemActivity.class);
+    // // intent.putExtra("id", TaxiApplication.getDriverId());
+    // intent.putExtra("orderindex", index);
+    // intent.putExtra("service", true);
+    // intent.putExtra("type", type);
+    // intent.putExtra("date", attributes.getNamedItem("date").getTextContent());
+    // intent.putExtra("class", carClass);
+    // intent.putExtra("adress", adress);
+    // intent.putExtra("where", where);
+    // intent.putExtra("costOrder", costOrder);
+    //
+    // if (type == 0) {
+    // int cost = Integer.parseInt(attributes.getNamedItem("cost").getTextContent());
+    // String costType = attributes.getNamedItem("costType").getTextContent();
+    // String text = nodeList.item(i).getTextContent();
+    // intent.putExtra("cost", cost);
+    // intent.putExtra("costType", costType);
+    // intent.putExtra("text", text);
+    // // orders.add(new CostOrder(this,costOrder, index, date, adress,
+    // // carClass, text, where, cost,
+    // // costType));
+    // }
+    // if (type == 1) {
+    // String text = nodeList.item(i).getTextContent();
+    // intent.putExtra("text", text);
+    // // orders.add(new NoCostOrder(this,costOrder, index, date,
+    // // adress, carClass, text, where));
+    // }
+    // if (type == 2) {
+    // String text = nodeList.item(i).getTextContent();
+    // intent.putExtra("text", text);
+    // // orders.add(new PreliminaryOrder(this,costOrder, index, date,
+    // // adress, carClass, text, where));
+    // }
+    //
+    // // PendingIntent pIntent = PendingIntent.getActivity(this, 0,
+    // // intent, 0);
+    // // Notification notif = new Notification(R.drawable.icon,
+    // // this.getString(R.string.new_order), System.currentTimeMillis());
+    // // notif.setLatestEventInfo(this, "Заказ", orders.get(i).toString(),
+    // // pIntent);
+    // //
+    // // // ставим флаг, чтобы уведомление пропало после нажатия
+    // // notif.flags |= Notification.FLAG_AUTO_CANCEL;
+    // // notif.sound = Uri.parse("android.resource://ru.peppers/" +
+    // // R.raw.sound);
+    // //
+    // // notif.defaults |= Notification.DEFAULT_VIBRATE;
+    // // notif.defaults |= Notification.DEFAULT_LIGHTS;
+    // //
+    // // notif.flags |= Notification.FLAG_NO_CLEAR;
+    // // // отправляем
+    // // NodeList nodeList1 = doc.getElementsByTagName("message");
+    // // nm.notify(nodeList1.getLength() + i + 1, notif);
+    //
+    // }
+    //
+    // return orders;
+    //
+    // }
 
 }

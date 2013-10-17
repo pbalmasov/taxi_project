@@ -1,4 +1,4 @@
-package ru.peppers;
+package ru.ntechs;
 /**
  * Фабрика для сокет соединения
  * @author p.balmasov

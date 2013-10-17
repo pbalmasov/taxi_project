@@ -3,15 +3,14 @@
  */
 package orders;
 
-import android.content.Context;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import model.DateUtils;
 import model.Order;
-import ru.peppers.R;
+import ru.ntechs.R;
+import android.content.Context;
 
 /**
  * Заказ

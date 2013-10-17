@@ -3,13 +3,12 @@
  */
 package model;
 
+import java.util.ArrayList;
+
+import ru.ntechs.R;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.util.Log;
-
-import java.util.ArrayList;
-
-import ru.peppers.R;
 
 /**
  * Модель водителя

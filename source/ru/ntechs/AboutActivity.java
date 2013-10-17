@@ -1,17 +1,9 @@
-package ru.peppers;
+package ru.ntechs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import model.Driver;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 

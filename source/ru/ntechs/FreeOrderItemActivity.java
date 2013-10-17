@@ -1,28 +1,27 @@
-package ru.peppers;
+package ru.ntechs;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+
+import orders.CostOrder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import orders.CostOrder;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 /**
- * Подробно заказа из района
+ * Подробно свободного заказа
  * @author p.balmasov
  */
-public class DistrictListItemActivity extends BalanceActivity {
+public class FreeOrderItemActivity extends BalanceActivity {
 
     private CostOrder order;
 
@@ -32,8 +31,10 @@ public class DistrictListItemActivity extends BalanceActivity {
         setContentView(R.layout.freeorder);
 
         Bundle bundle = getIntent().getExtras();
+        // int id = bundle.getInt("id");
         int index = bundle.getInt("index");
-        order = (CostOrder) TaxiApplication.getDriver(this).get_districtOrders().get(index);
+
+        order = (CostOrder) TaxiApplication.getDriver(this).getFreeOrders().get(index);
 
         TextView tv = (TextView) findViewById(R.id.textView1);
 
@@ -52,11 +53,11 @@ public class DistrictListItemActivity extends BalanceActivity {
                 if (order.get_departuretime() != null)
                     acceptOrder(null);
                 else {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(DistrictListItemActivity.this);
-                    alert.setTitle(DistrictListItemActivity.this.getString(R.string.time));
+                    AlertDialog.Builder alert = new AlertDialog.Builder(FreeOrderItemActivity.this);
+                    alert.setTitle(FreeOrderItemActivity.this.getString(R.string.time));
                     final CharSequence cs[];
 
-                    cs = new String[]{"3", "5", "7", "10", "15", "20", "25", "30", "35"};
+                    cs = new String[] { "3", "5", "7", "10", "15", "20", "25", "30", "35" };
 
                     alert.setItems(cs, new OnClickListener() {
 
@@ -90,12 +91,9 @@ public class DistrictListItemActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-
-                    Intent intent = new Intent(this, MyOrderActivity.class);
                     setResult(RESULT_OK);
-                    startActivity(intent);
                     finish();
-                    //TODO:заканчивать парент активити
+                    // TODO:заканчивать парент активити
                 } catch (Exception e) {
                     PhpData.errorHandler(this, e);
                 }

@@ -1,4 +1,4 @@
-package ru.peppers;
+package ru.ntechs;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,7 +28,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package ru.peppers;
+package ru.ntechs;
 
 import java.util.List;
 

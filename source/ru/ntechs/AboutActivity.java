@@ -25,11 +25,12 @@ public class AboutActivity extends BalanceActivity {
         itemsList = new ArrayList<String>();
         itemsList.add("АБС-Такси: Водитель");
         try {
-            itemsList.add("Статус: " + "Версия программы: "
+            itemsList.add("Версия программы: "
                     + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
+        itemsList.add("abs-taxi.ru");
 
         ListView lv = (ListView) findViewById(R.id.mainListView);
 

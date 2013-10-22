@@ -12,6 +12,7 @@ import org.w3c.dom.Node;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
@@ -91,7 +92,11 @@ public class FreeOrderItemActivity extends BalanceActivity {
                 PhpData.errorFromServer(this, errorNode);
             else {
                 try {
-                    setResult(RESULT_OK);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("index", String.valueOf(order.get_index()));
+                    Intent intent = new Intent();
+                    intent.putExtras(bundle);
+                    setResult(RESULT_OK,intent);
                     finish();
                     // TODO:заканчивать парент активити
                 } catch (Exception e) {
